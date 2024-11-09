@@ -10,7 +10,7 @@ const Clients = () => {
       <NavBar /> 
       <SideBar />
       <div className="containerDash">
-        
+      Clients
       </div>
     </div>
   )

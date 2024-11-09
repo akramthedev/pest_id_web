@@ -1,6 +1,6 @@
 
 .NavBar{
-    height: 80px;
+    height: 100px;
     width: 100%;
     z-index: 11;
     position: fixed;
@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 3vw;
+    padding: 0 2rem;
 }
 
 .options{
@@ -21,34 +21,54 @@
 .isfivs{
     height: 47px;
     width: 47px;
-    border-radius: 1rem;
+    border-radius: 1.6rem;
     object-fit: cover;
 }
 
 .eosvnowdc{
-    width: 56px;
+    width: 47px;
     background-color: transparent;
-    height: 56px;    
+    height: 56px;   
     cursor: pointer;
+    margin-right: 0.8rem;
 }
-.eosvnowdc i, .ziuvfzuo i {
-    font-size: 1.25rem;
-    color: #969696;
+.zjsdv i {
+    font-size: 1.28rem;
+    color: rgb(41, 41, 41);
 }
 
+ .ziuvfzuo i {
+  font-size: 1rem;
+  color: rgb(41, 41, 41);
+
+}
+
+.zjsdv{
+  background-color: rgb(234, 234, 234);
+  height: 47px;
+  width: 47px;
+  border-radius: 50%;
+  cursor: pointer;
+}
 .ziuvfzuo{
-    height: 56px;
-    width: 30px;
-    background-color: transparent;
+    height: 19px;
+    width: 19px;
     display: flex;
     align-items: center;
-    justify-content: right;
+    position: absolute;
+    background-color: rgb(234, 234, 234);
+    justify-content: center;
+    border-radius: 50%;
+    bottom: -4px;
+    right: -5px;
+    outline: 4px solid white;
 }
 
 .erovuson{
     display: flex;
     align-items: center;
     cursor: pointer;
+    position: relative;
 }
 
 
@@ -58,25 +78,26 @@
     height: 100vh;
     z-index: 10;
     position: fixed;
-    padding-top: 80px;
-    padding-left: 3vw;
-}
+    padding-top: 100px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
 
 .rowOI{
-    min-height: 62px;
-    border-radius: .7rem;
+    min-height: 50px;
+    border-radius: .4rem;
     display: flex;
     width: 100%;
     padding: 0 1rem;
     padding-left: 1.2rem;
     align-items: center;
     cursor: pointer;
-    transition: .3s all ease-in-out;
+    transition: .0s all ease-in-out;
 }
 
 .rowOI:hover{
-    background-color: #f8f8f8;
+    background-color: #f3f3f3;
 }
 
 .rowOIactiavted{
@@ -103,5 +124,84 @@
     color: white;
 }
 
-
  
+  
+  
+
+
+
+
+
+
+  
+.profile-popup {
+
+  position: absolute;
+    top: 70px; 
+    right: 2rem;
+    background-color: white;
+    border: 1px solid #f8f8f8;
+    padding: 10px;
+    min-width:250px;
+    border-radius: 8px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;}
+
+.profile-header {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: .7rem;
+  margin-right: 12px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+.profile-email {
+  font-size: 15px;
+  color: #777;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #333;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.profile-item:hover, .profile-header:hover {
+  background-color: #f3f3f3;
+  border-radius: 0.15rem;
+}
+
+.profile-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.uevuofz{
+  height: 16px;
+  width: 16px;
+  margin-left: 0.7rem;
+  margin-right: 1rem;
+}
+
+.uevuofz i{
+  color: #252525;
+}

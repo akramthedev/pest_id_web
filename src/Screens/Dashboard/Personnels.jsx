@@ -10,7 +10,7 @@ const Personnels = () => {
       <NavBar /> 
       <SideBar />
       <div className="containerDash">
-        
+      Personnels 
       </div>
     </div>
   )

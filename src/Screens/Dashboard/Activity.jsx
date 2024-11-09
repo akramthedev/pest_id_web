@@ -10,7 +10,7 @@ const Activity = () => {
       <NavBar /> 
       <SideBar />
       <div className="containerDash">
-        
+      Activity
       </div>
     </div>
   )

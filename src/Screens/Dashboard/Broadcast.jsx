@@ -10,7 +10,7 @@ const Broadcast = () => {
       <NavBar /> 
       <SideBar />
       <div className="containerDash">
-        
+      Broadcast
       </div>
     </div>
   )

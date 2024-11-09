@@ -27,13 +27,13 @@ function App() {
 
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/clients" element={<Clients />} />
-        <Route path="/demandes" element={<Demandes />} />
-        <Route path="/personnels" element={<Personnels />} />
-        <Route path="/calculations" element={<Calculations />} />
-        <Route path="/fermes" element={<Fermes />} />
-        <Route path="/broadcast" element={<Broadcast />} />
-        <Route path="/activity" element={<Activity />} />
+        <Route path="/clients" element={isAuthenticated ? <Clients /> : <Navigate to="/login" />} />
+        <Route path="/demandes" element={isAuthenticated ? <Demandes /> : <Navigate to="/login" />} />
+        <Route path="/personnels" element={isAuthenticated ? <Personnels /> : <Navigate to="/login" />} />
+        <Route path="/calculations" element={isAuthenticated ? <Calculations /> : <Navigate to="/login" />} />
+        <Route path="/fermes" element={isAuthenticated ? <Fermes /> : <Navigate to="/login" />} />
+        <Route path="/broadcast" element={isAuthenticated ? <Broadcast /> : <Navigate to="/login" />} />
+        <Route path="/activity" element={isAuthenticated ? <Activity /> : <Navigate to="/login" />} />
 
 
         <Route path="*" element={<Navigate to="/" />} />

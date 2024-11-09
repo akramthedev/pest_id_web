@@ -10,7 +10,7 @@ const Fermes = () => {
       <NavBar /> 
       <SideBar />
       <div className="containerDash">
-        
+      Fermes
       </div>
     </div>
   )

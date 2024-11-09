@@ -4,8 +4,350 @@
 }
 .containerDash{
     position: fixed;
-    height: calc(100vh - 80px);
-    width: calc(100% - 16%);
+    height: calc(100vh - 100px);
+    width: calc(100% - 17%);
+    overflow: hidden;
     bottom: 0;
     right: 0;
+    padding-right: 2rem;
+    padding-left: 1rem;
 }
+
+.rowD1{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.caseD1{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+}
+.caseD1 span{
+    font-size: 22px;
+    font-weight: 700;
+}
+.caseD1 span:first-child{
+    color: #5fa21b;
+}
+ 
+.caseD2{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    min-width: 100px;
+}
+
+.caseD2 button{
+    background-color: white;
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+    height: 40px;
+    width: auto;
+    margin-left: 0.7rem;
+    cursor: pointer;
+    padding: 0 1rem;
+    transition: .2s all ease-in-out;
+}
+
+.caseD2 button:first-child{
+    background-color: #5fa21b;
+}
+.caseD2 button:first-child:hover{
+    background-color: #477a14;
+
+}
+
+.caseD2 button:last-child, .caseD2 .annulerd2{
+    background-color: rgb(255, 255, 255) !important;
+    color: #5fa21b !important ;
+    width: 120px;
+    border: 1px solid #5fa21b !important;
+    padding: 0 1.2rem !important;
+}
+.caseD2 button i{
+    color: white;
+    font-size: 14px;
+}
+.caseD2 button:last-child:hover, .caseD2 .annulerd2:hover{
+}
+
+.caseD2 button:last-child i{
+    color: #5fa21b;
+    font-size: 14px;
+}
+.rowAddC{
+    height: calc(100% - 50px);
+    width: 100%;
+    padding-bottom: 2rem;
+}
+
+.popUp{
+    opacity: 0;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.765);
+    z-index: 90;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    transition: 0.15s all ease-in-out;
+}
+.showpopUp{
+    visibility: visible;
+    opacity: 1;
+}
+
+.contPopUp{
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;    
+    background-color: #ffffff;
+    height: 73vh;
+    width: 90%;
+    border-radius: 1.5rem;
+    max-width: 600px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+ 
+.caseD11{
+    height: 100px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    min-width: 100px;
+    justify-content: center;
+}
+.caseD11 span{
+    font-size: 22px;
+    font-weight: 700;
+}
+.caseD11 span:first-child{
+}
+.rowInp{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 1.111rem;
+}
+.rowInp label{
+    margin-bottom: 0.5rem;
+}
+.idplaque{
+    border: 1px solid #ccc;
+    height: 45px;
+    border-radius: 0.4rem;
+    padding: 0 1rem;
+    outline: none;
+
+}
+
+
+.rowInpModified{
+    position: absolute;
+    bottom: 1rem;
+    right: 5%;
+    left: 5%;
+    display: flex;
+    flex-direction: row;
+}
+
+.jofzvno{
+    background-color: white;
+    font-weight: 400;
+    border: 1px solid gainsboro;
+    height: 48px;
+    width: 28%;
+    cursor: pointer;
+    transition: .2s all ease-in-out;
+}
+
+.efvofvz{
+    background-color:#5fa21b;
+    color: white;
+    font-weight: 400;
+    height: 48px;
+    width: 70%;
+    margin-left: 0.7rem;
+    cursor: pointer;
+    transition: .2s all ease-in-out;
+}   
+.efvofvz2{
+    background-color:#477a14;
+    color: white;
+    font-weight: 400;
+    height: 48px;
+    width: 70%;
+    margin-left: 0.7rem;
+    cursor: not-allowed;
+    transition: .2s all ease-in-out;
+}
+.ofnov{
+    background-color: #f6f6f6;
+}.ofnov:hover{
+    background-color: #f3f3f3;
+}
+
+
+
+
+
+
+.custom-table {
+    border: 1px solid #f0f0f0;
+    border-radius: 0.4rem;
+    overflow-x: auto;
+    padding: 1rem;
+    height: calc(100% - 120px);
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.ejofvo{
+    text-align: center;
+    height: 40px !important;
+    border-bottom: 1px solid rgb(239, 239, 239);
+}
+
+.ejofvo1{
+    width: 40px;
+}
+.ejofvo2{
+    min-width: 50px;
+}
+.ejofvo3{
+    min-width: 50px;
+}
+.ejofvo4{
+    width: 150px;
+
+}
+.ejofvo5{
+    width: 100px;
+
+}
+.ejofvo6{
+    width: 100px;
+
+}
+.ejofvo7{
+    width: 100px;
+}
+.ejofvo8{
+    width: 100px;
+}
+.ejofvo9{
+    width: 120px;
+}
+.ejofvo0{
+    width: 150px;
+}
+
+.uoersf{
+    height: 35px  ;
+    width: 35px  ;
+    border-radius: 50%  ;
+    margin: 0 0.3rem;
+    cursor: pointer;
+    text-align: center;
+    transition: .2s all ease-in-out;
+}
+.uoersf i{
+    font-size: 13px;
+}
+.uoersf:nth-child(1){
+    background-color: rgb(239, 239, 239);
+}
+.uoersf:nth-child(2){
+    background-color: rgb(239, 239, 239);
+}
+.uoersf:nth-child(3){
+    background-color: rgb(239, 239, 239);
+}
+
+.uoersf:nth-child(1):hover{
+    background-color: rgb(209, 209, 209);
+}
+.uoersf:nth-child(2):hover{
+    background-color: rgb(209, 209, 209);
+}
+.uoersf:nth-child(3):hover{
+    background-color: rgb(209, 209, 209);
+}
+
+
+.uoersf .fa-eye {
+    color: black
+}
+
+.uoersf .fa-pencil {
+    color: black;
+}
+
+.uoersf .fa-trash {
+    color: black;
+    }
+
+
+
+
+
+/* Overall scrollbar styling */
+::-webkit-scrollbar {
+    width: 13px !important;   /* Width for the vertical scrollbar */
+    height: 13px !important; /* Height for the horizontal scrollbar */
+  }
+  
+  /* Scrollbar track styling */
+  ::-webkit-scrollbar-track {
+    background: #f0f0f0 ; /* Background color for the scrollbar track */
+    border-radius: 10px ;
+  }
+  
+  /* Scrollbar thumb styling */
+  ::-webkit-scrollbar-thumb {
+    background-color: #b6b6b6 ; /* Color of the scrollbar thumb */
+    border-radius: 10px ;    /* Rounded edges for the thumb */
+    border: 2px solid #f0f0f0 ; /* Padding for a border effect */
+  }
+  
+  /* Hover effect for the scrollbar thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #949494 ; /* Darker color on hover */
+  }
+  
+  /* Specific height for horizontal scrollbar only */
+  ::-webkit-scrollbar:horizontal {
+    height: 10px ;
+  }
+  
+  /* Specific width for vertical scrollbar only */
+  ::-webkit-scrollbar:vertical {
+    width: 8px ;
+  }
+  
+  /* Firefox styling */
+  .scrollable-element {
+    scrollbar-width: thin ;               /* Makes scrollbar thinner */
+    scrollbar-color: #888 #f0f0f0 ; /* Thumb color and track color */
+  }
+
+  
+
+  .sticky-column {
+    position: sticky !important;
+    right: 0 !important;
+    background-color: white !important; /* Optional: to ensure it's visually distinct */
+    z-index: 1 !important; /* Ensure it appears on top of other cells if needed */
+  }
