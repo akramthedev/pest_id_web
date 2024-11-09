@@ -57,10 +57,10 @@
     transition: .2s all ease-in-out;
 }
 
-.caseD2 button:first-child{
+.caseD2 .eofvouszfv11{
     background-color: #5fa21b;
 }
-.caseD2 button:first-child:hover{
+.caseD2 .eofvouszfv11:hover{
     background-color: #477a14;
 
 }
@@ -76,12 +76,31 @@
     color: white;
     font-size: 14px;
 }
-.caseD2 button:last-child:hover, .caseD2 .annulerd2:hover{
+.caseD2 .eofvouszfv00{
+    background-color:white;
+    color: #5fa21b;
+    border: 1px solid #5fa21b;
+    font-size: 15px;
+    font-weight: 400;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.7rem;
+    cursor: pointer;
+    border-radius: 4rem;
+    transition: .2s all ease-in-out; 
 }
 
-.caseD2 button:last-child i{
+.caseD2 button:last-child i {
     color: #5fa21b;
     font-size: 14px;
+}
+
+.caseD2 .eofvouszfv00 i{
+    color: #5fa21b;
+    font-size: 16px;
 }
 .rowAddC{
     height: calc(100% - 50px);
@@ -103,6 +122,9 @@
     inset: 0;
     transition: 0.15s all ease-in-out;
 }
+
+
+
 .showpopUp{
     visibility: visible;
     opacity: 1;
@@ -119,6 +141,11 @@
     display: flex;
     flex-direction: column;
 }
+
+.popUp1{
+    height: 64vh;
+}
+
  
 .caseD11{
     height: 100px;
@@ -351,3 +378,7 @@
     background-color: white !important; /* Optional: to ensure it's visually distinct */
     z-index: 1 !important; /* Ensure it appears on top of other cells if needed */
   }
+
+.uefuvzou{
+    background-color: transparent !important;
+}

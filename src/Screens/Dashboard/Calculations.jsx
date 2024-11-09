@@ -9,6 +9,7 @@ import 'primeflex/primeflex.css';
 import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
+import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 
 
 
@@ -19,20 +20,51 @@ const options = [
 ];
 
 
-const actionTemplate = (params) => {
+const actionTemplate = (params, setCalculations, setRefresh, refresh,seteditClicked, editClicked , setcalcul_to_Edited) => {
+  
+  
   const handleEdit = () => {
-    // Implement your edit functionality here
     console.log('Edit:', params.row);
+    setcalcul_to_Edited(params.row);
+    seteditClicked(!editClicked);
   };
 
-  const handleDelete = () => {
-    // Implement your delete functionality here
-    console.log('Delete:', params.row);
+
+  const handleView = async () => {
+    console.log('View:', params.row);
+    // we show just images
+  };
+
+
+  const handleDelete = async () => {
+    setCalculations(prevCalculations => 
+      prevCalculations.filter(item => item.id !== params.row.id)
+    );
+    try{
+      const token = localStorage.getItem('token');
+      
+      const response = await axios.delete(`${ENDPOINT_API}predictions/${params.row.id}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if(response.status === 200){
+      }
+      else{
+        alert('Not deleted');
+        setRefresh(!refresh);
+      }
+    }
+    catch(e){
+      alert('Not deleted');
+      setRefresh(!refresh);
+      console.log(e.message);
+    }
   };
 
   return (
-    <div>
-      <button className='uoersf'   onClick={handleEdit}  >
+    <div className='uefuvzou'>
+      <button className='uoersf'   onClick={handleView}  >
         <i class="fa-solid fa-eye"></i>
       </button>
       <button className='uoersf'   onClick={handleEdit}  >
@@ -52,12 +84,14 @@ const Calculations = () => {
   const [IDplaque,setIDplaque] = useState("");
   const [Calculations, setCalculations] = useState([]);
   const [addClicked, setaddClicked] = useState(false);
+  const [editClicked, seteditClicked] = useState(false);
+  const [calcul_to_Edited, setcalcul_to_Edited] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageFile, setImageFile] = useState('');
   const [imageName, setImageName] = useState('');
   const [loading, setloading] = useState(false);
   const [loadingAllPred, setloadingAllPred] = useState(true);
-   
+  const [loadingEdit, setloadingEdit] = useState(false);
 
 
   const handleChange = (option) => {
@@ -113,8 +147,10 @@ const Calculations = () => {
         let i = 0;
         const transformedData = predictionsResponse.data.map(item => {
           i++;
+          let createdAt = formatDateForCreatedAt(item.created_at)
           return {
-            id : i,
+            idInc : i,
+            id : item.id,
             farm_id : item.farm_id ? item.farm_id : "---", 
             serre_id : item.serre_id ? item.serre_id : "---", 
             plaque_id : item.plaque_id ? item.plaque_id : "---", 
@@ -123,11 +159,10 @@ const Calculations = () => {
             class_B : item.images[0].class_B ? item.images[0].class_B : "---", 
             class_C : item.images[0].class_C ? item.images[0].class_C : "---", 
             image : item.images[0].name ? item.images[0].name : "---",
-            created_at: item.created_at ? item.created_at : "---",
+            created_at:  item.created_at ? createdAt : "---",
           };
         });
         setCalculations(transformedData);
-        console.log(transformedData);
       }
       
       else {
@@ -205,7 +240,8 @@ const Calculations = () => {
 
     
     const columns = [
-      { field: 'id', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
+      { field: 'id', headerName: 'idReal', width: 100, headerAlign: 'center', align: 'center',hide: true  },
+      { field: 'idInc', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
       { field: 'farm_id', headerName: 'Ferme', minWidth: 200, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'serre_id', headerName: 'Serre', minWidth: 200, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'plaque_id', headerName: 'ID Plaque', minWidth: 100, editable: false, headerAlign: 'center', align: 'center' },
@@ -213,16 +249,15 @@ const Calculations = () => {
       { field: 'class_A', headerName: 'Mouches', width: 100, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'class_B', headerName: 'Mineuses', width: 100, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'class_C', headerName: 'Thrips', width: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'created_at', headerName: 'Date création', width: 150, editable: false, headerAlign: 'center', align: 'center' },
+      { field: 'created_at', headerName: 'Date création', width: 120, editable: false, headerAlign: 'center', align: 'center' },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params), 
+        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setcalcul_to_Edited), 
         headerName: 'Actions', 
         minWidth: 200, 
         editable: false, 
         headerAlign: 'center', 
         align: 'center',
-        cellClassName: 'sticky-column'
       }
     ];
     
@@ -236,6 +271,72 @@ const Calculations = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
+
+      {/*   edit Calculation    */}
+      
+        <div className={editClicked ? "popUp  showpopUp" : "popUp "}>
+          <div className="contPopUp popUp1">
+            <div className="caseD11">
+              <span>Modifier&nbsp;le</span><span>&nbsp;Calcul</span>
+            </div>
+            {
+            calcul_to_Edited !== null && 
+              <>
+                <div className="rowInp">
+                  <label>ID Plaque</label>
+                  <input 
+                    onChange={(e)=>{setIDplaque(e.target.value)}}
+                    type="text"
+                    value={calcul_to_Edited.plaque_id}
+                    className='idplaque' 
+                    placeholder="Veuillez saisir l'id de la plaque..."
+                  />
+                </div>
+                <div className="rowInp">
+                  <label>Ferme</label>
+                  <Select
+                    value={selectedOption}
+                    onChange={handleChange}
+                    options={options}
+                    placeholder="Choisissez une option"
+                    isClearable
+                    styles={customStyles}
+                  />
+                </div>
+                <div className="rowInp">
+                  <label>Serre</label>
+                  <Select
+                    value={selectedOption}
+                    onChange={handleChange}
+                    options={options}
+                    placeholder="Choisissez une option"
+                    isClearable
+                    styles={customStyles}
+                  />
+                </div>
+              </>
+            }
+            <div className="rowInp rowInpModified">
+              <button className='jofzvno' disabled={loading} onClick={()=>{seteditClicked(false);setcalcul_to_Edited(null);}} >Annuler</button>
+              <button 
+                disabled={loadingEdit}
+                onClick={()=>{
+                  handleSauvegarde();
+                }}
+                className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
+              >
+              {
+                loadingEdit ? "Sauvegarde en cours..."
+                :
+                "Sauvegarder les modifications"
+              }
+              </button>
+            </div>
+          </div>
+        </div>
+      
+
+      {/*   Add new Calculation    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
         <div className="contPopUp">
           <div className="caseD11">
@@ -328,21 +429,33 @@ const Calculations = () => {
               }
             </div>
             <div className="caseD2">
-              <button onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un calcul</button>
-              <button><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un calcul</button>
+              <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>
           {
             Calculations !== null && 
-            <Box sx={{ height: "calc(100% - 120px)", width: '100%' }}>
+            <Box sx={{ height: "calc(100% - 120px)", width: '100%', outline: "none" }}>
               <DataGrid
-                columns={columns}
+                columns={columns.filter(column => column.field !== 'id')}
                 hideFooter 
                 rows={Calculations}
+                disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: false  }}
                 sx={{
                   '& .Mui-selected': {
-                    backgroundColor: '#e8ffd0 !important',  
+                    backgroundColor: 'white !important',
+                    outline: 'none',
+                    '&:hover': {
+                      backgroundColor: 'white !important', 
+                    },
+                  },
+                  '& .MuiDataGrid-row:hover': {
+                    backgroundColor: 'white',  
+                  },
+                  '& .MuiDataGrid-cell:focus': {
+                    outline: 'none',  
                   },
                 }}
               />

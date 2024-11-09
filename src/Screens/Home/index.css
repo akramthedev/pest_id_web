@@ -106,8 +106,11 @@
     font-weight: 800;
     margin-bottom: 15px;
 }
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Satisfy&display=swap');
 .row2{
+    font-weight: 800;
     height: 5rem;
+    font-family: "PT Serif", serif;
     margin-bottom: 2.5rem;
     color: #579519;
 }

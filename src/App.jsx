@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Home from "./Screens/Home/Home";
 import Login from "./Screens/Auth/Login";
+import Todo from './Todo';
 import Register from "./Screens/Auth/Register";
 import Dashboard from './Screens/Dashboard/Dashboard';
 import Clients from "./Screens/Dashboard/Clients";
@@ -35,7 +36,7 @@ function App() {
         <Route path="/broadcast" element={isAuthenticated ? <Broadcast /> : <Navigate to="/login" />} />
         <Route path="/activity" element={isAuthenticated ? <Activity /> : <Navigate to="/login" />} />
 
-
+        <Route path="/to-do" element={<Todo />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
