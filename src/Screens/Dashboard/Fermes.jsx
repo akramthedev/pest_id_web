@@ -104,7 +104,7 @@ const Fermes = () => {
   const [addNewSerreClick, setaddNewSerreClick] = useState(false);
   const [nameS, setNameS] = useState(null);
   const [sizeS, setSizeS] = useState(null);
- 
+  const [loaderDelete, setloaderDelete] = useState(false);
   
 
 
@@ -287,7 +287,7 @@ const Fermes = () => {
 
 
 
-    const handleSauvegardeEdit = async ()=> {
+    const handleSauvegardeModifications = async ()=> {
       if(FarmToEdit.name.length <= 2){
         alert("Le nom de la ferme ne peut pas être vide.");
       }
@@ -358,6 +358,36 @@ const Fermes = () => {
 
   
 
+    const deleteSingleSerre = async (IdSerre, idFarm)=>{
+      try{
+        setloaderDelete(true);
+
+        setDataSerre(prevData => prevData.filter(item => item.id !== IdSerre));
+
+        const token = localStorage.getItem('token');
+        const resp = await axios.delete(`${ENDPOINT_API}serres/${parseInt(IdSerre)}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(resp.status === 200){
+           
+        }
+        else{
+          fetchSerresByFarm(parseInt(idFarm));
+          alert('Oops, something went wrong ! ');
+        }
+      }
+      catch(e){
+        fetchSerresByFarm(parseInt(idFarm));
+        alert('Oops, something went wrong ! ');
+        console.log(e.message);
+      } finally{
+        setloaderDelete(false);
+      }
+    }
+
+
 
     
 
@@ -426,7 +456,7 @@ const Fermes = () => {
               <button 
                 disabled={loadingEdit}
                 onClick={()=>{
-                  handleSauvegardeEdit();
+                  handleSauvegardeModifications();
                 }}
                 className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
               >
@@ -544,7 +574,12 @@ const Fermes = () => {
                             <button>
                               <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button>
+                            <button
+                              disabled={loaderDelete}
+                              onClick={()=>{
+                                deleteSingleSerre(serre.id, serre.farm_id);
+                              }}
+                            >
                               <i class="fa-solid fa-trash"></i>
                             </button>
                           </div>
@@ -724,11 +759,18 @@ const Fermes = () => {
           </div>
           {
             Fermes !== null && 
-            <Box sx={{ height: "calc(100% - 120px)", width: '100%', outline: "none" }}>
+            <Box  
+              sx={{ 
+                height: "calc(100% - 120px)", 
+                width: '100%', 
+                outline: "none",
+                borderRadius: "20px !important"
+              }}
+            >
               <DataGrid
                 columns={columns.filter(column => column.field !== 'id')}
                 hideFooter 
-                
+                className='euosvuouof'
                 loading={loadingAllFarms}
                 rows={Fermes}
                 disableSelectionOnClick

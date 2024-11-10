@@ -196,3 +196,14 @@
     font-weight: 800;
     font-size: 5rem ;
 }
+
+.contHome2{
+    width: 100%;
+    margin-bottom: 20px;
+    height: calc(100% - 160px);
+    display: flex;
+    align-items: center;
+    background-color: red;
+    padding-top: 5vh;
+    flex-direction: column;
+}

@@ -12,6 +12,8 @@ import Calculations from "./Screens/Dashboard/Calculations";
 import Fermes from "./Screens/Dashboard/Fermes";
 import Broadcast from "./Screens/Dashboard/Broadcast";
 import Activity from "./Screens/Dashboard/Activity";
+import About from "./Screens/About/About";
+
 
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
         <Route path="/become-member" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/about" element={<About />} />
 
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />

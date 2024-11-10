@@ -15,11 +15,12 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 
 
 
-const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm) => {
+const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm,farms,setGreenhouses) => {
   
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
+
     if(params.row.farm_id !== null && params.row.farm_id !== "---"){
       setSelectedFarm({ 
         value : params.row.farm_id,
@@ -30,6 +31,20 @@ const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditCli
         farm_id : params.row.farm_id,
         farm_name : params.row.farm_name
       });
+
+        
+      const selectedFarmX = farms.find(farm => farm.id === params.row.farm_id);
+      if (selectedFarmX) {
+        const greenhouseOptions = selectedFarmX.serres.map(serre => ({
+          value: serre.id,
+          label: serre.name
+        }));
+        setGreenhouses(greenhouseOptions);
+      } else {
+        setGreenhouses([]);
+      }
+
+
       if(params.row.serre_id !== null && params.row.serre_id !== "---"){
         setSelectedGreenhouse({
           value : params.row.serre_id,
@@ -42,13 +57,50 @@ const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditCli
         });
       }
     }
-    
+    setCalculToEdit(params.row);
     seteditClicked(!editClicked);
   };
 
 
   
   const handleView = async () => {
+
+    if(params.row.farm_id !== null && params.row.farm_id !== "---"){
+      setSelectedFarm({ 
+        value : params.row.farm_id,
+        label : params.row.farm_name
+      });
+      setCalculToEdit({
+        ...calculToEdit, 
+        farm_id : params.row.farm_id,
+        farm_name : params.row.farm_name
+      });
+
+
+      const selectedFarmX = farms.find(farm => farm.id === params.row.farm_id);
+      if (selectedFarmX) {
+        const greenhouseOptions = selectedFarmX.serres.map(serre => ({
+          value: serre.id,
+          label: serre.name
+        }));
+        setGreenhouses(greenhouseOptions);
+      } else {
+        setGreenhouses([]);
+      }
+
+
+      if(params.row.serre_id !== null && params.row.serre_id !== "---"){
+        setSelectedGreenhouse({
+          value : params.row.serre_id,
+          label : params.row.serre_name
+        });
+        setCalculToEdit({
+          ...calculToEdit, 
+          serre_id : params.row.serre_id,
+          serre_name : params.row.serre_name
+        });
+      }
+    }
 
     setCalculToEdit(params.row);
     setshowClicked(!showClicked);
@@ -281,10 +333,6 @@ const Calculations = () => {
       if(farmId.value !== null){
         setSelectedFarm(farmId);
         const selectedFarm = farms.find(farm => farm.id === farmId.value);
-        console.log("Ferme : ");
-        console.log(farmId);
-        console.log("Serre : ");
-        console.log(selectedFarm.serres);
 
         if (selectedFarm) {
           const greenhouseOptions = selectedFarm.serres.map(serre => ({
@@ -307,11 +355,32 @@ const Calculations = () => {
       try{
         setloadingEdit(true);
         const token = localStorage.getItem('token');
-        console.log(calculToEdit);
+
+        let dataJOJO = {
+          plaque_id : calculToEdit.plaque_id,
+          farm_id : selectedFarm && selectedFarm.value, 
+          serre_id : selectedGreenhouse && selectedGreenhouse.value
+        }
+        const response = await axios.patch(`${ENDPOINT_API}predictions/${parseInt(calculToEdit.id)}`, dataJOJO , {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(response.status === 200){
+          seteditClicked(false);
+          setCalculToEdit(null);
+          setSelectedFarm(null);
+          setSelectedGreenhouse(null);
+          fetchDataPrediction();
+        }
+        else{
+          alert('Oops, something went wrong !');
+        }
 
       }
       catch(e){
         console.log(e.message);
+        alert('Oops, something went wrong !');
       } finally{
         setloadingEdit(false);
       }
@@ -393,7 +462,7 @@ const Calculations = () => {
       { field: 'created_at', headerName: 'Date création', width: 120, editable: false, headerAlign: 'center', align: 'center' },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm), 
+        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setGreenhouses), 
         headerName: 'Actions', 
         minWidth: 200, 
         editable: false, 
@@ -711,13 +780,21 @@ const Calculations = () => {
           </div>
           {
             Calculations !== null && 
-            <Box sx={{ height: "calc(100% - 120px)", width: '100%', outline: "none" }}>
+            <Box  
+              sx={{ 
+                height: "calc(100% - 120px)", 
+                width: '100%', 
+                outline: "none",
+                borderRadius: "20px !important",
+              }}
+            >
               <DataGrid
                 columns={columns.filter(column => !['id', 'farm_id', 'serre_id'].includes(column.field))}
                 hideFooter 
                 rows={Calculations}
                 loading={loadingAllPred}
                 disableSelectionOnClick
+                className='euosvuouof'
                 experimentalFeatures={{ newEditingApi: false  }}
                 components={{
                   NoRowsOverlay: () => <div>Aucune donnée</div>,  

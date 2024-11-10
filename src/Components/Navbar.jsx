@@ -72,8 +72,8 @@ const NavBar = () => {
               </div>
             </div>
         }
-        {isProfileOpen && (
-          <div className="profile-popup" ref={profileRef}>
+       
+          <div className={isProfileOpen ? "profile-popup showprofile-popup" : "profile-popup"} ref={profileRef}>
             <div className="profile-header">
               <img                
                   src="https://res.cloudinary.com/dqprleeyt/image/upload/v1702216550/akram_tp6iku.jpg" 
@@ -84,13 +84,50 @@ const NavBar = () => {
                 <div className="profile-email">seasoned@gmail.com</div>
               </div>
             </div>
-           
-            <div className="profile-item"> 
+          
+
+            
+            <div 
+              onClick={()=>{
+                navigate("/activity");
+              }}
+              className="profile-item"> 
+              <div className="uevuofz">
+                <i class="fa-solid fa-book"></i>
+              </div> 
+              Journal d'activité
+            </div>
+
+            <div
+              onClick={()=>{
+                navigate("/broadcast");
+              }}
+              className="profile-item"> 
+              <div className="uevuofz">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div> 
+              Station Broadcast
+            </div>
+
+
+ 
+            
+            <div 
+              onClick={()=>{
+                navigate("/setting");
+              }}
+              className="profile-item"> 
               <div className="uevuofz">
                 <i class="fa-solid fa-gear"></i>
-              </div> Paramètres</div>
+              </div> 
+              Paramètres
+            </div>
+
+
+            
  
-            <div className="profile-item"
+            <div 
+              className="profile-item"
               onClick={()=>{
                 localStorage.removeItem('token');
                 localStorage.removeItem('userId');
@@ -102,7 +139,7 @@ const NavBar = () => {
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
               </div> Déconnexion</div>
           </div>
-        )}
+       
       </div>
     </div>
   );

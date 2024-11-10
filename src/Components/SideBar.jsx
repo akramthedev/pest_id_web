@@ -38,24 +38,6 @@ const SideBar = () => {
 
 
 
-      <div 
-        className={`rowOI ${location.pathname === "/clients" ? 'rowOIactiavted' : ''}`}
-        onClick={()=>{
-          navigate("/clients");
-        }}
-      >
-        <div  
-          className={`icons ${location.pathname === "/clients" ? 'textActi' : ''}`}
-        >
-          <i class="fa-solid fa-user-group"></i>
-        </div>
-        <div  
-          className={`textx ${location.pathname === "/clients" ? 'textActi' : ''}`}
-        >
-          Mes Clients
-        </div>
-      </div>
-
 
 
 
@@ -78,6 +60,28 @@ const SideBar = () => {
         </div>
       </div>
 
+
+
+
+
+
+      <div 
+        className={`rowOI ${location.pathname === "/clients" ? 'rowOIactiavted' : ''}`}
+        onClick={()=>{
+          navigate("/clients");
+        }}
+      >
+        <div  
+          className={`icons ${location.pathname === "/clients" ? 'textActi' : ''}`}
+        >
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+        <div  
+          className={`textx ${location.pathname === "/clients" ? 'textActi' : ''}`}
+        >
+          Mes Clients
+        </div>
+      </div>
 
 
 
@@ -143,52 +147,7 @@ const SideBar = () => {
           Mes Fermes
         </div>
       </div>
-
-
-
-
-
-      <div 
-        className={`rowOI ${location.pathname === "/broadcast" ? 'rowOIactiavted' : ''}`} 
-        onClick={()=>{
-          navigate("/broadcast");
-        }}
-      >
-        <div  
-          className={`icons ${location.pathname === "/broadcast" ? 'textActi' : ''}`}
-        >
-        <i class="fa-solid fa-bullhorn"></i>
-        </div>
-        <div  
-          className={`textx ${location.pathname === "/broadcast" ? 'textActi' : ''}`}
-        >
-        Station Broadcast
-        </div>
-      </div>
-       
-      
-
-
-
-      <div 
-        className={`rowOI ${location.pathname === "/activity" ? 'rowOIactiavted' : ''}`} 
-        onClick={()=>{
-          navigate("/activity");
-        }}
-      >
-        <div  
-          className={`icons ${location.pathname === "/activity" ? 'textActi' : ''}`}
-        >
-        <i class="fa-solid fa-align-right"></i>
-        </div>
-        <div  
-          className={`textx ${location.pathname === "/activity" ? 'textActi' : ''}`}
-        >
-        Journal d'activité
-        </div>
-      </div>
-       
-
+ 
 
       
     </div>
