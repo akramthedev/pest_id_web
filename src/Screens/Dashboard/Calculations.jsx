@@ -13,26 +13,46 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 
 
 
-const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
-];
 
 
-const actionTemplate = (params, setCalculations, setRefresh, refresh,seteditClicked, editClicked , setcalcul_to_Edited) => {
+const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm) => {
   
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
-    setcalcul_to_Edited(params.row);
+    if(params.row.farm_id !== null && params.row.farm_id !== "---"){
+      setSelectedFarm({ 
+        value : params.row.farm_id,
+        label : params.row.farm_name
+      });
+      setCalculToEdit({
+        ...calculToEdit, 
+        farm_id : params.row.farm_id,
+        farm_name : params.row.farm_name
+      });
+      if(params.row.serre_id !== null && params.row.serre_id !== "---"){
+        setSelectedGreenhouse({
+          value : params.row.serre_id,
+          label : params.row.serre_name
+        });
+        setCalculToEdit({
+          ...calculToEdit, 
+          serre_id : params.row.serre_id,
+          serre_name : params.row.serre_name
+        });
+      }
+    }
+    
     seteditClicked(!editClicked);
   };
 
 
+  
   const handleView = async () => {
-    console.log('View:', params.row);
-    // we show just images
+
+    setCalculToEdit(params.row);
+    setshowClicked(!showClicked);
+
   };
 
 
@@ -85,18 +105,23 @@ const Calculations = () => {
   const [Calculations, setCalculations] = useState([]);
   const [addClicked, setaddClicked] = useState(false);
   const [editClicked, seteditClicked] = useState(false);
-  const [calcul_to_Edited, setcalcul_to_Edited] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [calculToEdit, setCalculToEdit] = useState(null);
   const [imageFile, setImageFile] = useState('');
   const [imageName, setImageName] = useState('');
   const [loading, setloading] = useState(false);
   const [loadingAllPred, setloadingAllPred] = useState(true);
+  const [loadingAllFarms, setloadingAllFarms] = useState(true);
   const [loadingEdit, setloadingEdit] = useState(false);
+  const [farms, setFarms] = useState([]);
+  const [selectedFarm, setSelectedFarm] = useState('');
+  const [greenhouses, setGreenhouses] = useState([]);
+  const [selectedGreenhouse, setSelectedGreenhouse] = useState('');
+  const [options, setoptions] = useState([]);
+  const [showClicked,setshowClicked] = useState(false);
 
 
-  const handleChange = (option) => {
-    setSelectedOption(option);
-  };
+
+  
 
   const customStyles = {
     control: (provided, state) => ({
@@ -130,57 +155,167 @@ const Calculations = () => {
 
 
 
+  
+
   const fetchDataPrediction = async () => {
     try {
       setloadingAllPred(true);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
-      const token = localStorage.getItem('token'); 
-
+      const token = localStorage.getItem('token');
+  
+      // Fetch the predictions data
       const predictionsResponse = await axios.get(`${ENDPOINT_API}users/${userIdNum}/predictions/with/images`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
+  
+      
       if (predictionsResponse.status === 200) {
         let i = 0;
-        const transformedData = predictionsResponse.data.map(item => {
-          i++;
-          let createdAt = formatDateForCreatedAt(item.created_at)
-          return {
-            idInc : i,
-            id : item.id,
-            farm_id : item.farm_id ? item.farm_id : "---", 
-            serre_id : item.serre_id ? item.serre_id : "---", 
-            plaque_id : item.plaque_id ? item.plaque_id : "---", 
-            result : `${item.result}%` ? item.result : "---", 
-            class_A : item.images[0].class_A ? item.images[0].class_A : "---", 
-            class_B : item.images[0].class_B ? item.images[0].class_B : "---", 
-            class_C : item.images[0].class_C ? item.images[0].class_C : "---", 
-            image : item.images[0].name ? item.images[0].name : "---",
-            created_at:  item.created_at ? createdAt : "---",
-          };
-        });
+        const transformedData = await Promise.all(
+          predictionsResponse.data.map(async (item, index) => {
+            i++;
+            let createdAt = formatDateForCreatedAt(item.created_at);
+      
+            const namesResponses = await axios
+              .get(`${ENDPOINT_API}getNames/${item.farm_id}/${item.serre_id}`, {
+                headers: { 'Authorization': `Bearer ${token}` },
+              })
+              .catch(() => ({ data: { farm_name: "---", serre_name: "---" } }));
+      
+            return {
+              idInc: index + 1,
+              id: item.id,
+              farm_id: item.farm_id || "---",
+              serre_id: item.serre_id || "---",
+              plaque_id: item.plaque_id || "---",
+              result: item.result ? `${item.result}%` : "---",
+              class_A: item.images[0]?.class_A || "---",
+              class_B: item.images[0]?.class_B || "---",
+              class_C: item.images[0]?.class_C || "---",
+              image: item.images[0]?.name || "---",
+              created_at: createdAt || "---",
+              farm_name: namesResponses.data.farm_name,
+              serre_name: namesResponses.data.serre_name,
+            };
+          })
+        );
+      
         setCalculations(transformedData);
       }
       
+      
       else {
-        alert('Oops, something went wrong ! ');
+        alert('Oops, something went wrong!');
       }
+  
     } catch (error) {
-      alert('Oops, something went wrong ! ');
-      console.error('Erreur :', error.message);
+      alert('Oops, something went wrong!');
+      console.error('Erreur:', error.message);
     } finally {
       setloadingAllPred(false);
     }
   };
+  
 
+  
+
+
+  const fetchDataFarmsWithSerres = async () => {
+    try {
+      setloadingAllFarms(true);
+      setoptions([]);
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token'); 
+
+      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhouses/${userIdNum}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.status === 200) {
+          console.log(response.data);
+          setFarms(response.data);
+          console.log(response.data);
+      
+          const newOptions = response.data.map((farm) => ({
+              value: farm.id,
+              label: farm.name,
+          }));
+      
+          setoptions(newOptions);
+      }
+      else{
+        console.log("Not Fetched All Farms With Their Serres");
+      }
+    } catch (error) {
+      console.error('Erreur :', error.message);
+    } finally {
+      setloadingAllFarms(false);
+    }
+  };
+
+  
 
 
   useEffect(() => {
     fetchDataPrediction();
   }, [refresh]);
+
+
+  useEffect(() => {
+    fetchDataFarmsWithSerres();
+  }, []);
+
+
+
+
+  const handleFarmChange = (farmId) => {
+
+      setSelectedGreenhouse(null);
+
+      if(farmId.value !== null){
+        setSelectedFarm(farmId);
+        const selectedFarm = farms.find(farm => farm.id === farmId.value);
+        console.log("Ferme : ");
+        console.log(farmId);
+        console.log("Serre : ");
+        console.log(selectedFarm.serres);
+
+        if (selectedFarm) {
+          const greenhouseOptions = selectedFarm.serres.map(serre => ({
+            value: serre.id,
+            label: serre.name
+          }));
+          setGreenhouses(greenhouseOptions);
+        } else {
+          setGreenhouses([]);
+        }
+      }
+      else{
+        setSelectedFarm([]);
+        setGreenhouses([]);
+      }
+  };
+
+
+    const handleSauvegardeModifications = async()=>{
+      try{
+        setloadingEdit(true);
+        const token = localStorage.getItem('token');
+        console.log(calculToEdit);
+
+      }
+      catch(e){
+        console.log(e.message);
+      } finally{
+        setloadingEdit(false);
+      }
+    }
 
     
 
@@ -195,13 +330,16 @@ const Calculations = () => {
           const token = localStorage.getItem('token');
           const userIdNum =  localStorage.getItem('userId');
 
+          let idFarm = selectedFarm ? parseInt(selectedFarm.value) : null;
+          let idSerre = selectedGreenhouse ? parseInt(selectedGreenhouse.value) : null;
+
           let formData = {
             image : imageFile, 
             user_id : parseInt(userIdNum), 
             plaque_id : IDplaque, 
             created_at : new Date().toISOString().slice(0, 19).replace('T', ' '),
-            serre_id : null,
-            farm_id : null
+            serre_id : idSerre,
+            farm_id : idFarm
           };
 
           const response = await axios.post(`${ENDPOINT_API}create_prediction`, formData, {
@@ -215,7 +353,8 @@ const Calculations = () => {
             setRefresh(!refresh);
             setaddClicked(false);
             setImageName(null);
-            setSelectedOption(null);
+            setSelectedFarm(null);
+            setSelectedGreenhouse(null);
             setIDplaque("");
             setImageFile("");
             setaddClicked(false);
@@ -242,8 +381,10 @@ const Calculations = () => {
     const columns = [
       { field: 'id', headerName: 'idReal', width: 100, headerAlign: 'center', align: 'center',hide: true  },
       { field: 'idInc', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
-      { field: 'farm_id', headerName: 'Ferme', minWidth: 200, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'serre_id', headerName: 'Serre', minWidth: 200, editable: false, headerAlign: 'center', align: 'center' },
+      { field: 'farm_id', headerName: 'FermeID', minWidth: 200, editable: false, headerAlign: 'center', align: 'center',hide: true  },
+      { field: 'serre_id', headerName: 'SerreID', minWidth: 200, editable: false, headerAlign: 'center', align: 'center',hide: true  },
+      { field: 'farm_name', headerName: 'Ferme', minWidth: 200, editable: false, headerAlign: 'center', align: 'center'  },
+      { field: 'serre_name', headerName: 'Serre', minWidth: 200, editable: false, headerAlign: 'center', align: 'center'  },
       { field: 'plaque_id', headerName: 'ID Plaque', minWidth: 100, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'result', headerName: 'Résultat', width: 100, editable: false, headerAlign: 'center', align: 'center' },
       { field: 'class_A', headerName: 'Mouches', width: 100, editable: false, headerAlign: 'center', align: 'center' },
@@ -252,7 +393,7 @@ const Calculations = () => {
       { field: 'created_at', headerName: 'Date création', width: 120, editable: false, headerAlign: 'center', align: 'center' },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setcalcul_to_Edited), 
+        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm), 
         headerName: 'Actions', 
         minWidth: 200, 
         editable: false, 
@@ -272,22 +413,30 @@ const Calculations = () => {
       <NavBar /> 
       <SideBar />
 
+
+
+
       {/*   edit Calculation    */}
-      
-        <div className={editClicked ? "popUp  showpopUp" : "popUp "}>
+
+        <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>
           <div className="contPopUp popUp1">
             <div className="caseD11">
               <span>Modifier&nbsp;le</span><span>&nbsp;Calcul</span>
             </div>
             {
-            calcul_to_Edited !== null && 
+            calculToEdit !== null && 
               <>
                 <div className="rowInp">
                   <label>ID Plaque</label>
                   <input 
-                    onChange={(e)=>{setIDplaque(e.target.value)}}
+                    onChange={(e)=>{
+                      setCalculToEdit({
+                        ...calculToEdit,
+                        plaque_id : e.target.value
+                      })
+                    }}
                     type="text"
-                    value={calcul_to_Edited.plaque_id}
+                    value={calculToEdit.plaque_id}
                     className='idplaque' 
                     placeholder="Veuillez saisir l'id de la plaque..."
                   />
@@ -295,33 +444,33 @@ const Calculations = () => {
                 <div className="rowInp">
                   <label>Ferme</label>
                   <Select
-                    value={selectedOption}
-                    onChange={handleChange}
+                    value={selectedFarm}
+                    onChange={(itemValue) => handleFarmChange(itemValue)}
                     options={options}
+                    disabled={loadingAllFarms}
                     placeholder="Choisissez une option"
-                    isClearable
                     styles={customStyles}
                   />
                 </div>
                 <div className="rowInp">
                   <label>Serre</label>
                   <Select
-                    value={selectedOption}
-                    onChange={handleChange}
-                    options={options}
+                    value={selectedGreenhouse}
+                    onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
+                    options={greenhouses}
+                    disabled={!selectedFarm}
                     placeholder="Choisissez une option"
-                    isClearable
                     styles={customStyles}
                   />
                 </div>
               </>
             }
             <div className="rowInp rowInpModified">
-              <button className='jofzvno' disabled={loading} onClick={()=>{seteditClicked(false);setcalcul_to_Edited(null);}} >Annuler</button>
+              <button className='jofzvno' disabled={loading} onClick={()=>{seteditClicked(false);setCalculToEdit(null);setSelectedFarm(null);setSelectedGreenhouse(null);}} >Annuler</button>
               <button 
                 disabled={loadingEdit}
                 onClick={()=>{
-                  handleSauvegarde();
+                  handleSauvegardeModifications();
                 }}
                 className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
               >
@@ -335,6 +484,130 @@ const Calculations = () => {
           </div>
         </div>
       
+
+
+
+
+        {/*   show Calculation    */}
+              
+        <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
+                  <div className="contPopUp popUp1">
+            <div className="caseD11">
+              <span>Informations&nbsp;du</span><span>&nbsp;Calcul</span>
+            </div>
+            {
+            calculToEdit !== null && 
+              <>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Ferme
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.farm_name
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Serre
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.serre_name
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    ID plaque
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.plaque_id
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Résultat
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.result
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Effectif des Mouches
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.class_A
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Effectif des Mineuses
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.class_B
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Effectif des Thrips
+                  </label>
+                  <label>
+                    {
+                      calculToEdit.class_C
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                   Image du calcul
+                  </label>
+                  <button 
+                    style={{
+                      cursor : "pointer", 
+                      background : "#f4f4f4",
+                      border : "1px solid #dbdbdb", 
+                      height : "24px", 
+                      padding : "0 1rem", 
+                      alignItems : "center", 
+                      justifyContent : "center", 
+                      display : "center"
+                    }}
+                  >
+                    Voir l'image
+                  </button>
+                </div>
+              </>
+            }
+            <div className="rowInp rowInpModified">
+              <button className='jofzvno' disabled={loading} onClick={()=>{setshowClicked(false);setCalculToEdit(null);}} >Fermer</button>
+              <button 
+                onClick={()=>{
+                  setshowClicked(false);
+                  seteditClicked(true);
+                }}
+                className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
+              >
+               Modifier le calcul
+              </button>
+            </div>
+          </div>
+        </div>
+      
+
+
+
+
 
       {/*   Add new Calculation    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
@@ -353,27 +626,29 @@ const Calculations = () => {
             />
           </div>
           <div className="rowInp">
-            <label>Ferme</label>
-            <Select
-              value={selectedOption}
-              onChange={handleChange}
-              options={options}
-              placeholder="Choisissez une option"
-              isClearable
-              styles={customStyles}
-            />
-          </div>
-          <div className="rowInp">
-            <label>Serre</label>
-            <Select
-              value={selectedOption}
-              onChange={handleChange}
-              options={options}
-              placeholder="Choisissez une option"
-              isClearable
-              styles={customStyles}
-            />
-          </div>
+                  <label>Ferme</label>
+                  <Select
+                    value={selectedFarm}
+                    onChange={(itemValue) => handleFarmChange(itemValue)}
+                    options={options}
+                    disabled={loadingAllFarms}
+                    placeholder="Choisissez une option"
+                    
+                    styles={customStyles}
+                  />
+                </div>
+                <div className="rowInp">
+                  <label>Serre</label>
+                  <Select
+                    value={selectedGreenhouse}
+                    onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
+                    options={greenhouses}
+                    disabled={!selectedFarm}
+                    placeholder="Choisissez une option"
+                    
+                    styles={customStyles}
+                  />
+                </div>
           <div className="rowInp">
             <label
             className='ofnov'
@@ -400,7 +675,7 @@ const Calculations = () => {
             </label>
           </div>
           <div className="rowInp rowInpModified">
-            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFile(null);setSelectedOption(null);setIDplaque("");}} >Annuler</button>
+            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFile(null);setIDplaque(""); setSelectedFarm(null);setSelectedGreenhouse(null);}} >Annuler</button>
             <button 
               disabled={loading}
               onClick={()=>{
@@ -429,7 +704,7 @@ const Calculations = () => {
               }
             </div>
             <div className="caseD2">
-              <button  title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  disabled={loadingAllPred} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un calcul</button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
@@ -438,11 +713,15 @@ const Calculations = () => {
             Calculations !== null && 
             <Box sx={{ height: "calc(100% - 120px)", width: '100%', outline: "none" }}>
               <DataGrid
-                columns={columns.filter(column => column.field !== 'id')}
+                columns={columns.filter(column => !['id', 'farm_id', 'serre_id'].includes(column.field))}
                 hideFooter 
                 rows={Calculations}
+                loading={loadingAllPred}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: false  }}
+                components={{
+                  NoRowsOverlay: () => <div>Aucune donnée</div>,  
+                }}
                 sx={{
                   '& .Mui-selected': {
                     backgroundColor: 'white !important',

@@ -14,25 +14,30 @@ import LVG from './Loader.gif'
 
 
 const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
+  { value: 'fruit', label: "Fruit" },
+  { value: 'vegetable', label: 'Légume' },
+  { value: 'flower', label: 'Fleur' },
 ];
 
 
-const actionTemplate = (params, setFermes, setRefresh, refresh,seteditClicked, editClicked , setcalcul_to_Edited) => {
+
+const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm) => {
   
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
-    setcalcul_to_Edited(params.row);
+    setFarmToEdit(params.row);
     seteditClicked(!editClicked);
   };
 
 
   const handleView = async () => {
-    console.log('View:', params.row);
-    // we show just images
+
+    setFarmToShow(params.row);
+    setFarmToEdit(params.row);
+    setshowClicked(!showClicked);
+    fetchSerresByFarm(params.row.id);
+
   };
 
 
@@ -43,7 +48,7 @@ const actionTemplate = (params, setFermes, setRefresh, refresh,seteditClicked, e
     try{
       const token = localStorage.getItem('token');
       
-      const response = await axios.delete(`${ENDPOINT_API}predictions/${params.row.id}`,{
+      const response = await axios.delete(`${ENDPOINT_API}farms/${params.row.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -81,42 +86,57 @@ const actionTemplate = (params, setFermes, setRefresh, refresh,seteditClicked, e
 const Fermes = () => {
 
   const [refresh,setRefresh] = useState(false);
+  const [showClicked,setshowClicked] = useState(false);
   const [Appelation,setAppelation] = useState("");
   const [Fermes, setFermes] = useState([]);
   const [addClicked, setaddClicked] = useState(false);
   const [editClicked, seteditClicked] = useState(false);
-  const [calcul_to_Edited, setcalcul_to_Edited] = useState(null);
+  const [FarmToEdit, setFarmToEdit] = useState(null);
+  const [FarmToShow, setFarmToShow] = useState(null);
   const [localisation, setLocalisation] = useState(null);
   const [Size, setSize] = useState("");
   const [loadingCreation, setloading] = useState(false);
+  const [loadingCreationOf_New_Serre, setloadingCreationOf_New_Serre] = useState(false);
   const [loadingAllFarms, setloadingAllFarms] = useState(true);
   const [loadingEdit, setloadingEdit] = useState(false);
-
-
-  const handleChange = (option) => {
-    setLocalisation(option);
-  };
-
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      height : "45px",
-      border: '1px solid #ccc',     
-      boxShadow: state.isFocused ? 'none' : 'none', 
-      '&:hover': { border: '1px solid #ccc' } 
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? '#5fa21b' : '#fff',
-      color: state.isSelected ? '#fff' : '#333',
-      '&:hover': state.isSelected ? { backgroundColor: '#5fa21b', color: '#fff' } : { backgroundColor: '#c9ff93' },
-    }),
-  };
+  const [dataSerre, setDataSerre] = useState(null);
+  const [loadingdataSerre, setLoadingDataSerre] = useState(false);
+  const [addNewSerreClick, setaddNewSerreClick] = useState(false);
+  const [nameS, setNameS] = useState(null);
+  const [sizeS, setSizeS] = useState(null);
+ 
+  
 
 
  
-
-
+  const fetchSerresByFarm = async(id)=>{
+    setDataSerre(null);
+      try{
+        setLoadingDataSerre(true);
+        
+        const token = localStorage.getItem('token');
+        const response2 = await axios.get(`${ENDPOINT_API}serres-per-farm/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        if (response2.status === 200) {
+          setDataSerre(response2.data);
+        }
+        else{
+          setDataSerre([]);
+        }
+      }
+      catch(e){
+        setDataSerre([]);
+        console.log(e.message);
+      } finally{
+        setLoadingDataSerre(false);
+      }
+    
+  }
+ 
 
 
   const fetchDataPrediction = async () => {
@@ -137,7 +157,6 @@ const Fermes = () => {
         const transformedData = response.data.map(item => {
           i++;
           let createdAt = formatDateForCreatedAt(item.created_at)
-          console.warn(createdAt);
           return {
             idInc : i,
             id : item.id,
@@ -168,6 +187,55 @@ const Fermes = () => {
   }, [refresh]);
 
     
+
+
+  const handleCreatedNewSerre =  async()=>{
+    if(nameS.length <= 2){
+      alert("Le nom de la serre ne peut pas être vide.");
+    }
+    else{
+      setloadingCreationOf_New_Serre(true);
+      try{
+         
+        const token = localStorage.getItem('token');
+        
+        const resp0 = await axios.post(`${ENDPOINT_API}serres2`,
+          {
+            farm_id : FarmToShow.id,
+            name : nameS ? nameS : "Serre X", 
+            size : sizeS ? parseInt(sizeS) : 0,
+          },{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if(resp0.status === 201){
+          setloadingCreationOf_New_Serre(false);
+          setaddNewSerreClick(false);
+          setshowClicked(true);
+          setNameS('');
+          setSizeS('');
+          fetchSerresByFarm(FarmToShow.id);
+        }
+        else{
+          setloadingCreationOf_New_Serre(false);
+          setaddNewSerreClick(false);
+          setshowClicked(true);
+          alert('Oops, not created ! ');
+        }
+      }
+      catch(e){
+        alert('Oops, not created ! ')
+        console.log(e.message);
+        setloadingCreationOf_New_Serre(false);
+        setaddNewSerreClick(false);
+        setshowClicked(true);
+      }
+    }
+  }
+
+
 
     const handleSauvegarde = async ()=> {
       if(Appelation.length <= 2){
@@ -213,6 +281,55 @@ const Fermes = () => {
 
       }
     }
+
+
+
+
+
+
+    const handleSauvegardeEdit = async ()=> {
+      if(FarmToEdit.name.length <= 2){
+        alert("Le nom de la ferme ne peut pas être vide.");
+      }
+      else{
+        try{  
+          setloadingEdit(true);
+
+          const token = localStorage.getItem('token');
+
+          console.log(FarmToEdit);
+
+          let dataX = {
+            name : FarmToEdit.name, 
+            size : parseInt(FarmToEdit.size),
+            location : FarmToEdit.location, 
+          }
+
+          const resp0 = await axios.patch(`${ENDPOINT_API}farms/${FarmToEdit.id}`, dataX, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if(resp0.status === 200){
+            setRefresh(!refresh);
+            setFarmToEdit(null);
+            setFarmToShow(null);
+            seteditClicked(false);
+          }        
+          else{
+            alert('Oops, somethign went wrong ! ');
+          }    
+        }
+        catch(e){
+          alert('Oops, somethign went wrong ! ');
+          console.log(e.message);
+        }finally{
+          setloadingEdit(false);
+        }
+
+      }
+    }
  
 
 
@@ -228,7 +345,7 @@ const Fermes = () => {
       { field: 'created_at', headerName: 'Date création', width: 200, editable: false, headerAlign: 'center', align: 'center' },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setcalcul_to_Edited), 
+        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm), 
         headerName: 'Actions', 
         minWidth: 200, 
         editable: false, 
@@ -239,6 +356,7 @@ const Fermes = () => {
     
     
 
+  
 
 
     
@@ -248,36 +366,67 @@ const Fermes = () => {
       <NavBar /> 
       <SideBar />
 
-      {/*   edit Calculation    */}
-      
+      {/*   edit Farm    */}
         <div className={editClicked ? "popUp  showpopUp" : "popUp "}>
           <div className="contPopUp popUp1">
             <div className="caseD11">
-              <span>Modifier&nbsp;le</span><span>&nbsp;Calcul</span>
+              <span>Modifier&nbsp;la</span><span>&nbsp;Ferme</span>
             </div>
             {
-            calcul_to_Edited !== null && 
+            
+              FarmToEdit !== null &&
               <>
                 <div className="rowInp">
-                  <label>ID Plaque</label>
+                  <label>Appelation</label>
                   <input 
-                    onChange={(e)=>{setAppelation(e.target.value)}}
+                    onChange={(e)=>{setFarmToEdit({
+                      ...FarmToEdit, 
+                      name : e.target.value
+                    })}}
+                    maxLength={60}
                     type="text"
-                    value={calcul_to_Edited.plaque_id}
+                    value={FarmToEdit.name}
                     className='idplaque' 
-                    placeholder="Veuillez saisir l'id de la plaque..."
+                    placeholder="Veuillez saisir le nom de la ferme..."
                   />
                 </div>
-                 
-                 
+                <div className="rowInp">
+                  <label>Localisation</label>
+                  <input 
+                     onChange={(e)=>{setFarmToEdit({
+                      ...FarmToEdit, 
+                      location : e.target.value
+                    })}}
+                    maxLength={60}
+                    type="text"
+                    value={FarmToEdit.location}
+                    className='idplaque' 
+                    placeholder="Veuillez saisir la localisation de la ferme..."
+                  />
+                </div>
+                <div className="rowInp">
+                  <label>Mesure en m²</label>
+                  <input 
+                     onChange={(e)=>{setFarmToEdit({
+                      ...FarmToEdit, 
+                      size : e.target.value
+                    })}}
+                    type="text"
+                    maxLength={6}
+                    value={FarmToEdit.size.toString()}
+                    className='idplaque' 
+                    placeholder="Veuillez saisir la mesure de la ferme..."
+                  />
+                </div>
               </>
-            }
+              
+            }            
             <div className="rowInp rowInpModified">
-              <button className='jofzvno' disabled={loadingEdit} onClick={()=>{seteditClicked(false);setcalcul_to_Edited(null);}} >Annuler</button>
+              <button className='jofzvno' disabled={loadingEdit} onClick={()=>{seteditClicked(false);setFarmToEdit(null);setFarmToShow(null);}} >Annuler</button>
               <button 
                 disabled={loadingEdit}
                 onClick={()=>{
-                  handleSauvegarde();
+                  handleSauvegardeEdit();
                 }}
                 className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
               >
@@ -292,7 +441,141 @@ const Fermes = () => {
         </div>
       
 
-      {/*   Add new Calculation    */}
+
+
+      {/*   show a Farm    */}
+      <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
+          <div className="popUp12">
+            <div className="caseD11">
+              <span>Informations&nbsp;de la</span><span>&nbsp;Ferme</span>
+            </div>
+            {
+            FarmToShow !== null && 
+              <>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Appelation
+                  </label>
+                  <label>
+                    {
+                      FarmToShow.name
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Localisation
+                  </label>
+                  <label>
+                    {
+                      FarmToShow.location
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Mesure en m²
+                  </label>
+                  <label>
+                    {
+                      FarmToShow.size
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1">
+                  <label>
+                    Date de création
+                  </label>
+                  <label>
+                    {
+                      FarmToShow.created_at
+                    }
+                  </label>
+                </div>
+                <div className="rowInp rowInp1 rowInp122">
+                  <label>
+                    Serres associées&nbsp;<>{!loadingdataSerre && dataSerre && <>{dataSerre.length === 0 ? ": 0" : `: ${dataSerre.length}`}</>}</>
+                  </label>
+                    <button
+                      className='eionfv'
+                      onClick={()=>{
+                        setshowClicked(false);
+                        setaddNewSerreClick(!addNewSerreClick);
+                      }}
+                    > 
+                      <i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une serre
+                    </button>
+                </div>
+                {
+                  loadingdataSerre && !dataSerre ? 
+                  <div className="rowInp123">
+                    <div className="rowSerre1">
+                      Chargement...
+                    </div> 
+                  </div>
+                  :
+                  <div className="rowInp123">
+                  {
+                    dataSerre && 
+                    dataSerre.length === 0 ?
+                    <div className="rowSerre1">
+                      Aucune donnée
+                    </div> 
+                    : 
+                    dataSerre.map((serre)=>{
+                      return(
+                        <div key={serre.id} className="rowSerre">
+                          <div className="casej1">
+                          {
+                            serre.name
+                          }
+                          </div>
+                          <div className="casej1">
+                          {
+                            serre.size
+                          }&nbsp;m²                           
+                          </div>
+                          <div className="casej1">
+                          {
+                            formatDateForCreatedAt(serre.created_at)
+                          } 
+                          </div>
+                          <div className="casej1">
+                            <button>
+                              <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button>
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div> 
+                      )
+                    })
+                  }
+                  </div>
+                }
+              </>
+            }
+            <div className="rowInp rowInpModified2">
+              <button className='jofzvno'  onClick={()=>{setshowClicked(false);setFarmToShow(null);setFarmToEdit(null);}} >Fermer</button>
+              <button 
+                onClick={()=>{
+                  setshowClicked(false);
+                  seteditClicked(true);
+                }}
+                className="efvofvz"
+              >
+                Modifier la ferme
+              </button>
+            </div>
+          </div>
+        </div>
+      
+
+
+
+
+      {/*   Add new Farm    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
         <div className="contPopUp">
           <div className="caseD11">
@@ -304,6 +587,7 @@ const Fermes = () => {
               onChange={(e)=>{setAppelation(e.target.value)}}
               type="text"
               value={Appelation}
+              maxLength={60}
               className='idplaque' 
               placeholder="Veuillez saisir le nom de la ferme..."
             />
@@ -313,6 +597,7 @@ const Fermes = () => {
             <input 
               onChange={(e)=>{setLocalisation(e.target.value)}}
               type="text"
+              maxLength={60}
               value={localisation}
               className='idplaque' 
               placeholder="Veuillez saisir la location de la ferme..."
@@ -323,7 +608,7 @@ const Fermes = () => {
             <input 
               onChange={(e)=>{setSize(e.target.value)}}
               type="text"
-              maxLength={5}
+              maxLength={6}
               value={Size}
               className='idplaque' 
               placeholder="Veuillez saisir la mesure de la ferme..."
@@ -349,6 +634,77 @@ const Fermes = () => {
           </div>
         </div>
       </div>
+
+
+
+
+
+
+
+       {/*   Add new Serre    */}
+       <div className={addNewSerreClick ? "popUp popUpX showpopUp" : "popUp popUpX"}>
+        {
+          addNewSerreClick &&
+        <div className="contPopUp contPopUpcontPopUp">
+          <div className="caseD11">
+            <span>Nouvelle</span><span>&nbsp;&nbsp;Serre</span>
+          </div>
+          <div className="rowInp">
+            <label>Appelation</label>
+            <input 
+              onChange={(e)=>{setNameS(e.target.value);}}
+              type="text"
+              value={nameS}
+              maxLength={60}
+              className='idplaque' 
+              placeholder="Veuillez saisir le nom de la serre..."
+            />
+          </div>
+          <div className="rowInp">
+            <label>Mesure en m²</label>
+            <input 
+              onChange={(e)=>{setSizeS(e.target.value);}}
+              type="text"
+              value={sizeS}
+              maxLength={5}
+              className='idplaque' 
+              placeholder="Veuillez saisir la mesure de la serre..."
+            />
+          </div>
+          <div className="rowInp rowInpModified">
+            <button className='jofzvno' disabled={loadingCreationOf_New_Serre} onClick={()=>{
+                setaddNewSerreClick(false);
+                setNameS("");
+                setSizeS('');
+                setshowClicked(true);
+              }} 
+            >
+              Annuler
+            </button>
+            <button 
+              disabled={loadingCreationOf_New_Serre}
+              onClick={()=>{
+                handleCreatedNewSerre();
+              }}
+              className={loadingCreationOf_New_Serre ? "efvofvz efvofvz2" : "efvofvz"}
+            >
+            {
+              loadingCreationOf_New_Serre ? "Sauvegarde en cours..."
+              :
+              "Sauvegarder la serre"
+            }
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+
+
+
+
+
+
       <div className="containerDash">
           <div className="rowD1">
             <div className="caseD1">
@@ -361,7 +717,7 @@ const Fermes = () => {
               }
             </div>
             <div className="caseD2">
-              <button  title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} disabled={loadingAllFarms} ><i class="fa-solid fa-rotate-right"></i></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une ferme</button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
@@ -372,6 +728,8 @@ const Fermes = () => {
               <DataGrid
                 columns={columns.filter(column => column.field !== 'id')}
                 hideFooter 
+                
+                loading={loadingAllFarms}
                 rows={Fermes}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: false  }}

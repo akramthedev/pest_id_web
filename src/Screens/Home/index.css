@@ -96,7 +96,7 @@
     height: calc(100% - 140px);
     display: flex;
     align-items: center;
-    padding-top: 16vh;
+    padding-top: 14vh;
     flex-direction: column;
 }
 
@@ -111,7 +111,7 @@
     font-weight: 800;
     height: 5rem;
     font-family: "PT Serif", serif;
-    margin-bottom: 2.5rem;
+    margin-bottom: 4rem;
     color: #579519;
 }
 
@@ -120,7 +120,7 @@
 }
 .row4{
     font-size:1.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 4rem;
 }
 .row4 span{
     font-size:1.5rem;
