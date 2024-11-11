@@ -157,7 +157,9 @@
 }
 
 .popUp1{
+    min-height: 600px;
     height: 64vh;
+    max-height: 666px;
 }
 
 
@@ -366,8 +368,8 @@
 
 /* Overall scrollbar styling */
 ::-webkit-scrollbar {
-    width: 13px !important;   /* Width for the vertical scrollbar */
-    height: 13px !important; /* Height for the horizontal scrollbar */
+    width: 12px !important;   /* Width for the vertical scrollbar */
+    height: 11.25px !important; /* Height for the horizontal scrollbar */
   }
   
   /* Scrollbar track styling */
@@ -523,7 +525,7 @@
 }
 
 
-.casej1 button:first-child i {
+.casej1 button  i {
     color: #477a14;
     font-size: 14px;
 }
@@ -544,7 +546,7 @@
     background-color: #d4f4b7;
 
 }
-.casej1 button:last-child{
+.casej1 button {
     margin-left: 1.3rem;
     background-color: rgb(255, 211, 211);
 }
@@ -559,4 +561,36 @@
     outline: none !important;
     border: 1px solid #e3e3e3 !important;
     border-radius: 1rem !important;
+}
+
+
+.rowInp1rowInp1{
+    margin-bottom: 1.3rem;
+}
+
+.popUp777{
+    min-height: 400px !important;
+    height: 400px !important;
+    max-height: 400px !important;
+}
+
+.popUp77777{
+    min-height: 555px !important;
+    height: 555px !important;
+    max-height: 555px !important;
+}
+
+.uosruofdvc{
+    height: 45px;
+    width: 100%;
+    background-color: #efefef;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #d5d5d5;
+}
+
+.popUp1popUp1popUp1{
+    min-height: 530px !important;
+    height: 530px !important;
+    max-height: 530px !important;
 }

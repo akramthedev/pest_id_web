@@ -154,6 +154,7 @@ const Fermes = () => {
 
       if (response.status === 200) {
         let i = 0;
+        console.log(response.data);
         const transformedData = response.data.map(item => {
           i++;
           let createdAt = formatDateForCreatedAt(item.created_at)
@@ -337,22 +338,67 @@ const Fermes = () => {
 
     
     const columns = [
-      { field: 'id', headerName: 'idReal', width: 100, headerAlign: 'center', align: 'center',hide: true  },
-      { field: 'idInc', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
-      { field: 'name', headerName: 'Appelation', minWidth: 350, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'location', headerName: 'Localisation', minWidth: 350, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'size', headerName: 'Mesure en m²', minWidth: 150, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'created_at', headerName: 'Date création', width: 200, editable: false, headerAlign: 'center', align: 'center' },
+      { 
+        field: 'id', 
+        headerName: 'idReal', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        hide: true  
+      },
+      { 
+        field: 'idInc', 
+        headerName: 'ID', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center' 
+      },
+      { 
+        field: 'name', 
+        headerName: 'Appelation', 
+        minWidth: 350, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'location', 
+        headerName: 'Localisation', 
+        minWidth: 350, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'size', 
+        headerName: 'Mesure en m²', 
+        minWidth: 150, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'created_at', 
+        headerName: 'Date création', 
+        width: 200, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
       { 
         field: 'actions', 
         renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm), 
         headerName: 'Actions', 
         minWidth: 200, 
-        editable: false, 
         headerAlign: 'center', 
         align: 'center',
+        flex: 1 // Allow the column to stretch
       }
     ];
+
+    
+   
+    
     
     
 
@@ -398,7 +444,7 @@ const Fermes = () => {
 
       {/*   edit Farm    */}
         <div className={editClicked ? "popUp  showpopUp" : "popUp "}>
-          <div className="contPopUp popUp1">
+          <div className="contPopUp popUp1 popUp1popUp1popUp1">
             <div className="caseD11">
               <span>Modifier&nbsp;la</span><span>&nbsp;Ferme</span>
             </div>
@@ -571,9 +617,6 @@ const Fermes = () => {
                           } 
                           </div>
                           <div className="casej1">
-                            <button>
-                              <i class="fa-solid fa-pen"></i>
-                            </button>
                             <button
                               disabled={loaderDelete}
                               onClick={()=>{
@@ -612,7 +655,7 @@ const Fermes = () => {
 
       {/*   Add new Farm    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
-        <div className="contPopUp">
+        <div className="contPopUp popUp1popUp1popUp1">
           <div className="caseD11">
             <span>Nouvelle</span><span>&nbsp;&nbsp;Ferme</span>
           </div>
@@ -745,9 +788,16 @@ const Fermes = () => {
             <div className="caseD1">
               <span>Mes</span><span>&nbsp;Fermes</span>
               {
-                loadingAllFarms && 
+                loadingAllFarms ? 
                 <>
-                  &nbsp;&nbsp;&nbsp;<img src={LVG} alt="..." height={23} width={23} />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src={LVG} alt="..." height={23} width={23} />
+                </>
+                :
+                <>
+                &nbsp;&nbsp;
+                {
+                  Fermes && <span className="iyzsiyvqdc">:&nbsp;&nbsp;{Fermes.length}</span>
+                }
                 </>
               }
             </div>
@@ -768,7 +818,7 @@ const Fermes = () => {
               }}
             >
               <DataGrid
-                columns={columns.filter(column => column.field !== 'id')}
+                columns={columns.filter(column => !['id','idInc'].includes(column.field))}
                 hideFooter 
                 className='euosvuouof'
                 loading={loadingAllFarms}

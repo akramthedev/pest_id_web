@@ -3,6 +3,7 @@ import './App.css';
 import Home from "./Screens/Home/Home";
 import Login from "./Screens/Auth/Login";
 import Todo from './Todo';
+import Profile from "./Screens/Profile/Profile";
 import Register from "./Screens/Auth/Register";
 import Dashboard from './Screens/Dashboard/Dashboard';
 import Clients from "./Screens/Dashboard/Clients";
@@ -10,10 +11,10 @@ import Demandes from "./Screens/Dashboard/Demandes";
 import Personnels from "./Screens/Dashboard/Personnels";
 import Calculations from "./Screens/Dashboard/Calculations";
 import Fermes from "./Screens/Dashboard/Fermes";
-import Broadcast from "./Screens/Dashboard/Broadcast";
-import Activity from "./Screens/Dashboard/Activity";
+import Broadcast from "./Screens/Broadcast/Broadcast";
+import Activity from "./Screens/Activity/Activity";
 import About from "./Screens/About/About";
-
+import Setting from './Screens/Setting/Setting';
 
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
         <Route path="/fermes" element={isAuthenticated ? <Fermes /> : <Navigate to="/login" />} />
         <Route path="/broadcast" element={isAuthenticated ? <Broadcast /> : <Navigate to="/login" />} />
         <Route path="/activity" element={isAuthenticated ? <Activity /> : <Navigate to="/login" />} />
+        <Route path="/setting" element={isAuthenticated ? <Setting /> : <Navigate to="/login" />} />
+        <Route path="/profile/:id" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
 
         <Route path="/to-do" element={<Todo />} />
         <Route path="*" element={<Navigate to="/" />} />

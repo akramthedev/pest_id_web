@@ -42,6 +42,9 @@ function Register() {
       setLoader(true);
       const response = await axios.post(`${ENDPOINT_API}register`, { fullName : name,email : email,password : password });
       if (response.status === 201) {
+        setEmail('');
+        setPassword('');
+        setName('');
         alert("Inscription réussie, Nous allons examiner votre profil et vous recevrez un email dans un délai de 24 heures pour la prochaine étape.")
       }
       else if(response.status === 205) {

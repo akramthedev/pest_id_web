@@ -217,7 +217,7 @@ const Calculations = () => {
       const token = localStorage.getItem('token');
   
       // Fetch the predictions data
-      const predictionsResponse = await axios.get(`${ENDPOINT_API}users/${userIdNum}/predictions/with/images`, {
+      const predictionsResponse = await axios.get(`${ENDPOINT_API}users/${userIdNum}/p_with_image_version_two`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -231,11 +231,8 @@ const Calculations = () => {
             i++;
             let createdAt = formatDateForCreatedAt(item.created_at);
       
-            const namesResponses = await axios
-              .get(`${ENDPOINT_API}getNames/${item.farm_id}/${item.serre_id}`, {
-                headers: { 'Authorization': `Bearer ${token}` },
-              })
-              .catch(() => ({ data: { farm_name: "---", serre_name: "---" } }));
+            console.log("---------");
+            console.warn(item);
       
             return {
               idInc: index + 1,
@@ -249,9 +246,11 @@ const Calculations = () => {
               class_C: item.images[0]?.class_C || "---",
               image: item.images[0]?.name || "---",
               created_at: createdAt || "---",
-              farm_name: namesResponses.data.farm_name,
-              serre_name: namesResponses.data.serre_name,
+              farm_name: item.farm ? item.farm.name : "---",
+              serre_name: item.serre ? item.serre.name : "---",
             };
+
+
           })
         );
       
@@ -447,31 +446,118 @@ const Calculations = () => {
 
 
     
+    
     const columns = [
-      { field: 'id', headerName: 'idReal', width: 100, headerAlign: 'center', align: 'center',hide: true  },
-      { field: 'idInc', headerName: 'ID', width: 100, headerAlign: 'center', align: 'center' },
-      { field: 'farm_id', headerName: 'FermeID', minWidth: 200, editable: false, headerAlign: 'center', align: 'center',hide: true  },
-      { field: 'serre_id', headerName: 'SerreID', minWidth: 200, editable: false, headerAlign: 'center', align: 'center',hide: true  },
-      { field: 'farm_name', headerName: 'Ferme', minWidth: 200, editable: false, headerAlign: 'center', align: 'center'  },
-      { field: 'serre_name', headerName: 'Serre', minWidth: 200, editable: false, headerAlign: 'center', align: 'center'  },
-      { field: 'plaque_id', headerName: 'ID Plaque', minWidth: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'result', headerName: 'Résultat', width: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'class_A', headerName: 'Mouches', width: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'class_B', headerName: 'Mineuses', width: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'class_C', headerName: 'Thrips', width: 100, editable: false, headerAlign: 'center', align: 'center' },
-      { field: 'created_at', headerName: 'Date création', width: 120, editable: false, headerAlign: 'center', align: 'center' },
+      { 
+        field: 'id', 
+        headerName: 'idReal', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        hide: true  
+      },
+      { 
+        field: 'idInc', 
+        headerName: 'ID', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center' 
+      },
+      { 
+        field: 'farm_id', 
+        headerName: 'FermeID', 
+        minWidth: 200, 
+        headerAlign: 'center', 
+        align: 'center', 
+        hide: true  
+      },
+      { 
+        field: 'serre_id', 
+        headerName: 'SerreID', 
+        minWidth: 200, 
+        headerAlign: 'center', 
+        align: 'center', 
+        hide: true  
+      },
+      { 
+        field: 'farm_name', 
+        headerName: 'Ferme', 
+        minWidth: 200, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'serre_name', 
+        headerName: 'Serre', 
+        minWidth: 200, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'plaque_id', 
+        headerName: 'ID Plaque', 
+        minWidth: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'result', 
+        headerName: 'Résultat', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'class_A', 
+        headerName: 'Mouches', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'class_B', 
+        headerName: 'Mineuses', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'class_C', 
+        headerName: 'Thrips', 
+        width: 100, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
+        field: 'created_at', 
+        headerName: 'Date création', 
+        width: 120, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
       { 
         field: 'actions', 
         renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setGreenhouses), 
         headerName: 'Actions', 
         minWidth: 200, 
-        editable: false, 
         headerAlign: 'center', 
         align: 'center',
+        flex: 1 // Allow the column to stretch
       }
     ];
     
     
+
+
+
 
 
 
@@ -488,7 +574,7 @@ const Calculations = () => {
       {/*   edit Calculation    */}
 
         <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>
-          <div className="contPopUp popUp1">
+          <div className="contPopUp popUp1 popUp1popUp1popUp1">
             <div className="caseD11">
               <span>Modifier&nbsp;le</span><span>&nbsp;Calcul</span>
             </div>
@@ -560,7 +646,7 @@ const Calculations = () => {
         {/*   show Calculation    */}
               
         <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
-                  <div className="contPopUp popUp1">
+                  <div className="contPopUp popUp1 popUp1popUp1popUp1">
             <div className="caseD11">
               <span>Informations&nbsp;du</span><span>&nbsp;Calcul</span>
             </div>
@@ -659,7 +745,7 @@ const Calculations = () => {
               </>
             }
             <div className="rowInp rowInpModified">
-              <button className='jofzvno' disabled={loading} onClick={()=>{setshowClicked(false);setCalculToEdit(null);}} >Fermer</button>
+              <button className='jofzvno'  onClick={()=>{setshowClicked(false);setCalculToEdit(null);}} >Fermer</button>
               <button 
                 onClick={()=>{
                   setshowClicked(false);
@@ -680,7 +766,7 @@ const Calculations = () => {
 
       {/*   Add new Calculation    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
-        <div className="contPopUp">
+        <div className="contPopUp popUp1popUp1popUp1">
           <div className="caseD11">
             <span>Nouveau</span><span>&nbsp;&nbsp;Calcul</span>
           </div>
@@ -766,9 +852,16 @@ const Calculations = () => {
             <div className="caseD1">
               <span>Mes</span><span>&nbsp;Calculations</span>
               {
-                loadingAllPred && 
+                loadingAllPred ? 
                 <>
-                  &nbsp;&nbsp;&nbsp;<img src={LVG} alt="..." height={23} width={23} />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src={LVG} alt="..." height={23} width={23} />
+                </>
+                :
+                <>
+                &nbsp;&nbsp;
+                {
+                  Calculations && <span className="iyzsiyvqdc">:&nbsp;&nbsp;{Calculations.length}</span>
+                }
                 </>
               }
             </div>
@@ -789,7 +882,7 @@ const Calculations = () => {
               }}
             >
               <DataGrid
-                columns={columns.filter(column => !['id', 'farm_id', 'serre_id'].includes(column.field))}
+                columns={columns.filter(column => !['id','idInc', 'farm_id', 'serre_id'].includes(column.field))}
                 hideFooter 
                 rows={Calculations}
                 loading={loadingAllPred}

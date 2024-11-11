@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./index.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const NavBar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Close the profile pop-up when clicking outside of it
   useEffect(() => {
@@ -74,7 +75,12 @@ const NavBar = () => {
         }
        
           <div className={isProfileOpen ? "profile-popup showprofile-popup" : "profile-popup"} ref={profileRef}>
-            <div className="profile-header">
+            <div 
+              onClick={()=>{
+                navigate("/profile/79234629365");
+              }}
+              className="profile-header"
+            >
               <img                
                   src="https://res.cloudinary.com/dqprleeyt/image/upload/v1702216550/akram_tp6iku.jpg" 
                   alt="Profile" 
@@ -87,6 +93,25 @@ const NavBar = () => {
           
 
             
+            
+            {["/profile", "/activity", "/setting", "/broadcast"].includes(location.pathname) && (
+              <div 
+                onClick={() => {
+                  navigate("/dashboard");
+                }}
+                className="profile-item"
+              >
+                <div className="uevuofz">
+                  <i className="fa-solid fa-chart-line"></i>
+                </div>
+                Tableau de Board
+              </div>
+              )
+            }
+
+
+
+
             <div 
               onClick={()=>{
                 navigate("/activity");
