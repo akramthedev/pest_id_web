@@ -4,9 +4,7 @@ import NavBar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
-import Select from 'react-select';
-import 'primeflex/primeflex.css';
-import axios from 'axios'
+  import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
