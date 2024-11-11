@@ -256,6 +256,21 @@
     cursor: not-allowed;
     transition: .2s all ease-in-out;
 }
+
+.efvofvz22{
+    background-color:#a40000;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    height: 48px;
+    width: 70%;
+    margin-left: 0.7rem;
+    transition: .2s all ease-in-out;
+}
+
+.efvofvz22:hover{
+    background-color: #dc0000 ;
+}
 .ofnov{
     background-color: #f6f6f6;
 }.ofnov:hover{
@@ -593,4 +608,31 @@
     min-height: 530px !important;
     height: 530px !important;
     max-height: 530px !important;
+}
+
+.popUp1popUp1popUp12{
+    min-height: 255px !important;
+    height: 255px !important;
+    max-height: 255px !important;
+}
+
+.uzuovsououzv{
+    width: 90%;
+    max-width: 470px;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.zufshvwo{
+    color: #5fa21b !important;
+}
+
+.svowdjc{
+    color: #a40000 !important;
+}
+
+
+.efvofvz3795:hover{
+    background-color: #67c10c !important;
 }
