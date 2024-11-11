@@ -10,6 +10,7 @@ function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mobile, setmobile] = useState('');
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e, field) => {
@@ -21,6 +22,9 @@ function Register() {
       setEmail(e.target.value);
     } else if (field === 'password') {
       setPassword(e.target.value);
+    }
+      else if (field === 'mobile') {
+        setmobile(e.target.value);
     }
   };
 
@@ -40,11 +44,12 @@ function Register() {
 
     try {
       setLoader(true);
-      const response = await axios.post(`${ENDPOINT_API}register`, { fullName : name,email : email,password : password });
+      const response = await axios.post(`${ENDPOINT_API}register`, { fullName : name,email : email,password : password, mobile : mobile });
       if (response.status === 201) {
         setEmail('');
         setPassword('');
         setName('');
+        setmobile('');
         alert("Inscription réussie, Nous allons examiner votre profil et vous recevrez un email dans un délai de 24 heures pour la prochaine étape.")
       }
       else if(response.status === 205) {
@@ -84,6 +89,17 @@ function Register() {
           placeholder="your@email.com"
           value={email}
           onChange={(e) => handleInputChange(e, 'email')}
+        />
+
+        <label className="login-label" htmlFor="mobile">
+          Numéro de téléphone 
+        </label>
+        <input
+          id="mobile"
+          className={`login-input`}
+          placeholder="+212 XXX XXX XXX"
+          value={mobile}
+          onChange={(e) => handleInputChange(e, 'mobile')}
         />
         
         <label className="login-label" htmlFor="pass">

@@ -15,7 +15,7 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 
 
 
-const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setLoadingDelete) => {
+const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked ) => {
 
   
   const handleEdit = () => {
@@ -33,72 +33,11 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
   };
 
 
-  const handleDelete = async () => {
-    setLoadingDelete(true);
-    let staffsUsers = [];
-
-    try{
-
-      const token = localStorage.getItem('token');
-
-      const resp0 = await axios.get(`${ENDPOINT_API}getAdminIdFromUserId/${parseInt(params.row.id)}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if(resp0.status === 200){
-        const idAdmin = resp0.data.id;
-        const resp00 = await axios.get(`${ENDPOINT_API}staffs/${idAdmin}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }); 
-
-        if(resp00.status === 200){
-          staffsUsers = resp00.data;
-           
-        }
-      }
-
-      const resp = await axios.delete(`${ENDPOINT_API}deleteUserWhoIsAdmin/${parseInt(params.row.id)}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if(resp.status === 200){
-        if (staffsUsers.length !== 0) {
-          for (const staff of staffsUsers) {
-            try {
-              await axios.delete(`${ENDPOINT_API}deleteUserStaffNotAdmin/${staff.user_id}`, {
-                headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              });
-            } catch (error) {
-              console.log('Error deleting user:', error);
-            }
-          }
-        }
-        setLoadingDelete(false);
-        setAllUsers(prevallUsers => 
-          prevallUsers.filter(item => item.id !== params.row.id)
-        );
-      }
-      else{
-        alert('Not deleted');
-        setLoadingDelete(false);
-      }
-      
-
-    }
-    catch(e){
-      setLoadingDelete(false);
-      alert('Not deleted');
-      console.log(e.message);
-    }
-  };
+  const handleDelete = ()=>{
+    setparamClicked(params);
+    console.warn(params);
+    setisDeletedClicked(true);
+  }
 
   return (
     <div className='uefuvzou'>
@@ -134,6 +73,8 @@ const Clients = () => {
   const [loadingCreateUser, setLoadingCreateUser] = useState(false);
   const [refresh,setRefresh] = useState(false);
   const [loadingDelete,setLoadingDelete] = useState(false);
+  const [isDeletedClicked,setisDeletedClicked] = useState(false);
+  const [paramClicked,setparamClicked] = useState(null);
 
   
 
@@ -154,7 +95,7 @@ const Clients = () => {
         console.warn(response.data.users);
         let i = 0;
         const transformedData = response.data.users
-          .filter(user => user.id !== userIdNum && user.type === "admin")
+          .filter(user => user.id !== userIdNum && user.type === "admin" && user.canAccess === 1 && user.isEmailVerified === 1)
           .map(user => {
             i++; 
             let createdAt = formatDateForCreatedAt(user.created_at);
@@ -299,6 +240,10 @@ const Clients = () => {
         if(resp0.status === 201){
           setLoadingCreateUser(false);
           fetch_data_allUsers();
+          setFullname('');
+          setEmail("");
+          setPassword('');
+          setMobile('');
           setaddClicked(false);
         }
         else{
@@ -314,6 +259,79 @@ const Clients = () => {
     }
   }
  
+
+
+
+
+  const handleDeleteAdministrator = async () => {
+    setisDeletedClicked(false);
+    setLoadingDelete(true);
+    let staffsUsers = [];
+    if(!paramClicked){
+      return;
+    }
+    try{
+
+      const token = localStorage.getItem('token');
+
+      const resp0 = await axios.get(`${ENDPOINT_API}getAdminIdFromUserId/${parseInt(paramClicked.row.id)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if(resp0.status === 200){
+        const idAdmin = resp0.data.id;
+        const resp00 = await axios.get(`${ENDPOINT_API}staffs/${idAdmin}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }); 
+
+        if(resp00.status === 200){
+          staffsUsers = resp00.data;
+           
+        }
+      }
+
+      const resp = await axios.delete(`${ENDPOINT_API}deleteUserWhoIsAdmin/${parseInt(paramClicked.row.id)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if(resp.status === 200){
+        if (staffsUsers.length !== 0) {
+          for (const staff of staffsUsers) {
+            try {
+              await axios.delete(`${ENDPOINT_API}deleteUserStaffNotAdmin/${staff.user_id}`, {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+            } catch (error) {
+              console.log('Error deleting user:', error);
+            }
+          }
+        }
+        setLoadingDelete(false);
+        setAllUsers(prevallUsers => 
+          prevallUsers.filter(item => item.id !== paramClicked.row.id)
+        );
+      }
+      else{
+        alert('Not deleted');
+        setLoadingDelete(false);
+      }
+      
+
+    }
+    catch(e){
+      setLoadingDelete(false);
+      alert('Not deleted');
+      console.log(e.message);
+    }
+  };
 
 
 
@@ -376,7 +394,7 @@ const Clients = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setLoadingDelete ), 
+      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked ), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 
@@ -396,6 +414,44 @@ const Clients = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
+
+
+      
+      <div className={isDeletedClicked ? "popUp  showpopUp" : "popUp "}>
+        <div className="contPopUp popUp1 popUp1popUp1popUp12  popUp1popUp1popUp12345">
+          <div className="caseD11">
+            <span className='svowdjc'><i class="fa-solid fa-triangle-exclamation fa-triangle-exclamation2"></i>&nbsp;&nbsp;Confirmer&nbsp;</span><span className='svowdjc'>&nbsp;la suppression</span>
+          </div>
+          <div className="uzuovsououzv">
+            &nbsp;&nbsp;La suppression de cet utilisateur est irréversible et entraînera la perte définitive de ses données, notamment ses personnels, ses prédictions et ses fermes !
+          </div>
+          <div className="rowInp rowInpModified">
+              <button 
+                className='jofzvno' 
+                disabled={loadingDelete} 
+                onClick={()=>{
+                  setisDeletedClicked(false);
+                  setparamClicked(null);
+                }} 
+              >
+                Annuler
+              </button>
+              <button 
+                disabled={loadingDelete}
+                onClick={()=>{
+                  handleDeleteAdministrator();
+                }}
+                className={loadingDelete ? "efvofvz22 efvofvz2" : "efvofvz22"}
+              >
+              {
+                loadingDelete ? "Traitement en cours..."
+                :
+                "Oui, je confirme"
+              }
+              </button>
+          </div>
+        </div>
+      </div>
 
       <div className={loadingDelete ? "popUp666 showpopUp" : "popUp666"}>
         <span style={{
@@ -632,7 +688,7 @@ const Clients = () => {
             />
           </div> 
           <div className="uzuovsououzv2">
-            <i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Tous les privilèges d'un administrateur seront attribués au nouveau client.
+            <i class="fa-solid fa-triangle-exclamation "></i>&nbsp;&nbsp;Tous les privilèges d'un administrateur seront attribués au nouveau client.
           </div>
           <div className="rowInp rowInpModified">
             <button className='jofzvno' disabled={loadingCreateUser} onClick={()=>{setaddClicked(false); setPassword('');setEmail('');setFullname('');setMobile('')}} >Annuler</button>

@@ -158,24 +158,34 @@ const SideBar = () => {
 
 
 
+        {
+          TypeOfUser && 
+          <>
+          {
+            TypeOfUser !== "staff" && 
+                <div 
+                  className={`rowOI ${location.pathname === "/fermes" ? 'rowOIactiavted' : ''}`} 
+                  onClick={()=>{
+                    navigate("/fermes");
+                  }}
+                >
+                  <div  
+                    className={`icons ${location.pathname === "/fermes" ? 'textActi' : ''}`}
+                  >
+                    <i class="fa-solid fa-leaf"></i>
+                  </div>
+                  <div  
+                    className={`textx ${location.pathname === "/fermes" ? 'textActi' : ''}`}
+                  >
+                    Mes Fermes
+                  </div>
+                </div>
+          }
+          </>
+        }
 
-        <div 
-          className={`rowOI ${location.pathname === "/fermes" ? 'rowOIactiavted' : ''}`} 
-          onClick={()=>{
-            navigate("/fermes");
-          }}
-        >
-          <div  
-            className={`icons ${location.pathname === "/fermes" ? 'textActi' : ''}`}
-          >
-            <i class="fa-solid fa-leaf"></i>
-          </div>
-          <div  
-            className={`textx ${location.pathname === "/fermes" ? 'textActi' : ''}`}
-          >
-            Mes Fermes
-          </div>
-        </div>
+
+
       </>
     }
     </div>
