@@ -1,3 +1,148 @@
 .profile{
-    
+    height: 100vh;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 100px;
+
+}
+.ofs{
+    width: 100%;
+    max-width: 700px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 3vh;
+    align-items: center;
+    justify-content: left;
+    font-size: 2rem;
+    font-weight: 700;
+}
+.posdvo4{
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+.itemX{
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+}
+.ofs2{
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+
+.ofs22{
+    width: 100%;
+    max-width: 577px;
+    height: auto;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ofs span{
+    color: #579519;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.sfovwd{
+    height:calc(100% - 80px);
+    width: 100%;
+    max-width: 700px;
+    margin:  0 auto;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+.rowuzd{
+    width: 100%;
+    height: 200px;
+    display: flex;
+}
+.caseOno{
+    height: 200px;
+    width: 200px;
+}
+.caseOno img{
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 0.9rem;
+}
+.caseDoso{
+    width: calc(100% - 200px);
+    height: 200px;
+    padding-left: 1.5rem;
+}
+
+.zufsiqdvc{
+    font-weight: 800;
+    font-size:3.2rem;
+    width: 300%;
+}
+.posdvo1{
+    margin-top: .8rem;
+    font-weight: 300;
+    font-size: 1.5rem;
+    width: 300%;
+
+    margin-bottom: .8rem;
+}
+.posdvo3{
+    margin-top: .5rem;
+    font-weight: 300;
+    width: calc(377px - 25px);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.posdvo3 span{
+    font-weight: 300;
+    font-size: 1.5rem;
+}
+.rowuzd2{
+    width: 100%;
+    max-width: 577px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.ofs22 button{
+    width: 48%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+    font-weight: 500;
+}
+.ofs22 button:hover{
+    background-color: #e1e1e1;
+}
+
+.ofs22 button:active{
+    background-color: #bebebe;
+}
+
+.ofs22ofs22 button{
+    width: 100% !important;
 }

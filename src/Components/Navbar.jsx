@@ -165,6 +165,11 @@ const NavBar = () => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('userId');
                 localStorage.removeItem('type');
+                localStorage.removeItem('mobile');
+                localStorage.removeItem('image');
+                localStorage.removeItem('fullName');
+                localStorage.removeItem('email');
+                localStorage.removeItem('created_at');
                 navigate(0);
               }}
             > 

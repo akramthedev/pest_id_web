@@ -1,6 +1,11 @@
 const formatDateForCreatedAt = (date) => {
     // Make sure the input is a valid Date object
-    const parsedDate = new Date(date);
+    if(date === "---"){
+      return `--/--/----`;
+
+    }
+    else{
+      const parsedDate = new Date(date);
   
     // Check if the parsedDate is valid
     if (isNaN(parsedDate.getTime())) {
@@ -15,6 +20,7 @@ const formatDateForCreatedAt = (date) => {
     const seconds = String(parsedDate.getSeconds()).padStart(2, '0');
     
     return `${day}/${month}/${year}`;
+    }
   };
   
   export default formatDateForCreatedAt;
