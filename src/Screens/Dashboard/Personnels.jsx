@@ -618,9 +618,9 @@ const Personnels = () => {
               className={loadingCreationPersonnel ? "efvofvz efvofvz2" : "efvofvz"}
             >
             {
-              loadingCreationPersonnel ? "Sauvegarde en cours..."
+              loadingCreationPersonnel ? "Création en cours..."
               :
-              "Sauvegarder le personnel"
+              "Créer le nouveau personnel"
             }
             </button>
           </div>

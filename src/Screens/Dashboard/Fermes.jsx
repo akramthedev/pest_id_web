@@ -704,9 +704,9 @@ const Fermes = () => {
               className={loadingCreation ? "efvofvz efvofvz2" : "efvofvz"}
             >
             {
-              loadingCreation ? "Sauvegarde en cours..."
+              loadingCreation ? "Création en cours..."
               :
-              "Sauvegarder la ferme"
+              "Créer la nouvelle ferme"
             }
             </button>
           </div>
