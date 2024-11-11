@@ -201,12 +201,14 @@ const Clients = () => {
  
 
 
-    const handle_Update_Personnel = async(XXX)=>{
+    const handle_Update_Client = async(XXX)=>{
       if(XXX.idUser === "---" || XXX.idUser  === null || XXX.idUser  === undefined){
         alert("Oops, une erreur s'est produite ! ");
         return;
       }
       else{
+
+        console.log(XXX);
 
         let emailX = XXX.email.toString();
         let mobileX = XXX.mobile.toString();
@@ -218,7 +220,7 @@ const Clients = () => {
             return;
           } 
           else if(mobileX.length <= 4){
-            alert("Invalid password");
+            alert("Invalid Mobile");
             return;
           } 
           else if(fullNameX.length <= 1){
@@ -414,7 +416,7 @@ const Clients = () => {
         <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>
           <div className="contPopUp popUp1 popUp77777">
             <div className="caseD11">
-              <span>Modifier&nbsp;le</span><span>&nbsp;personnel</span>
+              <span>Modifier&nbsp;le</span><span>&nbsp;client</span>
             </div>
             {
             userToEdit !== null && 
@@ -474,7 +476,9 @@ const Clients = () => {
                 </div>
               </>
             }
-            <div className="rowInp rowInpModified">
+            {
+              userToEdit && userToEdit.idUser &&
+              <div className="rowInp rowInpModified">
               <button 
                 className='jofzvno' 
                 disabled={loadinGEdit} 
@@ -488,7 +492,7 @@ const Clients = () => {
               <button 
                 disabled={loadinGEdit}
                 onClick={()=>{
-                  handle_Update_Personnel(userToEdit);
+                  handle_Update_Client(userToEdit);
                 }}
                 className={loadinGEdit ? "efvofvz efvofvz2" : "efvofvz"}
               >
@@ -499,6 +503,7 @@ const Clients = () => {
               }
               </button>
             </div>
+            }
           </div>
         </div>
       
@@ -511,7 +516,7 @@ const Clients = () => {
         <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
           <div className="contPopUp popUp1 popUp777">
             <div className="caseD11">
-              <span>Informations&nbsp;du</span><span>&nbsp;personnel</span>
+              <span>Informations&nbsp;du</span><span>&nbsp;client</span>
             </div>
             {
             userToEdit !== null && 
@@ -567,7 +572,7 @@ const Clients = () => {
                 }}
                 className={loadinGEdit ? "efvofvz efvofvz2" : "efvofvz"}
               >
-                Modifier le personnel
+                Modifier le client
               </button>
             </div>
           </div>

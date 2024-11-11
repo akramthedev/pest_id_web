@@ -109,26 +109,31 @@ const SideBar = () => {
 
 
 
-
-        <div 
-          className={`rowOI ${location.pathname === "/personnels" ? 'rowOIactiavted' : ''}`} 
-          onClick={()=>{
-            navigate("/personnels");
-          }}
-        >
-          <div  
-            className={`icons ${location.pathname === "/personnels" ? 'textActi' : ''}`}
-          >
-            <i class="fa-solid fa-users"></i>
-          </div>
-          <div  
-            className={`textx ${location.pathname === "/personnels" ? 'textActi' : ''}`}
-          >
-            Mes personnels
-          </div>
-        </div>
-
-
+        {
+          TypeOfUser && 
+          <>
+            {
+              TypeOfUser !== "staff" && 
+              <div 
+                className={`rowOI ${location.pathname === "/personnels" ? 'rowOIactiavted' : ''}`} 
+                onClick={()=>{
+                  navigate("/personnels");
+                }}
+              >
+                <div  
+                  className={`icons ${location.pathname === "/personnels" ? 'textActi' : ''}`}
+                >
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <div  
+                  className={`textx ${location.pathname === "/personnels" ? 'textActi' : ''}`}
+                >
+                  Mes personnels
+                </div>
+              </div>
+            }
+          </>
+        }
 
 
         

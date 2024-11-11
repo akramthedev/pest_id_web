@@ -185,7 +185,7 @@ const Personnels = () => {
             return;
           } 
           else if(mobileX.length <= 4){
-            alert("Invalid password");
+            alert("Invalid Mobile");
             return;
           } 
           else if(fullNameX.length <= 1){
