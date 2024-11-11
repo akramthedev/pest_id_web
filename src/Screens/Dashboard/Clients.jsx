@@ -15,7 +15,7 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 
 
 
-const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked ) => {
+const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff) => {
 
   
   const handleEdit = () => {
@@ -29,13 +29,13 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
   const handleView = async () => {
     console.log('Show:', params.row);
     setUserToEdit(params.row);
-    setshowClicked(!showClicked);
+    setRefreshStaff(!RefreshStaff);
+    setshowClicked(true);
   };
 
 
   const handleDelete = ()=>{
     setparamClicked(params);
-    console.warn(params);
     setisDeletedClicked(true);
   }
 
@@ -75,8 +75,11 @@ const Clients = () => {
   const [loadingDelete,setLoadingDelete] = useState(false);
   const [isDeletedClicked,setisDeletedClicked] = useState(false);
   const [paramClicked,setparamClicked] = useState(null);
-
-  
+  const [loadingAllPersonnels, setloadingAllPersonnels] = useState(false);
+  const [RefreshStaff, setRefreshStaff] = useState(false);
+  const [AlllHisStaffs, setAlllHisStaffs] = useState(null);
+  const [InfosOfHisProperty, setInfosOfHisProperty] = useState(null);
+  const [LoaderOfPropertyInfos, setLoaderOfPropertyInfos] = useState(false);
 
   
   const fetch_data_allUsers = async () => {
@@ -92,7 +95,6 @@ const Clients = () => {
         }
       });
       if (response.status === 200 ) {
-        console.warn(response.data.users);
         let i = 0;
         const transformedData = response.data.users
           .filter(user => user.id !== userIdNum && user.type === "admin" && user.canAccess === 1 && user.isEmailVerified === 1)
@@ -149,7 +151,6 @@ const Clients = () => {
       }
       else{
 
-        console.log(XXX);
 
         let emailX = XXX.email.toString();
         let mobileX = XXX.mobile.toString();
@@ -336,6 +337,103 @@ const Clients = () => {
 
 
 
+
+
+
+   
+  const getAllStaffs = async()=>{
+    setloadingAllPersonnels(true);
+    if(userToEdit){
+      try{
+        setAlllHisStaffs(null);
+        setInfosOfHisProperty(null);
+        const userIdNum = parseInt(userToEdit.idUser);
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.get(`${ENDPOINT_API}staffsByUserId/${userIdNum}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(response.status === 200){
+       
+          const transformedData = response.data.map(staff => {
+           
+            let createdAt = formatDateForCreatedAt(staff.created_at);
+            return {
+              idInc: staff.user_id,
+              id: staff.id,
+              fullName: staff.user ? staff.user.fullName : "---",
+              password: staff.user ? staff.user.password : "---",
+              type: staff.user ? staff.user.type : "---",
+              idUser: staff.user ? staff.user.id : "---",
+              image: staff.user ? staff.user.image : "---",
+              email: staff.user ? staff.user.email : "---",
+              mobile: staff.user ? staff.user.mobile : "---",
+              created_at: staff.created_at ? createdAt : "---",
+            };
+          });
+          
+          setAlllHisStaffs(transformedData)
+        }
+        else{
+          setAlllHisStaffs([]);
+        }
+      }
+      catch(e){
+        console.log(e.message);
+        setAlllHisStaffs([]);
+      } finally{
+        setloadingAllPersonnels(false);
+      }
+    }
+  }
+
+
+  const getInfosOfHisProperty = async()=>{
+    setLoaderOfPropertyInfos(true);
+    if(userToEdit){
+      try{
+        setInfosOfHisProperty(null);
+        const userIdNum = parseInt(userToEdit.idUser);
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.get(`${ENDPOINT_API}getadmin/${userIdNum}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(response.status === 200){
+          console.log(response.data)
+          setInfosOfHisProperty(response.data);
+        }
+        else{
+          setInfosOfHisProperty({
+          });
+        }
+      }
+      catch(e){
+        console.log(e.message);
+        setInfosOfHisProperty({
+
+        });
+      } finally{
+        setLoaderOfPropertyInfos(false);
+      }
+    }
+  }
+
+
+
+
+useEffect(()=>{
+  getAllStaffs();
+  getInfosOfHisProperty();
+},[RefreshStaff]);
+
+
+
+
   const columns = [
     { 
       field: 'id', 
@@ -394,7 +492,7 @@ const Clients = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked ), 
+      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff ), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 
@@ -570,66 +668,231 @@ const Clients = () => {
         {/*   show Personnel    */}
               
         <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
-          <div className="contPopUp popUp1 popUp777">
-            <div className="caseD11">
-              <span>Informations&nbsp;du</span><span>&nbsp;client</span>
+          <div className="contPopUp popUp1 popUp172853">
+              <div className='uofsdvsfnov'>
+                <div className="caseD11">
+                  <span>Ses Informations&nbsp;</span><span>&nbsp;</span>
+                </div>
+                {
+                userToEdit !== null && 
+                  <>
+                    <div className="rowInp rowInp1 rowInp1rowInp1 rowInp1rowInp1111">
+                      <img 
+                        src={userToEdit.image? userToEdit.image : "https://res.cloudinary.com/dqprleeyt/image/upload/v1731358494/istockphoto-1397556857-612x612_muc78g.jpg"}
+                        alt="" 
+                        style={{
+                          borderRadius : "50%", 
+                          height : '80px', 
+                          width : '80px',
+                          objectFit : "cover"
+                        }}
+                      />
+                    </div>
+                    <div className="rowInp rowInp1 rowInp1rowInp1">
+                      <label>
+                        Nom et prénom : 
+                      </label>
+                      <label>
+                        {
+                          userToEdit.fullName ? userToEdit.fullName  : "---"
+                        }
+                      </label>
+                    </div>
+                    <div className="rowInp rowInp1 rowInp1rowInp1">
+                      <label>
+                        Adresse Email : 
+                      </label>
+                      <label>
+                        {
+                          userToEdit.email ? userToEdit.email : "---"
+                        }
+                      </label>
+                    </div>
+                    <div className="rowInp rowInp1 rowInp1rowInp1">
+                      <label>
+                        Téléphone : 
+                      </label>
+                      <label>
+                        {
+                          userToEdit.mobile ?  userToEdit.mobile : "---"
+                        }
+                      </label>
+                    </div>
+                    <div className="rowInp rowInp1 rowInp1rowInp1">
+                      <label>
+                        Date de création : 
+                      </label>
+                      <label>
+                        {
+                          userToEdit.created_at
+                        }
+                      </label>
+                    </div>
+
+                    {
+                      LoaderOfPropertyInfos ?
+                      <div 
+                            style={{
+                              height : "123px", 
+                              width : "100%", 
+                              display : "flex", 
+                              alignItems : "center", 
+                              justifyContent : "center"
+                            }}
+                      >
+                        Chargement...&nbsp;&nbsp;<img src={LVG} alt="..." height={20} width={20} />
+                      </div>
+                      :
+                      <>
+                      {
+                        InfosOfHisProperty !== null && 
+                        <>
+                          <div 
+                            style={{
+                              height : "1px", 
+                              width  :"93%",
+                              marginLeft : "3.5%",
+                              background : "#eee", 
+                              marginBottom : "2rem" 
+                            }}
+                          />
+                          <div className="rowInp rowInp1 rowInp1rowInp1">
+                            <label>
+                              Appelation de la propriété : 
+                            </label>
+                            <label>
+                              {
+                                InfosOfHisProperty.company_name ? InfosOfHisProperty.company_name : "---"
+                              }
+                            </label>
+                          </div>
+                          <div className="rowInp rowInp1 rowInp1rowInp1">
+                            <label>
+                              Email de la propriété : 
+                            </label>
+                            <label>
+                              {
+                                InfosOfHisProperty.company_email ? InfosOfHisProperty.company_email : "---"
+                              }
+                            </label>
+                          </div>
+                          <div className="rowInp rowInp1 rowInp1rowInp1">
+                            <label>
+                              Téléphone de la propriété : 
+                            </label>
+                            <label>
+                              {
+                                InfosOfHisProperty.company_mobile ? InfosOfHisProperty.company_mobile : "---"
+                              }
+                            </label>
+                          </div>
+                        </>
+                      }
+                      </>
+                    }
+                    
+                    
+                  </>
+                }
+                <div className="rowInp rowInpModified rowInpModified2 osfovoufsouvs">
+                  <button className='jofzvno' onClick={()=>{setshowClicked(false);setUserToEdit(null);}} >Fermer</button>
+                  <button 
+                    onClick={()=>{
+                      setshowClicked(false);
+                      seteditClicked(true);
+                    }}
+                    className={loadinGEdit ? "efvofvz efvofvz2" : "efvofvz"}
+                  >
+                    Modifier le client
+                  </button>
+                </div>
             </div>
-            {
-            userToEdit !== null && 
-              <>
-                <div className="rowInp rowInp1 rowInp1rowInp1">
-                  <label>
-                    Nom et prénom
-                  </label>
-                  <label>
-                    {
-                      userToEdit.fullName
-                    }
-                  </label>
+            <div className="hrVertical" />
+            <div className="uofsdvsfnov">
+                <div className="caseD11">
+                  <span>Ses Personnels</span>
                 </div>
-                <div className="rowInp rowInp1 rowInp1rowInp1">
-                  <label>
-                    Adresse Email
-                  </label>
-                  <label>
+                {
+                  loadingAllPersonnels ? 
+                  <div className="uozsoufvuosf" style={{
+                    display : "flex",
+                    alignItems : "center", 
+                    justifyContent : "center", 
+                    paddingTop : "6rem", 
+                    color : "gray", 
+                    fontWeight : "400", 
+                    fontSize : "14px"
+                  }}>
+                    Chargement...&nbsp;&nbsp;<img src={LVG} alt="..." height={20} width={20} />
+                  </div>
+                  :
+                  <>
+                  {
+                    AlllHisStaffs && 
+                    <>
                     {
-                      userToEdit.email
+                      AlllHisStaffs.length === 0 ? 
+                      <div className="uozsoufvuosf" style={{
+                        display : "flex",
+                        alignItems : "center", 
+                        justifyContent : "center", 
+                        paddingTop : "6rem", 
+                        color : "gray", 
+                        fontWeight : "400", 
+                        fontSize : "14px"
+                      }}>
+                        Aucune donnée
+                      </div>
+                      :
+                      <div className="uozsoufvuosf">
+                        {
+                          AlllHisStaffs.map((staff, index)=>{
+                            return(
+                              <div className="otem">
+                                <div className="caseuzhcsd8989">
+                                  <div className="otemom">
+                                    <span>Nom complet : &nbsp;</span>
+                                    <span>
+                                    {
+                                      staff.fullName
+                                    }
+                                    </span>
+                                  </div>
+                                  <div className="otemom">
+                                    <span>Adresse Email : &nbsp;</span>
+                                    <span>
+                                    {
+                                      staff.email
+                                    }
+                                    </span>
+                                  </div>
+                                  <div className="otemom">
+                                    <span>Numéro téléphone : &nbsp;</span>
+                                    <span>
+                                    {
+                                      staff.mobile
+                                    }
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="caseuzhcsd89">
+                                  <button className='uosfvuouo'>
+                                    <i className='fa-solid fa-pen' ></i>
+                                  </button>
+                                  <button className='zirvhnzvf' >
+                                    <i className='fa-solid fa-trash'></i>
+                                  </button>
+                                </div>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
                     }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1 rowInp1rowInp1">
-                  <label>
-                    Téléphone
-                  </label>
-                  <label>
-                    {
-                      userToEdit.mobile
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1 rowInp1rowInp1">
-                  <label>
-                    Date de création
-                  </label>
-                  <label>
-                    {
-                      userToEdit.created_at
-                    }
-                  </label>
-                </div>
-              </>
-            }
-            <div className="rowInp rowInpModified">
-              <button className='jofzvno' onClick={()=>{setshowClicked(false);setUserToEdit(null);}} >Fermer</button>
-              <button 
-                onClick={()=>{
-                  setshowClicked(false);
-                  seteditClicked(true);
-                }}
-                className={loadinGEdit ? "efvofvz efvofvz2" : "efvofvz"}
-              >
-                Modifier le client
-              </button>
+                    </>
+                  }
+                  </>
+                }
             </div>
           </div>
         </div>
@@ -732,9 +995,9 @@ const Clients = () => {
               }
             </div>
             <div className="caseD2">
-              <button  disabled={loadingAllUsers} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
-              <button  disabled={loadingAllUsers}  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un client</button>
-              <button  disabled={loadingAllUsers}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  disabled={loadingAllUsers || loadingDelete} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un client</button>
+              <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>
           {

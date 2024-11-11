@@ -1,12 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "./index.css";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { matchPath, useLocation, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+
+  const paths = [
+    "/profile",
+    "/activity",
+    "/setting",
+    "/broadcast",
+    "/profile/:id"
+  ];
+
+  const isProfilePage = paths.some((path) => matchPath({ path }, location.pathname));
+
+
 
   // Close the profile pop-up when clicking outside of it
   useEffect(() => {
@@ -34,11 +47,6 @@ const NavBar = () => {
         <button className='eosvnowdc'>
           <button className='zjsdv' >
             <i class="fa-solid fa-earth-americas"></i>  
-          </button>         
-        </button>
-        <button className='eosvnowdc'>
-          <button className='zjsdv' >
-            <i className="fa-solid fa-bell"></i>   
           </button>         
         </button>
         {
@@ -77,7 +85,7 @@ const NavBar = () => {
           <div className={isProfileOpen ? "profile-popup showprofile-popup" : "profile-popup"} ref={profileRef}>
             <div 
               onClick={()=>{
-                navigate("/profile/79234629365");
+                navigate("/profile/79234629365");setIsProfileOpen(false);
               }}
               className="profile-header"
             >
@@ -94,10 +102,11 @@ const NavBar = () => {
 
             
             
-            {["/profile", "/activity", "/setting", "/broadcast"].includes(location.pathname) && (
+            {isProfilePage && (
               <div 
                 onClick={() => {
-                  navigate("/dashboard");
+                  navigate("/dashboard");setIsProfileOpen(false);
+                  
                 }}
                 className="profile-item"
               >
@@ -106,15 +115,14 @@ const NavBar = () => {
                 </div>
                 Tableau de Board
               </div>
-              )
-            }
+            )}
 
 
 
 
             <div 
               onClick={()=>{
-                navigate("/activity");
+                navigate("/activity");setIsProfileOpen(false);
               }}
               className="profile-item"> 
               <div className="uevuofz">
@@ -125,7 +133,7 @@ const NavBar = () => {
 
             <div
               onClick={()=>{
-                navigate("/broadcast");
+                navigate("/broadcast");setIsProfileOpen(false);
               }}
               className="profile-item"> 
               <div className="uevuofz">
@@ -139,7 +147,7 @@ const NavBar = () => {
             
             <div 
               onClick={()=>{
-                navigate("/setting");
+                navigate("/setting");setIsProfileOpen(false);
               }}
               className="profile-item"> 
               <div className="uevuofz">

@@ -1,12 +1,15 @@
 import React from 'react'
 import "./index.css";
+import NavBar from '../../Components/Navbar';
+
 
 const Profile = () => {
   return (
-    <div>
+    <div className='profile'>
+      <NavBar /> 
       Profile
     </div>
   )
 }
 
-export default Profile
+export default Profile;

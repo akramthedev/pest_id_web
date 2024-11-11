@@ -497,6 +497,18 @@ const Personnels = () => {
             {
             personnel_to_edit !== null && 
               <>
+                <div className="rowInp rowInp1 rowInp1rowInp1 rowInp1rowInp1111">
+                      <img 
+                        src={personnel_to_edit.image? personnel_to_edit.image : "https://res.cloudinary.com/dqprleeyt/image/upload/v1729461147/Design_sans_titre_rbtiwt.png"}
+                        alt="" 
+                        style={{
+                          borderRadius : "50%", 
+                          height : '99px', 
+                          width : '99px', 
+                          objectFit : "cover"
+                        }}
+                      />
+                </div>
                 <div className="rowInp rowInp1 rowInp1rowInp1">
                   <label>
                     Nom et prénom

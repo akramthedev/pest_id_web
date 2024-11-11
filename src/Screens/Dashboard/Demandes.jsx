@@ -309,7 +309,7 @@ const Demandes = () => {
       <div className={isAcceptedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12">
           <div className="caseD11">
-            <span className='zufshvwo'>Confirmer&nbsp;</span><span  className='zufshvwo'>&nbsp;l'adhésion</span>
+            <span className='zufshvwo'>Confirmer&nbsp;</span><span  className='zufshvwo'>&nbsp;l'adhésion&nbsp;{paramClicked && <>:&nbsp;{paramClicked.row.fullName}</>}</span>
           </div>
           <div className="uzuovsououzv">
             En acceptant, cet utilisateur deviendra membre avec accès complet à la plateforme.
