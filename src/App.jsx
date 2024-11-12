@@ -3,7 +3,8 @@ import './App.css';
 import Home from "./Screens/Home/Home";
 import Login from "./Screens/Auth/Login";
 import Todo from './Todo';
-import Profile from "./Screens/Profile/Profile";
+import OtherProfile from './Screens/Profile/OtherProfile';
+import Profile from "./Screens/Profile/MyProfile";
 import Register from "./Screens/Auth/Register";
 import Dashboard from './Screens/Dashboard/Dashboard';
 import Clients from "./Screens/Dashboard/Clients";
@@ -40,7 +41,8 @@ function App() {
         <Route path="/broadcast" element={isAuthenticated ? <Broadcast /> : <Navigate to="/login" />} />
         <Route path="/activity" element={isAuthenticated ? <Activity /> : <Navigate to="/login" />} />
         <Route path="/setting" element={isAuthenticated ? <Setting /> : <Navigate to="/login" />} />
-        <Route path="/profile/:id" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/profile/:id" element={isAuthenticated ? <OtherProfile /> : <Navigate to="/login" />} />
+        <Route path="/my-profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
 
         <Route path="/to-do" element={<Todo />} />
         <Route path="*" element={<Navigate to="/" />} />

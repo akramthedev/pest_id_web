@@ -14,7 +14,8 @@ const NavBar = () => {
     "/activity",
     "/setting",
     "/broadcast",
-    "/profile/:id"
+    "/profile/:id",
+    "/my-profile",
   ];
 
   const isProfilePage = paths.some((path) => matchPath({ path }, location.pathname));
@@ -54,7 +55,7 @@ const NavBar = () => {
           <div key={797979} className="erovuson" onClick={() => setIsProfileOpen(!isProfileOpen)}>
               <img 
                 className='isfivs'
-                src="https://res.cloudinary.com/dqprleeyt/image/upload/v1702216550/akram_tp6iku.jpg" 
+                src={localStorage.getItem("image") ? localStorage.getItem("image") : "https://res.cloudinary.com/dqprleeyt/image/upload/v1731358494/istockphoto-1397556857-612x612_muc78g.jpg"} 
                 alt="VBFISBIS" 
               />
               <div className='ziuvfzuo'>
@@ -69,7 +70,7 @@ const NavBar = () => {
             <div key={24924205} className="erovuson" onClick={() => setIsProfileOpen(!isProfileOpen)}>
               <img 
                 className='isfivs'
-                src="https://res.cloudinary.com/dqprleeyt/image/upload/v1702216550/akram_tp6iku.jpg" 
+                src={localStorage.getItem("image") ? localStorage.getItem("image") : "https://res.cloudinary.com/dqprleeyt/image/upload/v1731358494/istockphoto-1397556857-612x612_muc78g.jpg"} 
                 alt="VBFISBIS" 
               />
               <div className='ziuvfzuo'>
@@ -85,17 +86,17 @@ const NavBar = () => {
           <div className={isProfileOpen ? "profile-popup showprofile-popup" : "profile-popup"} ref={profileRef}>
             <div 
               onClick={()=>{
-                navigate("/profile/79234629365");setIsProfileOpen(false);
+                navigate("/my-profile");setIsProfileOpen(false);
               }}
               className="profile-header"
             >
               <img                
-                  src="https://res.cloudinary.com/dqprleeyt/image/upload/v1702216550/akram_tp6iku.jpg" 
+                  src={localStorage.getItem("image") ? localStorage.getItem("image") : "https://res.cloudinary.com/dqprleeyt/image/upload/v1731358494/istockphoto-1397556857-612x612_muc78g.jpg"} 
                   alt="Profile" 
                   className="profile-image" />
               <div className="profile-info">
-                <div className="profile-name">Akram El Basri</div>
-                <div className="profile-email">seasoned@gmail.com</div>
+                <div className="profile-name">{localStorage.getItem("fullName") ? localStorage.getItem("fullName") : "---"}</div>
+                <div className="profile-email">{localStorage.getItem("email") ? localStorage.getItem("email") : "---"}</div>
               </div>
             </div>
           
@@ -170,6 +171,10 @@ const NavBar = () => {
                 localStorage.removeItem('fullName');
                 localStorage.removeItem('email');
                 localStorage.removeItem('created_at');
+                localStorage.removeItem('company_email');
+                localStorage.removeItem('company_mobile');
+                localStorage.removeItem('company_name');
+                localStorage.removeItem('adminId');
                 navigate(0);
               }}
             > 

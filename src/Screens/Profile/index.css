@@ -8,17 +8,18 @@
     justify-content: center;
     align-items: center;
     padding-top: 100px;
+    overflow-y: auto !important;
 
 }
 .ofs{
     width: 100%;
-    max-width: 700px;
+    max-width: 577px;
     height: 60px;
     margin: 0 auto;
     display: flex;
     margin-top: 3vh;
     align-items: center;
-    justify-content: left;
+    justify-content: space-between;
     font-size: 2rem;
     font-weight: 700;
 }
@@ -29,16 +30,16 @@
 .itemX{
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     justify-content: space-between;
 }
 .ofs2{
     width: 100%;
-    max-width: 700px;
+    max-width: 577px;
     height: auto;
     margin: 0 auto;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -62,47 +63,76 @@
     font-size: 2rem;
     font-weight: 700;
 }
+.ofs span:last-child{
+    color: #212121 !important;
+    font-size: 2rem;
+    font-weight: 700;
+}
 
 .sfovwd{
     height:calc(100% - 80px);
     width: 100%;
-    max-width: 700px;
-    margin:  0 auto;
-    padding-top: 2rem;
+    max-width: 577px;
+    margin: 0 auto;
+    padding-top: 2.7rem;
     display: flex;
     flex-direction: column;
 }
 .rowuzd{
     width: 100%;
-    height: 200px;
+    height: auto;
+    min-height: 200px;
     display: flex;
 }
 .caseOno{
-    height: 200px;
+    height: auto;
+    min-height: 200px;
     width: 200px;
 }
 .caseOno img{
     height: 200px;
     width: 200px;
     object-fit: cover;
-    border-radius: 0.9rem;
+    border-radius: 50%;
 }
 .caseDoso{
     width: calc(100% - 200px);
-    height: 200px;
+    height: auto;
+    min-height: 200px;
     padding-left: 1.5rem;
 }
 
 .zufsiqdvc{
     font-weight: 800;
     font-size:3.2rem;
-    width: 300%;
+    width: 100%;
+}
+
+.zufsiqdvcmodif{
+    width: 100%;
+}
+.zufsiqdvcmodif input{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid rgb(208, 207, 207);
+    outline: none;
+    font-weight: 800;
+    font-size:3rem;
+}
+
+.zufsiqdvcmodif input:focus{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid #579519;
+    outline: none;
+    font-weight: 800;
+    font-size:3rem;
 }
 .posdvo1{
     margin-top: .8rem;
     font-weight: 300;
     font-size: 1.5rem;
-    width: 300%;
+    width: 100%;
 
     margin-bottom: .8rem;
 }
@@ -123,26 +153,101 @@
     width: 100%;
     max-width: 577px;
     height: auto;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     padding: 0;
 }
 
-.ofs22 button{
-    width: 48%;
+.ofs button{
+    width: 50px;
     height: 50px;
     cursor: pointer;
     transition: 0.2s all ease-in-out;
     font-weight: 500;
 }
-.ofs22 button:hover{
+.ofs button:hover{
     background-color: #e1e1e1;
 }
 
-.ofs22 button:active{
+.ofs button:active{
     background-color: #bebebe;
 }
 
-.ofs22ofs22 button{
-    width: 100% !important;
+ 
+.disabled{
+    background-color: #e1e1e1;
+}
+
+
+
+
+.popUp6666{
+    opacity: 0;
+    visibility: hidden;
+    backdrop-filter: blur(9px) saturate(200%);
+    -webkit-backdrop-filter: blur(9px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.212);    z-index: 9999999;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    transition: 0.400 all ease-in-out;
+}
+
+
+
+.showpopUp{
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+.zufsiqdvcmodif2{
+    width: 100%;
+    margin-top: 0.3rem;
+}
+.zufsiqdvcmodif2 input{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid rgb(208, 207, 207);
+    outline: none;
+    font-weight: 400;
+    font-size : 20px;
+}
+
+.zufsiqdvcmodif2 input:focus{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid #579519;
+    outline: none;
+}
+
+
+.zufsiqdvcmodif3{
+    width: 100%;
+}
+.zufsiqdvcmodif3 input{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid rgb(208, 207, 207);
+    outline: none;
+    font-weight: 400;
+    text-align: right;
+}
+
+.zufsiqdvcmodif3 input:focus{
+    width: calc(100%);
+    padding: 0.25rem 1rem;
+    border: 1.8px solid #579519;
+    outline: none;
+}
+
+
+.zsfiowdvzsfiowdv i{
+    color: #579519;
 }

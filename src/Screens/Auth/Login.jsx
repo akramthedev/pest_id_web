@@ -43,13 +43,13 @@ function Login() {
         localStorage.setItem('token', token);
         localStorage.setItem('userId', user.id);
         localStorage.setItem('type', user.type);
-
+        
         localStorage.setItem('image', user.image ? user.image : "---");
         localStorage.setItem('mobile', user.mobile ? user.mobile : "---");
         localStorage.setItem('fullName', user.fullName ? user.fullName : "---");
         localStorage.setItem('email', user.email ? user.email : "---");
         localStorage.setItem('created_at', user.created_at ? user.created_at : "---");
-
+ 
         if(user.type !== "staff"){
           const resp = await axios.get(`${ENDPOINT_API}getadmin/${user.id}`,{
             headers : {
@@ -60,8 +60,10 @@ function Login() {
             localStorage.setItem('company_mobile', resp.data.company_mobile ? resp.data.company_mobile : "---");
             localStorage.setItem('company_name', resp.data.company_name ? resp.data.company_name : "---");
             localStorage.setItem('company_email', resp.data.company_email ? resp.data.company_email : "---");
+            localStorage.setItem('adminId', resp.data.id);
           }
           else{
+            localStorage.setItem('adminId', "---");
             localStorage.setItem('company_mobile', "---");
             localStorage.setItem('company_name', "---");
             localStorage.setItem('company_email', "---");

@@ -550,7 +550,7 @@ useEffect(()=>{
         </div>
       </div>
 
-      <div className={loadingDelete ? "popUp666 showpopUp" : "popUp666"}>
+      <div className={loadingDelete ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{
           fontSize : '16px', 
           fontWeight : "500",
