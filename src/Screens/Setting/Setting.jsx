@@ -131,7 +131,7 @@ const Setting = () => {
     <>
       <NavBar />
 
-      <div className={loadRefresh || loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
+      <div className={loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
         <span style={{
           fontSize: '16px', 
           fontWeight: '500',
@@ -141,6 +141,20 @@ const Setting = () => {
         }}>
           <img src={LVG} alt="..." height={21} width={21} />
           &nbsp;&nbsp;Modification en cours...
+        </span>
+      </div>
+
+
+      <div className={loadRefresh ? 'popUp6666 showpopUp' : 'popUp6666'}>
+        <span style={{
+          fontSize: '16px', 
+          fontWeight: '500',
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center'
+        }}>
+          <img src={LVG} alt="..." height={21} width={21} />
+          &nbsp;&nbsp;Réinitialisation en cours...
         </span>
       </div>
 
