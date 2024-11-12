@@ -26,7 +26,7 @@ function Login() {
     e.preventDefault();
     const validationErrors = {};
     if (!email || !/\S+@\S+\.\S+/.test(email)) validationErrors.email = 'Adresse email invalide';
-    if (!password || password.length < 6) validationErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+    if (!password || password.length < 5) validationErrors.password = 'Le mot de passe doit contenir au moins 5 caractères';
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
