@@ -325,14 +325,15 @@
 
 .usfhuvhushuf .info{
     width: calc(100% - 280px);
+    color: rgb(163, 163, 163) !important;
 }
 
 .usfhuvhushuf2{
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
-    margin-top:1.666rem;
-    height: calc(100% - 240px);    
+    margin-top:2.4rem;
+    height: calc(100% - 170px);    
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -379,7 +380,7 @@
 }
 
 
-.siufhusdc div:first-child{
+.siufhusdc .eushfvofs{
     background-color: #579519;
     border-radius: 50%;
     display: flex;
@@ -393,6 +394,55 @@
     width: calc(100% - 34px);
 }
 
-.siufhusdc div:first-child i{
+.siufhusdc .eushfvofs i{
     font-size: 13px;
+    margin-top: 0.1rem;
+    margin-right: 0.035rem;
+}
+
+.siufhusdc .eushfvofs2{
+    background-color: rgb(214, 0, 0);
+}
+
+.uzsorfvshfvohsfuvhosfhv{
+    position: relative;
+    overflow-y: hidden !important;
+    margin-top:2rem !important;
+    height: calc(100% - 240px) !important;    
+}
+
+.ousuofozofvs793794{
+    background-color: rgba(255, 255, 255, 0.829);
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+}
+
+.uzsfuvuosfuosqfoud{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gray;
+}
+
+.euzuzrugfuozuofzuoouf{
+    display: flex;
+    align-items: center;
+}
+
+.zovuoizovzufvnuoznfvous{
+    height: 400px;
+    width: 100%;
+    display: flex;
+    color: rgb(69, 69, 69);
+    align-items: center;
+    justify-content: center;
+}
+
+.disabledX:hover{
+    background-color: rgb(238, 238, 238) !important;
 }

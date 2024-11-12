@@ -3,7 +3,6 @@ import "./index.css";
 import NavBar from '../../Components/Navbar';
 import axios from 'axios';
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
-import formatPhoneNumber from '../../Helpers/formatMobile';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from 'react-router-dom';
@@ -13,37 +12,86 @@ const Activity = () => {
 
   const [type, settype] = useState(null);   
   const [JA, setJA] = useState(null);   
-  const [loaderDelete, setloaderDelete] = useState(null);
+  const [loaderDelete, setloaderDelete] = useState(false);
   const [loading, setloading] = useState(null);
   const [dataHistory, setdataHistory] = useState(null);
+  const [isNull, setisNull] = useState(false);
   const nav = useNavigate();
 
 
  
 
-    const fetchAllHistory = ()=>{
+    const fetchAllHistory = async ()=>{
       setloading(true);
       let pp = localStorage.getItem("type");
       let ja = localStorage.getItem("is_ja");
       settype(pp);
       setJA(ja);
-      setloading(false);
-
+      
+      try{
+          const userId = localStorage.getItem('userId');
+          const userIdNum = parseInt(userId);
+          const token = localStorage.getItem('token');
+      
+          const resp = await axios.get(`${ENDPOINT_API}getAllActivitiesByUser/${userIdNum}`, {
+              headers: {
+              'Authorization': `Bearer ${token}`
+              }
+          });
+          if(resp.status === 200){
+              setdataHistory(resp.data);
+              if(resp.data.length === 0){
+                setisNull(true);
+              }
+              else{
+                setisNull(false);
+              }
+          }
+          else{
+              setdataHistory([]);
+              setisNull(true);
+          }
+          console.warn(resp.status);
+      }     
+      catch(e){
+          setdataHistory([]);
+          setisNull(true);
+          console.log(e.message);
+      } finally{
+        setloading(false);
+      }
+      
     }
 
 
 
     const handleDeleteAllHistory = async ()=>{
-      if(dataHistory){
-        if(dataHistory.length === 0){
+      try{
+        if(dataHistory){
+          if(dataHistory.length === 0){
+            return;
+          }
+          else{
+            setloaderDelete(true);
+            const resp = await axios.delete(`${ENDPOINT_API}deleteAllActivityByUser/${parseInt(localStorage.getItem('userId'))}`, {
+                headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if(resp.status === 200){
+              setdataHistory([]);
+            }
+            setloaderDelete(false);
+          }
+        } 
+        else{
           return;
         }
-        else{
-          //delete all history data
-        }
-      } 
-      else{
-        return;
+      }
+      catch(e){
+        console.log(e.message);
+      } finally{
+        setloaderDelete(false);
       }
     }
 
@@ -66,7 +114,7 @@ const Activity = () => {
           justifyContent :"center"
         }}>
           <img src={LVG} alt="..." height={21} width={21} />
-          &nbsp;&nbsp;Modification en cours...
+          &nbsp;&nbsp;Suppression en cours...
         </span>
       </div>
 
@@ -78,14 +126,14 @@ const Activity = () => {
                 Historique
                 &nbsp;
               </span>
-              <span>
-                d'activité
+              <span >
+                d'activité&nbsp;&nbsp;&nbsp;{loading && <img src={LVG} alt="..." height={25} width={25} />}
               </span>
             </div>
           
             <button
-              disabled={loaderDelete || loading}
-              className={loaderDelete ? "disabled disabledX oefbbofoufzuofzs" : "oefbbofoufzuofzs disabledX"}
+              disabled={loaderDelete || loading || isNull}
+              className={loaderDelete || loading || isNull ? "disabled disabledX oefbbofoufzuofzs" : "oefbbofoufzuofzs"}
               onClick={()=>{
                 handleDeleteAllHistory();
               }}
@@ -94,44 +142,122 @@ const Activity = () => {
               <i className='fa-solid fa-trash-can' ></i>
             </button>
         </div>
-        <div className="usfhuvhushuf">
-          <div className="info">
-          Votre suivi d'activité est actuellement désactivé. <br /> Activez-le à tout moment dans la page des paramètres.
-          </div>
-          <button
-            onClick={()=>{
-              nav("/setting");
-            }}
-          >
-            <i className='fa-solid fa-gear'></i>&nbsp;
-            Accéder aux paramètres
-          </button>
-        </div>
-        <div className="usfhuvhushuf2">
-         
-          
-          
-          
-        <div className="itemomomo">
-            <div className="siufhusdc">
-              <div>
-                <i className='fa-solid fa-check' ></i>
+        {
+          JA !== null && JA !== undefined && 
+          <>
+          {
+            JA === "desactivated" && 
+            <div className="usfhuvhushuf">
+              <div className="info">
+              Votre suivi d'activité est actuellement désactivé. <br /> Activez-le à tout moment dans la page des paramètres.
               </div>
-              <div>
-                Une erreu survenue lors de la création de la ferme et la serre. .
-              </div>
+              <button
+                onClick={()=>{
+                  nav("/setting");
+                }}
+              >
+                <i className='fa-solid fa-gear'></i>&nbsp;
+                Accéder aux paramètres
+              </button>
             </div>
-            <span>
-              19/11/2024
-            </span>
+          }
+          </>
+        }
+
+
+
+        {
+          loading ? 
+
+          <div className="usfhuvhushuf2 uzsorfvshfvohsfuvhosfhv uzsfuvuosfuosqfoud">
+            <img src={LVG} alt="..." height={20} width={20} />&nbsp;&nbsp;Chargement des données...
           </div>
 
-
- 
-
+          :
 
 
-        </div>
+            <div className={`usfhuvhushuf2 ${JA && JA === "desactivated" ? "uzsorfvshfvohsfuvhosfhv" : ""}`}>
+
+                {
+                  JA !== null && JA !== undefined &&
+                  <>
+                  {
+                    JA === "desactivated" && 
+                    <div className="ousuofozofvs793794" />
+                  }
+                  </>
+                }
+
+
+                {
+                  dataHistory && 
+                  <>
+                  {
+                    dataHistory.length === 0 ? 
+                    <div className="zovuoizovzufvnuoznfvous">
+                      Aucune donnée
+                    </div>
+                    :
+                    <>
+                    {
+                      dataHistory.map((data, index)=>{
+                        if(data.isDanger === 1 || data.isDanger === "1" || data.isDanger === true){
+                          return(
+                            <div className="itemomomo">
+                  
+                            <div className="siufhusdc">
+                                <div className='eushfvofs eushfvofs2'>
+                                  <i className='fa-solid fa-xmark' ></i>
+                                </div>
+                                <div>
+                                {
+                                  data.action
+                                }
+                                </div>
+                              </div>
+                              <span>
+                              {
+                                formatDateForCreatedAt(data.created_at)
+                              }
+                              </span>
+                            </div>
+
+                          )
+                        }
+                        else{
+                          return(
+                            <div className="itemomomo">
+                  
+                              <div className="siufhusdc">
+                                <div className='eushfvofs'>
+                                  <i className='fa-solid fa-check' ></i>
+                                </div>
+                                <div>
+                                {
+                                  data.action
+                                }
+                                </div>
+                              </div>
+                              <span>
+                              {
+                                formatDateForCreatedAt(data.created_at)
+                              }
+                              </span>
+                            </div>
+
+                          )
+                        }
+                      })
+                    }
+                    </>
+                  }
+                  </>
+                }
+
+
+
+              </div>
+        }
       </div>
     </>
   )

@@ -146,7 +146,7 @@ const Setting = () => {
 
       <div className="profile">
         <div className="ofs">
-          <div><span>Mes&nbsp;</span><span>Paramètres</span></div>
+          <div><span>Mes&nbsp;</span><span>Paramètres&nbsp;&nbsp;{isModifierMotDePasseClicked && <>/&nbsp;&nbsp;Mot de passe</>}</span></div>
           {
             isModifierMotDePasseClicked === false  && 
             <button
