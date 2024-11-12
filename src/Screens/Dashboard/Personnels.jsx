@@ -660,7 +660,7 @@ const Personnels = () => {
               }
             </div>
             <div className="caseD2">
-              <button  disabled={LoadinG_All_Personnels} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  disabled={LoadinG_All_Personnels}   className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><i className='fa-solid fa-arrows-rotate' ></i><div className="tooltipXX">Actualiser </div></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un personnel</button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>

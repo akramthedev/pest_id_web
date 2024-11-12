@@ -801,7 +801,7 @@ const Fermes = () => {
               }
             </div>
             <div className="caseD2">
-              <button  title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} disabled={loadingAllFarms} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} disabled={loadingAllFarms} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une ferme</button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>

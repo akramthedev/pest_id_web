@@ -826,3 +826,46 @@
 }
 
 
+
+
+.caseD2 .fa-arrows-rotate{
+    font-size: 20px !important;
+}
+
+
+
+
+.oefbbofoufzuofzs{
+    position: relative !important;
+}
+
+
+.tooltipXX {
+    visibility: hidden ;
+    width: 120px ;
+    height: 45px ;
+    background-color: #f7f7f7 ;
+    color: #999999  ;
+    border: 1px solid #ffffff  ;
+    text-align: center  ;
+    border-radius: 5px  ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute  ;
+    top: -5%  ; /* Tooltip appears above the button */
+    right: 150%  ;
+    opacity: 0  ;
+    transition: opacity 0.3s  ;
+    z-index: 90  ;
+    font-weight: 500   ;
+    font-size: 16px   ;
+  }
+  
+  .oefbbofoufzuofzs:hover .tooltipXX {
+    visibility: visible  ;
+    opacity: 1  ;
+  }
+
+  
+

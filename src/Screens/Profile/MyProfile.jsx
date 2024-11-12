@@ -178,33 +178,36 @@ const Profile = () => {
           isModifiedInfosClicked ? 
           <div className='uoezsrqdvc'>
             <button
-              className={loaderAnnuler || loaderConfirmer && "disabled"}
+              className={loaderAnnuler || loaderConfirmer ? "disabled oefbbofoufzuofzs" : "oefbbofoufzuofzs"}
               disabled={loaderAnnuler || loaderConfirmer}
               onClick={()=>{
                 handleChangeData();
               }}
             >
+              <div className="tooltip">Sauvegarder les modifications</div>
               <i className='fa-solid fa-check' ></i>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button
               disabled={loaderAnnuler || loaderConfirmer}
-              className={loaderAnnuler || loaderConfirmer && "disabled"}
+              className={loaderAnnuler || loaderConfirmer ? "disabled oefbbofoufzuofzs" : "oefbbofoufzuofzs"}
               onClick={()=>{
                 fetchInfosFromLocalStorage();
               }}
             >
+              <div className="tooltip">Annuler les modifications</div>
               <i className='fa-solid fa-xmark' ></i>
             </button>
           </div>
           :
           <button
             disabled={loaderAnnuler || loaderConfirmer}
-            className={loaderAnnuler || loaderConfirmer && "disabled"}
+            className={loaderAnnuler || loaderConfirmer ? "disabled oefbbofoufzuofzs" : "oefbbofoufzuofzs"}
             onClick={()=>{
               setisModifiedInfosClicked(true);
             }}
           >
+            <div className="tooltip">Modifier mes informations</div>
             <i className='fa-solid fa-pen' ></i>
           </button>
         }

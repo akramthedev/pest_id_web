@@ -230,3 +230,50 @@
 .uevuofz i{
   color: #212121;
 }
+
+
+
+
+
+
+.switch-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.switch-label {
+  font-size: 16px;
+  margin-right: 10px;
+  color: gray;
+  width: calc(100% - 130px);
+  font-weight: 300;
+}
+
+.switch {
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  display: flex;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.switch-on {
+  background-color: #579519;
+}
+
+.switch-circle {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: margin 0.3s ease;
+}
+
+.circle-on {
+  margin-left: 30px;
+}

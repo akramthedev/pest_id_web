@@ -41,14 +41,26 @@ function Login() {
         const token = response.data.token;
         const user = response.data.user;
         localStorage.setItem('token', token);
+
+
+
         localStorage.setItem('userId', user.id);
         localStorage.setItem('type', user.type);
-        
         localStorage.setItem('image', user.image ? user.image : "---");
         localStorage.setItem('mobile', user.mobile ? user.mobile : "---");
         localStorage.setItem('fullName', user.fullName ? user.fullName : "---");
         localStorage.setItem('email', user.email ? user.email : "---");
         localStorage.setItem('created_at', user.created_at ? user.created_at : "---");
+
+
+        
+        localStorage.setItem('is_np', user.is_np === 1 ? "activated" : "desactivated");
+        localStorage.setItem('is_an', user.is_an === 1 ? "activated" : "desactivated");
+        localStorage.setItem('is_maj', user.is_maj === 1 ? "activated" : "desactivated");
+        localStorage.setItem('is_ja', user.is_ja === 1 ? "activated" : "desactivated");
+
+
+      
  
         if(user.type !== "staff"){
           const resp = await axios.get(`${ENDPOINT_API}getadmin/${user.id}`,{
@@ -76,6 +88,7 @@ function Login() {
         alert('Erreur lors de la connexion');
       }
     } catch (error) {
+      console.log(error);
       alert('Erreur lors de la connexion');
       console.error("Erreur lors de la connexion", error);
     } finally{

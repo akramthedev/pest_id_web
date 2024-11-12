@@ -350,7 +350,7 @@ const Demandes = () => {
       <div className={isRefusedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12">
           <div className="caseD11">
-            <span className='svowdjc'>Refuser&nbsp;</span><span className='svowdjc'>&nbsp;l'adhésion</span>
+            <span className='svowdjc'>Refuser&nbsp;</span><span className='svowdjc'>&nbsp;l'adhésion&nbsp;{paramClicked && <>:&nbsp;{paramClicked.row.fullName}</>}</span>
           </div>
           <div className="uzuovsououzv">
           Le refus empêchera cet utilisateur de devenir membre et d'accéder à la plateforme.
@@ -409,7 +409,7 @@ const Demandes = () => {
               }
             </div>
             <div className="caseD2">
-              <button  disabled={loadingNouvDem} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  disabled={loadingNouvDem}  className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>

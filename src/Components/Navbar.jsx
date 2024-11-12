@@ -164,6 +164,7 @@ const NavBar = () => {
               className="profile-item"
               onClick={()=>{
                 localStorage.removeItem('token');
+                
                 localStorage.removeItem('userId');
                 localStorage.removeItem('type');
                 localStorage.removeItem('mobile');
@@ -171,10 +172,17 @@ const NavBar = () => {
                 localStorage.removeItem('fullName');
                 localStorage.removeItem('email');
                 localStorage.removeItem('created_at');
+
                 localStorage.removeItem('company_email');
                 localStorage.removeItem('company_mobile');
                 localStorage.removeItem('company_name');
                 localStorage.removeItem('adminId');
+
+                localStorage.removeItem('is_np');
+                localStorage.removeItem('is_an');
+                localStorage.removeItem('is_maj');
+                localStorage.removeItem('is_ja');
+
                 navigate(0);
               }}
             > 

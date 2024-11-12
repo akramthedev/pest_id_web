@@ -251,3 +251,38 @@
 .zsfiowdvzsfiowdv i{
     color: #579519;
 }
+
+
+
+.oefbbofoufzuofzs{
+    position: relative !important;
+}
+
+
+.tooltip {
+    visibility: hidden !important;
+    width: 260px !important;
+    background-color: #f6f6f6 !important;
+    color: #5d5d5d !important;
+    border: 1px solid #e8e8e8 !important;
+    text-align: center !important;
+    border-radius: 5px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;    position: absolute !important;
+    top: -120% !important; /* Tooltip appears above the button */
+    left: 50% !important;
+    margin-left: -130px !important; /* Center the tooltip */
+    opacity: 0 !important;
+    transition: opacity 0.3s !important;
+    z-index: 90 !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+  }
+  
+  .oefbbofoufzuofzs:hover .tooltip {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  

@@ -994,7 +994,7 @@ useEffect(()=>{
               }
             </div>
             <div className="caseD2">
-              <button  disabled={loadingAllUsers || loadingDelete} title='Rafraîchir la page' className='eofvouszfv00' onClick={()=>{setRefresh(!refresh)}} ><i class="fa-solid fa-rotate-right"></i></button>
+              <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
               <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un client</button>
               <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
