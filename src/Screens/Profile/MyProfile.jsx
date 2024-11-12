@@ -171,9 +171,9 @@ const Profile = () => {
       </div>
 
 
-      <div className='profile'>
+      <div className='profile'> 
         <div className="ofs">
-          <div><span>{isModifiedInfosClicked ? "Modifier" : "Mon"}&nbsp;</span><span>{isModifiedInfosClicked && <>mon&nbsp;</>}profil</span></div>
+          <div><span>Mon&nbsp;</span><span>profil{isModifiedInfosClicked && <>&nbsp;&nbsp;/&nbsp;&nbsp;Modification</>}</span></div>
         {
           isModifiedInfosClicked ? 
           <div className='uoezsrqdvc'>
