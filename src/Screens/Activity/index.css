@@ -334,7 +334,7 @@
     margin: 0 auto;
     margin-top:2.4rem;
     height: calc(100% - 170px);    
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
