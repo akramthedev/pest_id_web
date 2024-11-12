@@ -13,3 +13,9 @@ button{
   outline: none;
   border-radius: 0.4rem;
 }
+
+
+::selection{
+  background-color: #579519;
+  color : white !important;
+}

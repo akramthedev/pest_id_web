@@ -13,7 +13,7 @@
 }
 .ofs{
     width: 100%;
-    max-width: 577px;
+    max-width: 700px;
     height: 60px;
     margin: 0 auto;
     display: flex;
@@ -35,11 +35,11 @@
 }
 .ofs2{
     width: 100%;
-    max-width: 577px;
+    max-width: 700px;
     height: auto;
     margin: 0 auto;
-    margin-top: 4rem;
-    margin-bottom: 3rem;
+    margin-top: 3rem !important;
+    margin-bottom: 2rem !important;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -50,7 +50,7 @@
 
 .ofs22{
     width: 100%;
-    max-width: 577px;
+    max-width: 700px;
     height: auto;
     margin-top: 2rem;
     display: flex;
@@ -72,7 +72,7 @@
 .sfovwd{
     height:calc(100% - 80px);
     width: 100%;
-    max-width: 577px;
+    max-width: 700px;
     margin: 0 auto;
     padding-top: 2.7rem;
     display: flex;
@@ -151,7 +151,7 @@
 }
 .rowuzd2{
     width: 100%;
-    max-width: 577px;
+    max-width: 700px;
     height: auto;
     margin: 0 auto;
     display: flex;

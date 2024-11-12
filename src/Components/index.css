@@ -239,6 +239,7 @@
 .switch-container {
   display: flex;
   position: relative;
+  width: 700px;
   align-items: flex-start;
   justify-content: space-between;
 }
@@ -260,11 +261,13 @@
   display: flex;
   padding: 5px;
   border: none;
+  overflow: hidden !important;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .switch-on {
+  overflow: hidden !important;
   background-color: #579519;
 }
 
@@ -278,7 +281,8 @@
 
 .circle-on {
   margin-left: 30px;
-}
+
+  box-shadow: rgba(0, 0, 0, 0.526) 0px 10px 20px 4px;}
 
 
 
