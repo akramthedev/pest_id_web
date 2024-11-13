@@ -58,12 +58,27 @@ const Setting = () => {
   const handleUpdatePassword = async()=>{
     
     if((password !== confirmpassword) && (password.length !== confirmpassword.length)){
-      alert("le mot de passe et la confirmation ne sont pas identiques.");
-      return;
+      if(!showItResponse){
+        setisErrorResponse(true);
+        
+        setmessageResponse("le mot de passe et la confirmation ne sont pas identiques.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
+      return;     
+
     }
     else if(confirmpassword.length <5 || password.length < 5){
-      alert('Le mot de passe doit contenir au moins 5 caracteres ! ');
-      return;
+      if(!showItResponse){
+          setisErrorResponse(true);
+          
+          setmessageResponse("Le mot de passe doit contenir au mois 5 caractères.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);}
+        return;
     }
 
     try{

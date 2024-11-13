@@ -418,6 +418,8 @@ const Calculations = () => {
           seteditClicked(false);
           setCalculToEdit(null);
           setSelectedFarm(null);
+          setImageFile(null);
+          setImageName(null);
           setSelectedGreenhouse(null);
           fetchDataPrediction();
         }
@@ -494,8 +496,9 @@ const Calculations = () => {
             setSelectedFarm(null);
             setSelectedGreenhouse(null);
             setIDplaque("");
-            setImageFile("");
+            setImageFile(null);
             setaddClicked(false);
+            document.querySelector('input[type="file"]').value = '';
           }        
           else{
            if(!showItResponse){
