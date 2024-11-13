@@ -17,7 +17,7 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const actionTemplate = (params, isRefusedClicked, setisRefusedClicked, isAcceptedClicked, setisAcceptedClicked, setparamClicked) => {
+const actionTemplate = (params, isRefusedClicked, setisRefusedClicked, isAcceptedClicked, setisAcceptedClicked, setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
   
   
   return (
@@ -134,17 +134,39 @@ const Demandes = () => {
               prevnouvellesDemandes.filter(item => item.id !== paramClicked.id)
             );
             setisAcceptedClicked(false);
+            if(!showItResponse){
+              setisErrorResponse(false);
+              setmessageResponse("La demande a été acceptée avec succès.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 3000);
+            }
           }
           else{
             setloadingAccepte(false);
             setisAcceptedClicked(false);
-            alert('Oops, Error ! ');
+             if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de l'acceptation du client.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 3000);
+        }
           }
         }
         else{
           setloadingAccepte(false);
           setisAcceptedClicked(false);
-          alert('Oops, Error ! ');
+           if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de l'acceptation du client.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 3000);
+        }
         }
         
       }
@@ -152,12 +174,26 @@ const Demandes = () => {
         console.log(e.message);
         setloadingAccepte(false);
        setisAcceptedClicked(false);
-        alert('Oops, Error ! ');
+         if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de l'acceptation du client.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 3000);
+        }
       }
        
     }
     else{
-      alert("Oups, Erorr ! ");
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de l'acceptation du client.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 3000);
+      }
       return;
     }
   }
@@ -167,7 +203,6 @@ const Demandes = () => {
     if(paramClicked){
       setloadingRefuse(true);
       try{
-        const token = localStorage.getItem('token');
       
         const response = await axios.post(`${ENDPOINT_API}refuse/${parseInt(paramClicked.row.id)}`);
 
@@ -176,12 +211,27 @@ const Demandes = () => {
           setNouvellesDemandes(prevnouvellesDemandes => 
             prevnouvellesDemandes.filter(item => item.id !== paramClicked.id)
           );
+          if(!showItResponse){
+            setisErrorResponse(false);
+            setmessageResponse("La demande a été refusée avec succès.");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 3000);
+          }
           setisRefusedClicked(false);
         }
         else{
           setloadingRefuse(false);
           setisRefusedClicked(false);
-          alert('Oops, Error ! ');
+          if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors du refus du client.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 3000);
+        }
         }
         
       }
@@ -189,48 +239,32 @@ const Demandes = () => {
         console.log(e.message);
         setloadingRefuse(false);
         setisRefusedClicked(false);
-        alert('Oops, Error ! ');
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors du refus du client.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 3000);
+        }
       }
        
     }
     else{
-      alert("Oups, Erorr ! ");
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors du refus du client.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 3000);
+      }
       return;
     }
   }
 
 
-  const handleRefuser2 = async () => {
-    /*
-    setNouvellesDemandes(prevnouvellesDemandes => 
-      prevnouvellesDemandes.filter(item => item.id !== params.row.id)
-    );
-    try{
-
-      const token = localStorage.getItem('token');
-
-      const response = await axios.delete(`${ENDPOINT_API}deleteUserStaffNotAdmin/${parseInt(params.row.idUser)}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if(response.status === 200){
-      }
-      else{
-        alert('Not deleted');
-        setRefresh(!refresh);
-      }
-     
-    }
-    catch(e){
-      alert('Not deleted');
-      setRefresh(!refresh);
-      console.log(e.message);
-    }
-    */
-  };
-
+ 
 
  
 
@@ -292,7 +326,7 @@ const Demandes = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, isRefusedClicked, setisRefusedClicked, isAcceptedClicked, setisAcceptedClicked, setparamClicked), 
+      renderCell: (params) => actionTemplate(params, isRefusedClicked, setisRefusedClicked, isAcceptedClicked, setisAcceptedClicked, setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
       headerName: 'Actions', 
       minWidth: 100, 
       headerAlign: 'center', 

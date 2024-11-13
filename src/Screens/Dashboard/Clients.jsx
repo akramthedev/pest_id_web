@@ -18,7 +18,7 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff,setLoaderPermission, loaderOfPermission) => {
+const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff,setLoaderPermission, loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
 
   
   const handleEdit = () => {
@@ -67,7 +67,15 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
 
       }
       catch(e){
-        setRefresh(!refresh)
+        setRefresh(!refresh);
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors du changement de permission.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
         console.log(e.message);
         setLoaderPermission(false);
       }
@@ -195,6 +203,14 @@ const Clients = () => {
   
     } catch (error) {
       setAllUsers([]);
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la récupération des données.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
       console.error('Erreur:', error.message);
     } finally {
       setLoadingAllUsers(false);
@@ -229,16 +245,26 @@ const Clients = () => {
         let fullNameX = XXX.fullName.toString();
 
         try{
-          if(emailX.length <= 1){
-            alert("Invalid Email");
-            return;
-          } 
-          else if(mobileX.length <= 4){
-            alert("Invalid Mobile");
+          if(emailX.length <= 5){
+            if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Le champ `email` est invalide.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             return;
           } 
           else if(fullNameX.length <= 1){
-            alert("Invalid fullname");
+            if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Le champ `Nom et prénom` ne peut pas etre vide.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             return;
           }
           setLoadinGEdit(true);
@@ -271,13 +297,27 @@ const Clients = () => {
           else{
             seteditClicked(false);
             setUserToEdit(null);
-            alert('Oops, something went wrong !');
+             if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la modification des données.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
           }
 
         }
         catch(e){
           console.log(e.message);
-          alert('Oops, something went wrong !');
+           if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la modification des données.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
         } finally{
           setLoadinGEdit(false);
         }
@@ -288,16 +328,37 @@ const Clients = () => {
     
 
   const handleCreateNewClient = async ()=> {
-    if(email.length <= 1){
-      alert("Invalid Email");
+    if(email.length <= 5){
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Le champ `email` est incorrect.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
       return;
     } 
     else if(password.length <= 4){
-      alert("Invalid password");
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Le champ `mot de passe` est incorrect, il doit contenir au moins 5 caractères.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
       return;
     } 
     else if(fullname.length <= 1){
-      alert("Invalid fullname");
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Le champ `Nom et prénom` est incorrect.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
       return;
     }   
     else{
@@ -321,12 +382,26 @@ const Clients = () => {
         }
         else{
           setLoadingCreateUser(false);
-          alert('X - Error while creating a new staff.');
+          if(!showItResponse){
+            setisErrorResponse(true);
+            setmessageResponse("Une erreur est survenue lors de la création du nouveau personnel.");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);
+          }
         }          
       }
       catch(e){
         setLoadingCreateUser(false);
-        alert('Oops, somethign went wrong ! ');
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création du nouveau personnel.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
         console.log(e.message);
       } 
     }
@@ -363,7 +438,16 @@ const Clients = () => {
 
         if(resp00.status === 200){
           staffsUsers = resp00.data;
-           
+        }
+        else{
+          if(!showItResponse){
+            setisErrorResponse(true);
+            setmessageResponse("Une erreur est survenue lors de la suppression de l'utilisateur.");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);
+          }
         }
       }
 
@@ -393,7 +477,14 @@ const Clients = () => {
         );
       }
       else{
-        alert('Not deleted');
+        if(!showItResponse){
+            setisErrorResponse(true);
+            setmessageResponse("Une erreur est survenue lors de la suppression de l'utilisateur.");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);
+          }
         setLoadingDelete(false);
       }
       
@@ -401,7 +492,14 @@ const Clients = () => {
     }
     catch(e){
       setLoadingDelete(false);
-      alert('Not deleted');
+      if(!showItResponse){
+            setisErrorResponse(true);
+            setmessageResponse("Une erreur est survenue lors de la suppression de l'utilisateur.");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);
+          }
       console.log(e.message);
     }
   };
@@ -454,7 +552,14 @@ const Clients = () => {
         }
       }
       catch(e){
-        console.log(e.message);
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la récupération des données.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
         setAlllHisStaffs([]);
       } finally{
         setloadingAllPersonnels(false);
@@ -488,7 +593,7 @@ const Clients = () => {
       catch(e){
         console.log(e.message);
         setInfosOfHisProperty({
-
+          
         });
       } finally{
         setLoaderOfPropertyInfos(false);
@@ -593,7 +698,7 @@ useEffect(()=>{
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff,setLoaderPermission,loaderOfPermission), 
+      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff,setLoaderPermission,loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 

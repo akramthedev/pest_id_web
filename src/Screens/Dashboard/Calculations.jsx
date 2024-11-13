@@ -18,8 +18,22 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm,farms,setGreenhouses) => {
-  
+const actionTemplate = (params, 
+    setCalculations, 
+    setRefresh, 
+    refresh, 
+    seteditClicked, 
+    editClicked,
+    setCalculToEdit,
+    calculToEdit,
+    setshowClicked,
+    showClicked , 
+    setSelectedGreenhouse, 
+    setSelectedFarm, 
+    farms,
+    setGreenhouses, 
+    showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse
+  ) => {
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
@@ -126,12 +140,26 @@ const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditCli
       if(response.status === 200){
       }
       else{
-        alert('Not deleted');
+       if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la suppression du calcul.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
         setRefresh(!refresh);
       }
     }
     catch(e){
-      alert('Not deleted');
+     if(!showItResponse){
+      setisErrorResponse(true);
+      setmessageResponse("Une erreur est survenue lors de la suppression du calcul.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
       setRefresh(!refresh);
       console.log(e.message);
     }
@@ -155,7 +183,6 @@ const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditCli
 
 const Calculations = () => {
 
-  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [refresh,setRefresh] = useState(false);
   const [IDplaque,setIDplaque] = useState("");
@@ -225,8 +252,7 @@ const Calculations = () => {
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
   
-      // Fetch the predictions data
-      const predictionsResponse = await axios.get(`${ENDPOINT_API}users/${userIdNum}/p_with_image_version_two`, {
+       const predictionsResponse = await axios.get(`${ENDPOINT_API}users/${userIdNum}/p_with_image_version_two`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -268,11 +294,25 @@ const Calculations = () => {
       
       
       else {
-        alert('Oops, something went wrong!');
+        if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la récupération des calculs.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
       }
   
     } catch (error) {
-      alert('Oops, something went wrong!');
+      if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la récupération des calculs.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
       console.error('Erreur:', error.message);
     } finally {
       setloadingAllPred(false);
@@ -382,13 +422,27 @@ const Calculations = () => {
           fetchDataPrediction();
         }
         else{
-          alert('Oops, something went wrong !');
+          if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la modification du calcul");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
         }
 
       }
       catch(e){
         console.log(e.message);
-        alert('Oops, something went wrong !');
+        if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la modification du calcul");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
       } finally{
         setloadingEdit(false);
       }
@@ -398,7 +452,14 @@ const Calculations = () => {
 
     const handleSauvegarde = async ()=> {
       if (imageFile === undefined || imageFile === null || imageFile === ""){
-        alert('Image can not be empty ! ');
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("L'image du calcul ne peut pas être vide.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
       }
       else{
         try{  
@@ -437,13 +498,27 @@ const Calculations = () => {
             setaddClicked(false);
           }        
           else{
-            alert('Oops, somethign went wrong ! ');
+           if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création du calcul.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           }    
         }
         catch(e){
-          alert('Oops, somethign went wrong ! ');
+         if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création du calcul.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           console.log(e.message);
-          console.log(e.message);
+        
         }finally{
           setloading(false);
         }
@@ -554,7 +629,7 @@ const Calculations = () => {
       },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setGreenhouses), 
+        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setGreenhouses, showItResponse, isErrorResponse, setisErrorResponse, setshowItResponse, setmessageResponse),
         headerName: 'Actions', 
         minWidth: 200, 
         headerAlign: 'center', 

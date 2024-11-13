@@ -18,7 +18,7 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ,setLoaderPermission,loaderOfPermission, setisDeletedClicked,paramClicked, setparamClicked) => {
+const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ,setLoaderPermission,loaderOfPermission, setisDeletedClicked,paramClicked, setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
 
   
   const handleEdit = () => {
@@ -62,8 +62,6 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
         });
 
         if(resp.status === 200){
-
-         
           setLoaderPermission(false);
         }
         else{
@@ -75,6 +73,14 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
       catch(e){
         setRefresh(!refresh);
         console.log(e.message);
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors du changement de permission.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
         setLoaderPermission(false);
       }
       setLoaderPermission(false);
@@ -240,16 +246,27 @@ const Personnels = () => {
         let fullNameX = XXX.fullName.toString();
 
         try{
-          if(emailX.length <= 1){
-            alert("Invalid Email");
+          if(emailX.length <= 4){
+            if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Le champ `email` ne peut pas etre vide.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             return;
           } 
-          else if(mobileX.length <= 4){
-            alert("Invalid Mobile");
-            return;
-          } 
+           
           else if(fullNameX.length <= 1){
-            alert("Invalid fullname");
+            if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Le champs `Nom et prénom` ne peut pas etre vide.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             return;
           }
           setLoadinGEdit(true);
@@ -282,13 +299,27 @@ const Personnels = () => {
           else{
             seteditClicked(false);
             set_personnel_to_edit(null);
-            alert('Oops, something went wrong !');
+             if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la modification des données du personnel.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
           }
 
         }
         catch(e){
           console.log(e.message);
-          alert('Oops, something went wrong !');
+           if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la modification des données du personnel.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
         } finally{
           setLoadinGEdit(false);
         }
@@ -495,7 +526,7 @@ const Personnels = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked,setLoaderPermission,loaderOfPermission,setisDeletedClicked,paramClicked,setparamClicked ), 
+      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked,setLoaderPermission,loaderOfPermission,setisDeletedClicked,paramClicked,setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse ), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 

@@ -24,7 +24,7 @@ const options = [
 
 
 
-const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm) => {
+const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
   
   
   const handleEdit = () => {
@@ -59,12 +59,26 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
       if(response.status === 200){
       }
       else{
-        alert('Not deleted');
+         if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la suppression de la ferme.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
         setRefresh(!refresh);
       }
     }
     catch(e){
-      alert('Not deleted');
+       if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la suppression de la ferme.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
       setRefresh(!refresh);
       console.log(e.message);
     }
@@ -88,8 +102,7 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
 
 const Fermes = () => {
 
-  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
-
+ 
   const [refresh,setRefresh] = useState(false);
   const [showClicked,setshowClicked] = useState(false);
   const [Appelation,setAppelation] = useState("");
@@ -148,7 +161,7 @@ const Fermes = () => {
  
 
 
-  const fetchDataPrediction = async () => {
+  const fetchDataAllFarmsX = async () => {
     try {
       setloadingAllFarms(true);
       const userId = localStorage.getItem('userId');
@@ -180,10 +193,24 @@ const Fermes = () => {
       }
       
       else {
-        alert('Oops, something went wrong ! ');
+        if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la récupération des données .");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
       }
     } catch (error) {
-      alert('Oops, something went wrong ! ');
+      if(!showItResponse){
+              setisErrorResponse(true);
+              setmessageResponse("Une erreur est survenue lors de la récupération des données .");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
       console.error('Erreur :', error.message);
     } finally {
       setloadingAllFarms(false);
@@ -193,7 +220,7 @@ const Fermes = () => {
 
 
   useEffect(() => {
-    fetchDataPrediction();
+    fetchDataAllFarmsX();
   }, [refresh]);
 
     
@@ -201,7 +228,15 @@ const Fermes = () => {
 
   const handleCreatedNewSerre =  async()=>{
     if(nameS.length <= 2){
-      alert("Le nom de la serre ne peut pas être vide.");
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Le nom de la serre ne peut pas etre vide.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
+      return;
     }
     else{
       setloadingCreationOf_New_Serre(true);
@@ -232,11 +267,25 @@ const Fermes = () => {
           setloadingCreationOf_New_Serre(false);
           setaddNewSerreClick(false);
           setshowClicked(true);
-          alert('Oops, not created ! ');
+          if(!showItResponse){
+            setisErrorResponse(true);
+            setmessageResponse("Une erreur est survenue lors de la création de la serre .");
+            setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);
+          }
         }
       }
       catch(e){
-        alert('Oops, not created ! ')
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création de la serre .");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
         console.log(e.message);
         setloadingCreationOf_New_Serre(false);
         setaddNewSerreClick(false);
@@ -249,7 +298,15 @@ const Fermes = () => {
 
     const handleSauvegarde = async ()=> {
       if(Appelation.length <= 2){
-        alert("Le nom de la ferme ne peut pas être vide.");
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Le nom de la ferme ne peut pas etre vide.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+        return;
       }
       else{
         try{  
@@ -279,11 +336,25 @@ const Fermes = () => {
             setAppelation("");
           }        
           else{
-            alert('Oops, somethign went wrong ! ');
+            if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création de la ferme.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           }    
         }
         catch(e){
-          alert('Oops, somethign went wrong ! ');
+          if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création de la ferme.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           console.log(e.message);
         }finally{
           setloading(false);
@@ -299,7 +370,14 @@ const Fermes = () => {
 
     const handleSauvegardeModifications = async ()=> {
       if(FarmToEdit.name.length <= 2){
-        alert("Le nom de la ferme ne peut pas être vide.");
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Le nom de la ferme ne peut pas etre vide.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
       }
       else{
         try{  
@@ -328,11 +406,25 @@ const Fermes = () => {
             seteditClicked(false);
           }        
           else{
-            alert('Oops, somethign went wrong ! ');
+            if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la modification de la ferme.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           }    
         }
         catch(e){
-          alert('Oops, somethign went wrong ! ');
+          if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la modification de la ferme.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
           console.log(e.message);
         }finally{
           setloadingEdit(false);
@@ -396,7 +488,7 @@ const Fermes = () => {
       },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm), 
+        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
         headerName: 'Actions', 
         minWidth: 200, 
         headerAlign: 'center', 
