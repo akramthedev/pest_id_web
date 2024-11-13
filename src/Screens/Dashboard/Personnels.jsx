@@ -8,6 +8,7 @@ import { Box, Button } from '@mui/material';
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -77,6 +78,8 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
 
 
 const Personnels = () => {
+
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [all_personnels, set_all_personnels] = useState([]);
   const [LoadinG_All_Personnels, set_LoadinG_All_Personnels] = useState(true);
@@ -385,9 +388,7 @@ const Personnels = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
-
-
-
+      <PopUp/>
       {/*   edit Personnel    */}
 
         <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>

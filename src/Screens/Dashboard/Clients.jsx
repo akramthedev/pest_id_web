@@ -9,6 +9,7 @@ import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -58,6 +59,7 @@ const Clients = () => {
 
   const [allUsers, setAllUsers] = useState([]);
   const [loadingAllUsers, setLoadingAllUsers] = useState(true);
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [fullname,setFullname] = useState("");
   const [email,setEmail] = useState("");
@@ -511,7 +513,7 @@ useEffect(()=>{
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
-
+      <PopUp/>
 
       
       <div className={isDeletedClicked ? "popUp  showpopUp" : "popUp "}>

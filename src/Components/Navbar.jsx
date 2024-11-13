@@ -178,6 +178,7 @@ const NavBar = () => {
                 localStorage.removeItem('company_name');
                 localStorage.removeItem('adminId');
 
+                localStorage.removeItem('isNoticeOfBroadCastSeen')
                 localStorage.removeItem('is_np');
                 localStorage.removeItem('is_an');
                 localStorage.removeItem('is_maj');

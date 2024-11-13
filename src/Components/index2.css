@@ -1,0 +1,71 @@
+.popUpkaka{
+    visibility: hidden;
+    opacity: 0;
+    z-index: 70 !important;
+    position: fixed !important;
+    bottom: -180px !important;
+    left: 1.666rem !important;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: 400px;
+    background-color: rgb(17, 17, 17);
+    height: 170px;
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: 0.8rem;
+    transition: bottom 0.8s ease-in-out, opacity 0.3s ease;
+
+}
+.showXuX{
+    visibility: visible;
+    opacity: 1;
+    bottom: 1.666rem !important;
+}
+
+.new{
+    height: 60px;
+    display: flex;
+    padding-top: 0.6rem;
+    align-items: center;
+    justify-content: left;
+    padding-left: 2rem;
+    font-weight: 700;
+    font-size: 17px;
+    color: white;
+}
+.newdesc{
+    height: 50px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: left;
+    padding-left: 2rem;
+    color: white;
+    padding-right: 1.6rem;
+    font-weight: 300;
+    font-size: 15px;
+}
+.ouvrir{
+    height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: left;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-weight: 700;
+    font-size: 17px;
+    color: white;
+}
+.ouvrir button{
+    height: 40px;
+    width:100% ;
+    margin: 0 auto;
+    cursor: pointer;
+    color: white;
+    transition: 0.2s all ease-in-out;
+    font-weight: 500;
+    font-size: 15px;
+    background-color: #579519;
+}
+
+.ouvrir button:hover{
+    background-color: #356109;
+}
+

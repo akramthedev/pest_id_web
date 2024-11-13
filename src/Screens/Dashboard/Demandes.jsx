@@ -8,6 +8,7 @@ import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -46,7 +47,8 @@ const Demandes = () => {
   const [loadingAccepte, setloadingAccepte] = useState(false);
   const [loadingRefuse, setloadingRefuse] = useState(false);
 
-  
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
+
 
   const fetchNouvellesDemandes = async () => {
     try {
@@ -303,7 +305,7 @@ const Demandes = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
-
+      <PopUp/>
 
       <div className={isAcceptedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12">

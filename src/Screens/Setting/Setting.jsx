@@ -5,10 +5,14 @@ import axios from 'axios';
 import LVG from '../Dashboard/Loader.gif';
 import { ENDPOINT_API } from '../../endpoint';
 import SwitchButton from '../../Components/SwitchButton';
+import PopUp from '../../Components/PopUp';
+
+
 
 const Setting = () => {
   const [type, setType] = useState(null);
   const [token, setToken] = useState(null);
+  
   
   // Separate states for each switch
   const [isNotificationsPush, setIsNotificationsPush] = useState(false);
@@ -22,6 +26,8 @@ const Setting = () => {
   
   const [loader, setLoader] = useState(false);
   const [loadingModification, setLoadingModification] = useState(false);
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
+
 
   const fetchInfosUser = () => {   
     setLoader(true);
@@ -130,6 +136,7 @@ const Setting = () => {
   return (
     <>
       <NavBar />
+      <PopUp/>
 
       <div className={loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
         <span style={{

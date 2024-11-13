@@ -9,6 +9,7 @@ import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -150,6 +151,8 @@ const actionTemplate = (params, setCalculations, setRefresh, refresh, seteditCli
 
 
 const Calculations = () => {
+
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [refresh,setRefresh] = useState(false);
   const [IDplaque,setIDplaque] = useState("");
@@ -563,10 +566,12 @@ const Calculations = () => {
     
 
   return (
+    <>
+    <PopUp/>
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
-
+      
 
 
 
@@ -914,6 +919,7 @@ const Calculations = () => {
           }
       </div>
     </div>
+    </>
   )
 }
 

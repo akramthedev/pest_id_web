@@ -6,6 +6,7 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from 'react-router-dom';
+import PopUp from '../../Components/PopUp';
 
 
 const Activity = () => {
@@ -17,6 +18,7 @@ const Activity = () => {
   const [dataHistory, setdataHistory] = useState(null);
   const [isNull, setisNull] = useState(false);
   const nav = useNavigate();
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
 
  
@@ -104,6 +106,9 @@ const Activity = () => {
   return (
     <>
       <NavBar /> 
+      
+        <PopUp/>
+      
 
       <div className={loaderDelete ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{

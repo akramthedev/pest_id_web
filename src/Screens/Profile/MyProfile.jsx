@@ -6,6 +6,7 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import formatPhoneNumber from '../../Helpers/formatMobile';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -27,6 +28,7 @@ const Profile = () => {
 
   const [isModifiedInfosClicked, setisModifiedInfosClicked] = useState(false);
  
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
 
  
@@ -156,7 +158,7 @@ const Profile = () => {
   return (
     <>
       <NavBar /> 
-
+      <PopUp/>
       <div className={loaderConfirmer ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{
           fontSize : '16px', 

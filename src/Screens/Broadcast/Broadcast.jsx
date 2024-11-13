@@ -6,10 +6,14 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import formatPhoneNumber from '../../Helpers/formatMobile';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
+import PopUp from '../../Components/PopUp';
 
 
 
 const Broadcast = () => {
+
+
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [DataBroadCast, setDataBroadCast] = useState(null);
   const [Title, setTitle] = useState(null);
@@ -190,6 +194,25 @@ const Broadcast = () => {
     }
 
 
+    useEffect(()=>{
+
+      const checkHaveSeenTheBroadCast = async()=>{
+        try{
+          localStorage.setItem('isNoticeOfBroadCastSeen', "seen");
+           await axios.get(`${ENDPOINT_API}userHaveSeenBroadCast/${parseInt(localStorage.getItem('userId'))}`,{
+            headers : {
+              Authorization : `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+        }
+        catch(e){
+          console.log(e.message)
+        }
+      } 
+      checkHaveSeenTheBroadCast();
+  
+    },[]);
+
 
   useEffect(()=>{
     fetchDataBroadCastWithUser();
@@ -199,7 +222,8 @@ const Broadcast = () => {
   return (
     <>
       <NavBar /> 
-
+       
+      
       <div className={loaderModification ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{
           fontSize : '16px', 

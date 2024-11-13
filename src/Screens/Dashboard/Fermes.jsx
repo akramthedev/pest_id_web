@@ -9,6 +9,7 @@ import Select from 'react-select';
  import axios from 'axios'
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
+import PopUp from '../../Components/PopUp';
 
 
 
@@ -83,6 +84,8 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
 
 
 const Fermes = () => {
+
+  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [refresh,setRefresh] = useState(false);
   const [showClicked,setshowClicked] = useState(false);
@@ -440,6 +443,7 @@ const Fermes = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
+      <PopUp/>
 
       {/*   edit Farm    */}
         <div className={editClicked ? "popUp  showpopUp" : "popUp "}>

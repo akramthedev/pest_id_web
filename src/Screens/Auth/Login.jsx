@@ -42,8 +42,6 @@ function Login() {
         const user = response.data.user;
         localStorage.setItem('token', token);
 
-
-
         localStorage.setItem('userId', user.id);
         localStorage.setItem('type', user.type);
         localStorage.setItem('image', user.image ? user.image : "---");
@@ -52,15 +50,11 @@ function Login() {
         localStorage.setItem('email', user.email ? user.email : "---");
         localStorage.setItem('created_at', user.created_at ? user.created_at : "---");
 
-
-        
+        localStorage.setItem('isNoticeOfBroadCastSeen', user.isNoticeOfBroadCastSeen === 1 ? "seen" : "notseen")
         localStorage.setItem('is_np', user.is_np === 1 ? "activated" : "desactivated");
         localStorage.setItem('is_an', user.is_an === 1 ? "activated" : "desactivated");
         localStorage.setItem('is_maj', user.is_maj === 1 ? "activated" : "desactivated");
         localStorage.setItem('is_ja', user.is_ja === 1 ? "activated" : "desactivated");
-
-
-      
  
         if(user.type !== "staff"){
           const resp = await axios.get(`${ENDPOINT_API}getadmin/${user.id}`,{

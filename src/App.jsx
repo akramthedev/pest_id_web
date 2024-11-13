@@ -25,6 +25,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        
+
         <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Home />} />
         <Route path="/become-member" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
