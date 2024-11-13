@@ -1061,7 +1061,7 @@ useEffect(()=>{
                         Aucune donnée
                       </div>
                       :
-                      <div className="uozsoufvuosf">
+                      <div className="uozsoufvuosf uozsoufvuosf22">
                         {
                           AlllHisStaffs.map((staff, index)=>{
                             return(
@@ -1100,17 +1100,21 @@ useEffect(()=>{
                                     </span>
                                   </div>
                                 </div>
-                                <div className="caseuzhcsd89">
-                                  <button className='uosfvuouo'>
-                                    <i className='fa-solid fa-lock' ></i>
-                                  </button>
-                                  <button className='zirvhnzvf' >
-                                    <i className='fa-solid fa-pen'></i>
-                                  </button>
-                                  <button className='zirvhnzvf' >
-                                    <i className='fa-solid fa-trash'></i>
-                                  </button>
-                                </div>
+                                {
+                                  /*
+                                  <div className="caseuzhcsd89">
+                                    <button className='uosfvuouo'>
+                                      <i className='fa-solid fa-lock' ></i>
+                                    </button>
+                                    <button className='zirvhnzvf' >
+                                      <i className='fa-solid fa-pen'></i>
+                                    </button>
+                                    <button className='zirvhnzvf' >
+                                      <i className='fa-solid fa-trash'></i>
+                                    </button>
+                                  </div>
+                                  */
+                                }
                               </div>
                             )
                           })

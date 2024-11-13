@@ -100,7 +100,7 @@
 
 .caseD2 .eofvouszfv00 i{
     color: #5fa21b;
-    font-size: 16px;
+    font-size: 17px !important;
 }
 .rowAddC{
     height: calc(100% - 50px);
@@ -746,7 +746,7 @@
     min-height: 100px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0;
     padding-bottom: 0.8rem;
     margin-bottom: .8rem;
@@ -755,7 +755,7 @@
 }
 
 .caseuzhcsd8989{
-    width: 90%;
+    width: 100%;
     min-height: 70px;
 }
 .caseuzhcsd89{
@@ -803,10 +803,9 @@
  
 
 .caseuzhcsd8989{
-    width: 85%;
+    width: 100%;
+    padding-right: 2rem;
     min-height: 70px;
-    padding: 0 1rem;
-    padding-right: 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -817,6 +816,7 @@
     height: auto;
     margin-bottom: 0.3rem;
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
 }
@@ -885,3 +885,9 @@
   }
 
 
+
+  .uozsoufvuosf22{
+    padding-right: 0 !important;
+  }
+
+ 

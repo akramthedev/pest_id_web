@@ -19,11 +19,13 @@ const PasswordConfig = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
+  const [isDone, setisDone] = useState(true);
 
  
 
   
   const handleUpdatePassword = async()=>{
+    
     if(id && name){
       if((password !== confirmpassword) && (password.length !== confirmpassword.length)){
         alert("le mot de passe et la confirmation ne sont pas identiques.");
@@ -50,7 +52,7 @@ const PasswordConfig = () => {
           setpassword("");
           setconfirmpassword('');
           setLoadingModification(false);
-         
+          setisDone(true);
           
           if(!showItResponse){
           setisErrorResponse(false);
@@ -81,7 +83,7 @@ const PasswordConfig = () => {
         setshowItResponse(true);
         setTimeout(()=>{          
           setshowItResponse(false);
-        }, 4500);}
+        }, 4500);} 
         console.log(e.message);
       }
       finally{
@@ -131,6 +133,9 @@ const PasswordConfig = () => {
               <input 
                 onChange={(e)=>{
                   setpassword(e.target.value);
+                  if(isDone === true){
+                    setisDone(false);
+                  }
                 }}
                 value={password}
                 type="password" 
@@ -145,6 +150,9 @@ const PasswordConfig = () => {
               <input    
                 onChange={(e)=>{
                   setconfirmpassword(e.target.value);
+                  if(isDone === true){
+                    setisDone(false);
+                  }
                 }}
                 value={confirmpassword}
                 type="password" 
@@ -166,7 +174,9 @@ const PasswordConfig = () => {
                 }
               }}
             >
-              Annuler
+              {
+                isDone ? "Retour" : "Annuler"
+              }
             </button>
             <button className='modifierMotDePasse8'
               disabled={loadingModification}
