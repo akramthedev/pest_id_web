@@ -30,8 +30,13 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     let access;
       try{  
 
-
-        console.warn(params.row)
+        setAllUsers((prevPersonnels) =>
+          prevPersonnels.map((person) =>
+            person.id === params.id
+              ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
+              : person
+          )
+        );
 
         if(params.row.permission === "Autorisé"){
            access = "canAccess"; 
@@ -41,6 +46,8 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
            access = "canNotAccess"; 
            console.log("We Give him Access");
         } 
+
+        
         const resp = await axios.get(`${ENDPOINT_API}updateUserRestriction/${parseInt(params.row.id)}/${access}`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -48,23 +55,16 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
         });
 
         if(resp.status === 200){
-
-          setAllUsers((prevPersonnels) =>
-            prevPersonnels.map((person) =>
-              person.id === params.id
-                ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
-                : person
-            )
-          );
-          //setRefresh(!refresh);
           setLoaderPermission(false);
         }
         else{
+          setRefresh(!refresh);
           setLoaderPermission(false);
         }
 
       }
       catch(e){
+        setRefresh(!refresh)
         console.log(e.message);
         setLoaderPermission(false);
       }

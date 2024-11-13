@@ -34,7 +34,13 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
       try{  
 
 
-
+        set_all_personnels((prevPersonnels) =>
+          prevPersonnels.map((person) =>
+            person.id === params.id
+              ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
+              : person
+          )
+        );
         console.warn(params.row)
  
 
@@ -54,22 +60,17 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
 
         if(resp.status === 200){
 
-          set_all_personnels((prevPersonnels) =>
-            prevPersonnels.map((person) =>
-              person.id === params.id
-                ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
-                : person
-            )
-          );
-          //setRefresh(!refresh);
+         
           setLoaderPermission(false);
         }
         else{
+          setRefresh(!refresh);
           setLoaderPermission(false);
         }
 
       }
       catch(e){
+        setRefresh(!refresh);
         console.log(e.message);
         setLoaderPermission(false);
       }
@@ -125,7 +126,6 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
 
 const Personnels = () => {
 
-  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
   const [all_personnels, set_all_personnels] = useState([]);
   const [LoadinG_All_Personnels, set_LoadinG_All_Personnels] = useState(true);
