@@ -1,6 +1,7 @@
 .home{
     height: 100vh;
     width: 100%;
+    overflow-y: auto;
     background-color: white;
 }
 
@@ -93,10 +94,12 @@
 
 .contHome{
     width: 100%;
-    height: calc(100% - 140px);
+    height: auto !important;
+    min-height: calc(100% - 140px) !important;
     display: flex;
+    padding-bottom: 2rem;
     align-items: center;
-    padding-top: 14vh;
+    padding-top: 11vh !important;
     flex-direction: column;
 }
 
@@ -112,7 +115,7 @@
     font-weight: 800;
     height: 5rem;
     font-family: "PT Serif", serif;
-    margin-bottom: 4rem;
+    margin-bottom: 4rem !important;
     color: #579519;
 }
 .row3{

@@ -15,15 +15,60 @@ import PopUp from '../../Components/PopUp';
 
 
 
-const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff) => {
+const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff,setLoaderPermission, loaderOfPermission) => {
 
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
-    setUserToEdit(params.row);
     seteditClicked(!editClicked);
   };
 
+  const handleChangePermission = async () => {
+    setLoaderPermission(true);
+    const token = localStorage.getItem('token');
+    let access;
+      try{  
+
+        
+
+        if(params.row.permission === "Autorisé"){
+           access = "canAccess"; 
+           console.log("We restrict him");
+        }
+        else if(params.row.permission === "Restreint"){
+           access = "canNotAccess"; 
+           console.log("We Give him Access");
+        } 
+        const resp = await axios.get(`${ENDPOINT_API}updateUserRestriction/${params.id}/${access}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if(resp.status === 200){
+
+          setAllUsers((prevPersonnels) =>
+            prevPersonnels.map((person) =>
+              person.id === params.id
+                ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
+                : person
+            )
+          );
+          //setRefresh(!refresh);
+          setLoaderPermission(false);
+        }
+        else{
+          setLoaderPermission(false);
+        }
+
+      }
+      catch(e){
+        console.log(e.message);
+        setLoaderPermission(false);
+      }
+      setLoaderPermission(false);
+
+  };
 
   
   const handleView = async () => {
@@ -43,6 +88,19 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     <div className='uefuvzou'>
       <button className='uoersf'   onClick={handleView}  >
         <i class="fa-solid fa-eye"></i>
+      </button>
+      <button disabled={loaderOfPermission} className='uoersf'   onClick={handleChangePermission}  >
+      {
+        params && 
+        <>
+        {
+          params.row.permission === "Restreint" ? 
+          <i class="fa-solid fa-unlock"></i>
+          :
+          <i class="fa-solid fa-lock"></i>
+        }
+        </>
+      }
       </button>
       <button className='uoersf'   onClick={handleEdit}  >
       <i class="fa-solid fa-pencil"></i>
@@ -81,6 +139,7 @@ const Clients = () => {
   const [AlllHisStaffs, setAlllHisStaffs] = useState(null);
   const [InfosOfHisProperty, setInfosOfHisProperty] = useState(null);
   const [LoaderOfPropertyInfos, setLoaderOfPropertyInfos] = useState(false);
+  const [loaderOfPermission, setLoaderPermission] = useState(false);
 
   
   const fetch_data_allUsers = async () => {
@@ -98,7 +157,7 @@ const Clients = () => {
       if (response.status === 200 ) {
         let i = 0;
         const transformedData = response.data.users
-          .filter(user => user.id !== userIdNum && user.type === "admin" && user.canAccess === 1 && user.isEmailVerified === 1)
+          .filter(user => user.id !== userIdNum && user.type === "admin" &&  user.isEmailVerified === 1)
           .map(user => {
             i++; 
             let createdAt = formatDateForCreatedAt(user.created_at);
@@ -108,6 +167,7 @@ const Clients = () => {
               fullName: user.fullName ? user.fullName : "---",
               password: user.password ? user.password : "---",
               type: user.type ? user.type : "---",
+              permission: user.canAccess === 1 ? "Autorisé" : "Restreint",
               idUser: user.id ? user.id : "---",
               image: user.image ? user.image : "---",
               email: user.email ? user.email : "---",
@@ -467,13 +527,41 @@ useEffect(()=>{
       align: 'center',
       flex: 1 // Allow the column to stretch
     },
+    {
+      field : 'permission', 
+      headerName: "Permission d'accès", 
+      minWidth: 160, 
+      headerAlign: 'center', 
+      align: 'center',
+      flex: 1,
+      renderCell: (params) => {
+        const isAuthorized = params.value === 'Autorisé';
+        return (
+          <div
+             
+          >
+            <span
+              style={{
+                backgroundColor: isAuthorized ? '#e0ffc1' : '#ffe1e1',
+                color : isAuthorized ? '#477a14' : '#c90000',
+                padding : "0.3rem 1rem", 
+                borderRadius : "3rem", 
+                fontWeight : "500"
+              }}
+            >
+              {params.value}
+            </span>
+          </div>
+        );
+      },
+    },
     { 
       field: 'email', 
       headerName: 'Adresse Email', 
-      minWidth: 300, 
+      minWidth: 250, 
       headerAlign: 'center', 
       align: 'center',
-      flex: 1 // Allow the column to stretch
+      flex: 1  
     },
     { 
       field: 'mobile', 
@@ -493,7 +581,7 @@ useEffect(()=>{
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff ), 
+      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff,setLoaderPermission,loaderOfPermission), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 

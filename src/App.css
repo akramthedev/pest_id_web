@@ -19,3 +19,9 @@ button{
   background-color: #579519;
   color : white !important;
 }
+
+
+input:focus{
+  border: 1px solid #579519;
+  outline: 4px solid #e0ffc2;
+}

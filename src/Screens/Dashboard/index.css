@@ -110,8 +110,10 @@
 
 .popUp{
     opacity: 0;
-    visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.765);
+    visibility: hidden; 
+    backdrop-filter: blur(4px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(4px) saturate(200%) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     z-index: 90;
     height: 100vh;
     width: 100%;
@@ -141,9 +143,8 @@
 .popUp6666{
     opacity: 0;
     visibility: hidden;
-    backdrop-filter: blur(9px) saturate(200%);
-    -webkit-backdrop-filter: blur(9px) saturate(200%);
-    background-color: rgba(255, 255, 255, 0.212);    z-index: 9999999;
+        
+    z-index: 9999999;
     height: 100vh;
     width: 100%;
     display: flex;
@@ -177,8 +178,9 @@
     opacity: 1;
 }
 
+
 .contPopUp{
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;    
+    
     background-color: #ffffff;
     height: 73vh;
     width: 90%;
@@ -189,6 +191,7 @@
 
 .popUp1{
     min-height: 600px;
+    
     height: 64vh;
     max-height: 666px;
 }
@@ -543,7 +546,7 @@
 }
 
 .popUp12 {
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+    
     background-color: #ffffff;
     width: 90%;
     border-radius: 0.7rem;
@@ -557,7 +560,7 @@
 
 
 .contPopUpcontPopUp{
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;    
+        
     background-color: #ffffff;
     height: 50vh;
     width: 90%;
@@ -621,12 +624,14 @@
 
 .popUp777{
     min-height: 560px !important;
+    
     height: 560px !important;
     max-height: 560px !important;
 }
 
 .popUp77777{
     min-height: 555px !important;
+    
     height: 555px !important;
     max-height: 555px !important;
 }
@@ -643,17 +648,17 @@
 .popUp1popUp1popUp1{
     min-height: 530px !important;
     height: 530px !important;
-    max-height: 530px !important;
+    max-height: 530px !important; 
 }
 
 .popUp1popUp1popUp12{
     min-height: 255px !important;
     height: 255px !important;
-    max-height: 255px !important;
+    max-height: 255px !important; 
 }
 .popUp1popUp1popUp12345{
     min-height: 300px !important;
-    height: 300px !important;
+    height: 300px !important; 
     max-height: 300px !important;
 
 }
@@ -690,7 +695,7 @@
 
 .popUp2358{
     height: 90vh;
-    max-height: 620px;
+    max-height: 620px; 
 }
 
 .fa-triangle-exclamation{
@@ -705,7 +710,7 @@
 
 .popUp172853{
     min-height: 700px !important;
-    height: auto !important;
+    height: auto !important; 
     max-height: 1100px !important;   
     width: calc(100% - 7rem) !important;
     max-width: calc(100% - 7rem) !important;
@@ -866,6 +871,4 @@
     visibility: visible  ;
     opacity: 1  ;
   }
-
   
-
