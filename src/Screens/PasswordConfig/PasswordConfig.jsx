@@ -6,6 +6,7 @@ import axios from 'axios';
 import LVG from '../Dashboard/Loader.gif';
 import { ENDPOINT_API } from '../../endpoint';
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
 
 const PasswordConfig = () => {
 
@@ -15,7 +16,13 @@ const PasswordConfig = () => {
   const [password,setpassword] = useState("");
   const [confirmpassword,setconfirmpassword] = useState("");
   const [loadingModification, setLoadingModification] = useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
+
+  
   const handleUpdatePassword = async()=>{
     if(id && name){
       if((password !== confirmpassword) && (password.length !== confirmpassword.length)){
@@ -43,17 +50,38 @@ const PasswordConfig = () => {
           setpassword("");
           setconfirmpassword('');
           setLoadingModification(false);
-          setTimeout(()=>{
-            alert('Votre mot de passe a été mis à jour avec succès ! ');
-          }, 400);
+         
+          
+          if(!showItResponse){
+          setisErrorResponse(false);
+          
+          setmessageResponse("Le mot de passe a été modifié avec succès.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);}
+
+          
         }
         else{
           setLoadingModification(false);
-          alert("Oops, une erreur s'est produite ! ");
+          if(!showItResponse){ 
+          setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la modification du mot de passe.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
         }
       }
       catch(e){
-        alert("Oops, une erreur s'est produite ! ");
+        if(!showItResponse){ 
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la modification du mot de passe.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
         console.log(e.message);
       }
       finally{
@@ -66,6 +94,14 @@ const PasswordConfig = () => {
     <>
       <NavBar />
       <PopUp/>
+
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
+
+      
       <div className={loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
         <span style={{
           fontSize: '16px', 

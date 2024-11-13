@@ -3,6 +3,9 @@ import './login.css';
 import axios from 'axios';
 import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from "react-router-dom";
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 function Login() {
 
@@ -11,7 +14,11 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   const handleInputChange = (e, field) => {
     setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
 
@@ -25,17 +32,40 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = {};
-    if (!email || !/\S+@\S+\.\S+/.test(email)) validationErrors.email = 'Adresse email invalide';
-    if (!password || password.length < 5) validationErrors.password = 'Le mot de passe doit contenir au moins 5 caractères';
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      
+      validationErrors.email = 'Adresse email invalide';
+      
+    
+    }
+    if (!password || password.length < 5) {
+      validationErrors.password = 'Le mot de passe doit contenir au moins 5 caractères';
+    }
+   
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      
+      if(!showItResponse){
+      setisErrorResponse(true);
+      setmessageResponse("Les informations fournies sont incorrectes.");
+      setshowItResponse(true);
+      setTimeout(()=>{          
+        setshowItResponse(false);
+      }, 4500);}
       return;
     }
     try {
       setLoader(true);
       const response = await axios.post(`${ENDPOINT_API}login`, { email, password });
       if(response.data.message === "Votre accès à l'application est restreint."){
-        alert(`Votre accès à l'application est restreint.`);
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("L'accès vous est refusé en raison de restrictions sur votre compte.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
       }
       if (response.status === 200) {
         const token = response.data.token;
@@ -79,11 +109,27 @@ function Login() {
         navigate(0);
       }
       else{
-        alert('Erreur lors de la connexion');
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la connexion.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
       }
     } catch (error) {
       console.log(error);
-      alert('Erreur lors de la connexion');
+      
+      
+      if(!showItResponse){
+      setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la connexion.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);}
+
       console.error("Erreur lors de la connexion", error);
     } finally{
       setLoader(false);
@@ -92,6 +138,11 @@ function Login() {
 
   return (
     <div className="login-container">
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       <h2 className="login-title">Accéder à votre compte</h2>
       <p className="login-subtitle">&nbsp;</p>
       <form className="login-form" onSubmit={handleSubmit}>

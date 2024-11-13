@@ -10,6 +10,9 @@ import Select from 'react-select';
 import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -107,7 +110,11 @@ const Fermes = () => {
   const [nameS, setNameS] = useState(null);
   const [sizeS, setSizeS] = useState(null);
   const [loaderDelete, setloaderDelete] = useState(false);
-  
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
+
+ 
 
 
  
@@ -444,7 +451,11 @@ const Fermes = () => {
       <NavBar /> 
       <SideBar />
       <PopUp/>
-
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       {/*   edit Farm    */}
         <div className={editClicked ? "popUp  showpopUp" : "popUp "}>
           <div className="contPopUp popUp1 popUp1popUp1popUp1">

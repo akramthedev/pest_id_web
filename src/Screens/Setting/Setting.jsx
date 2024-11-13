@@ -6,6 +6,9 @@ import LVG from '../Dashboard/Loader.gif';
 import { ENDPOINT_API } from '../../endpoint';
 import SwitchButton from '../../Components/SwitchButton';
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -27,7 +30,11 @@ const Setting = () => {
   const [loader, setLoader] = useState(false);
   const [loadingModification, setLoadingModification] = useState(false);
   const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
 
   const fetchInfosUser = () => {   
     setLoader(true);
@@ -75,22 +82,58 @@ const Setting = () => {
       });
 
       if(resp.status === 200){
+        
+        
+       
+        if(!showItResponse){
+        setisErrorResponse(false);
+        setmessageResponse("Votre mot de passe a été modifié avec succès.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+
+      }
+
+        
+       
+
+
+        
+
+
         setpassword("");
         setconfirmpassword('');
         setLoadingModification(false);
         setisModifierMotDePasseClicked(false);
-        setTimeout(()=>{
-          alert('Votre mot de passe a été mis à jour avec succès ! ');
-        }, 400);
       }
       else{
         setLoadingModification(false);
-        alert("Oops, une erreur s'est produite ! ");
+
+       
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la modification de votre mot de passe.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+
+      }
+
+        
+
+
       }
 
     }
     catch(e){
-      alert("Oops, une erreur s'est produite ! ");
+      setisErrorResponse(true);
+      setmessageResponse("Une erreur est survenue lors de la modification de votre mot de passe.");
+      setshowItResponse(true);
+      setTimeout(()=>{          
+        setshowItResponse(false);
+      }, 4500);
       console.log(e.message);
     }
     finally{
@@ -121,6 +164,7 @@ const Setting = () => {
     catch(e){
       console.log(e.message);
       setloadRefresh(false);
+      fetchInfosUser();      
     }
     setloadRefresh(false);
   }
@@ -137,7 +181,11 @@ const Setting = () => {
     <>
       <NavBar />
       <PopUp/>
-
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       <div className={loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
         <span style={{
           fontSize: '16px', 

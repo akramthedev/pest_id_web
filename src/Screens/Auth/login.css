@@ -50,6 +50,9 @@
     color: #4f4f4f;
     text-align: left;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 0.4rem;
   }
   

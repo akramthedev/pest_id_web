@@ -1,14 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./index.css";
 import { ENDPOINT_API } from "../../endpoint";
 import NavBar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import axios from 'axios';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 const Dashboard = () => {
 
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
 
   useEffect(()=>{
 
@@ -42,6 +49,11 @@ const Dashboard = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       <div className="containerDash">
       Dashboard
       </div>

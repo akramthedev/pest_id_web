@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './index.css';
 import {useNavigate} from "react-router-dom"
+import ErrorSuccess from '../../Components/ErrorSuccess';
 
 const About = () => {
 
   const navigate = useNavigate();
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   return (
     <div
       className='home'

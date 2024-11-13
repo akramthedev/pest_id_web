@@ -11,6 +11,9 @@ import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
 import { useNavigate } from 'react-router-dom';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -142,7 +145,11 @@ const Clients = () => {
   const [InfosOfHisProperty, setInfosOfHisProperty] = useState(null);
   const [LoaderOfPropertyInfos, setLoaderOfPropertyInfos] = useState(false);
   const [loaderOfPermission, setLoaderPermission] = useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   
 
   
@@ -607,7 +614,11 @@ useEffect(()=>{
       <NavBar /> 
       <SideBar />
       <PopUp/>
-
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       
       <div className={isDeletedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12  popUp1popUp1popUp12345">

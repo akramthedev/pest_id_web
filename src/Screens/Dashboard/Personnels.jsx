@@ -10,6 +10,9 @@ import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
 import { useNavigate } from 'react-router-dom';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -146,7 +149,11 @@ const Personnels = () => {
   const [isDeletedClicked,setisDeletedClicked] = useState(false);
   const [paramClicked,setparamClicked] = useState(null);
   const [LoadingDelete,setLoadingDelete] = useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   const navigate = useNavigate();
 
 
@@ -510,7 +517,11 @@ const Personnels = () => {
       <SideBar />
       <PopUp/>
 
-
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
 
       <div className={LoadingDelete ? "popUp6666  showpopUp" : "popUp6666 "}>
         <span style={{

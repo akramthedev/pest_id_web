@@ -10,6 +10,9 @@ import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -173,7 +176,11 @@ const Calculations = () => {
   const [options, setoptions] = useState([]);
   const [showClicked,setshowClicked] = useState(false);
 
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
 
   
 
@@ -571,7 +578,11 @@ const Calculations = () => {
     <div className='Dashboard'>
       <NavBar /> 
       <SideBar />
-      
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
 
 
 

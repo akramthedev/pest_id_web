@@ -7,10 +7,15 @@ import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from 'react-router-dom';
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 const Activity = () => {
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   const [type, settype] = useState(null);   
   const [JA, setJA] = useState(null);   
   const [loaderDelete, setloaderDelete] = useState(false);
@@ -18,8 +23,7 @@ const Activity = () => {
   const [dataHistory, setdataHistory] = useState(null);
   const [isNull, setisNull] = useState(false);
   const nav = useNavigate();
-  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
-
+ 
 
  
 
@@ -82,16 +86,44 @@ const Activity = () => {
             });
             if(resp.status === 200){
               setdataHistory([]);
+              if(!showItResponse){
+                setisErrorResponse(false);
+                setmessageResponse("Votre historique d'activité a été supprimé avec succès.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+              }
+            }
+            else{
+              if(!showItResponse){setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la suppression de l'historique.");
+          setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);}
             }
             setloaderDelete(false);
           }
         } 
         else{
+          if(!showItResponse){setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la suppression de l'historique.");
+          setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);}
           return;
         }
       }
       catch(e){
         console.log(e.message);
+        if(!showItResponse){setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la suppression de l'historique.");
+          setshowItResponse(true);
+            setTimeout(()=>{          
+              setshowItResponse(false);
+            }, 4500);}
       } finally{
         setloaderDelete(false);
       }
@@ -108,7 +140,11 @@ const Activity = () => {
       <NavBar /> 
       
         <PopUp/>
-      
+        <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
 
       <div className={loaderDelete ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{

@@ -9,6 +9,9 @@ import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -46,7 +49,11 @@ const Demandes = () => {
   const [refresh,setRefresh] = useState(null);
   const [loadingAccepte, setloadingAccepte] = useState(false);
   const [loadingRefuse, setloadingRefuse] = useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
   const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
 
 
@@ -306,7 +313,11 @@ const Demandes = () => {
       <NavBar /> 
       <SideBar />
       <PopUp/>
-
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       <div className={isAcceptedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12">
           <div className="caseD11">

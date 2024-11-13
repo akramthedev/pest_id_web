@@ -7,6 +7,9 @@ import formatPhoneNumber from '../../Helpers/formatMobile';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
+
+
 
 
 
@@ -26,7 +29,11 @@ const Broadcast = () => {
   const [noBroadcastYet, setnoBroadcastYet] = useState(null);
   const [deleteLoader, setdeleteLoader] = useState(false);
   const [isDeleteClicked, setisDeleteClicked] =useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
+ 
  
 
     const fetchDataBroadCastWithUser = async ()=>{
@@ -78,6 +85,16 @@ const Broadcast = () => {
         setnoBroadcastYet(true);
         setisSuperAdministrator(false);
         console.log(e.message);
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la récupération du Broadcast.");
+        setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+
+        }
       } finally{
         setloading(false);
       }
@@ -87,11 +104,29 @@ const Broadcast = () => {
 
     const handleModification = async ()=>{
       if(Title.length <= 10){
-        alert('Le titre du broadcast est trop petit ! Au moins 10 caracteres');
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("La description doit contenir un minimum de 10 caractères.");
+        setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+
+        }
         return;
       }
       else if(Description.length <= 20 ){
-        alert('Description doit avoir au moins 20 caracteres.');
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+              setmessageResponse("La description doit contenir un minimum de 20 caractères.");
+              setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+
+              }
         return
       }
       else{
@@ -114,9 +149,28 @@ const Broadcast = () => {
             if(resp.status === 200){
               fetchDataBroadCastWithUser();
               setisModifiedCLikec(false);
+              
+              if(!showItResponse){
+              setisErrorResponse(false);
+              setmessageResponse("Le broadcast a été créé avec succès.");
+              setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+
+              }
             }
             else{
-              alert('Oops, somethign went wrong ! ');
+              
+              if(!showItResponse){
+              setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la création du broadcast.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+
+              }
             }
             setloaderModification(false);
           }
@@ -135,9 +189,28 @@ const Broadcast = () => {
               if(resp.status === 200){
                 fetchDataBroadCastWithUser();
                 setisModifiedCLikec(false);
+                
+                if(!showItResponse){
+                setisErrorResponse(false);
+                setmessageResponse("Le broadcast a été modifié avec succès.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+
+              }
               }
               else{
-                alert('Oops, somethign went wrong ! ');
+                
+                if(!showItResponse){
+                setisErrorResponse(true);
+                setmessageResponse("Une erreur est survenue lors de la modification du broadcast.");
+                setshowItResponse(true);
+                setTimeout(()=>{          
+                  setshowItResponse(false);
+                }, 4500);
+
+              }
               }
               setloaderModification(false);
             }
@@ -145,7 +218,16 @@ const Broadcast = () => {
   
         }
         catch(e){
-          alert('Oops, somethign went wrong ! ');
+          
+          if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la modification du broadcast.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+
+        }
           console.log(e.message);
         } finally{
           setloaderModification(false);
@@ -159,8 +241,6 @@ const Broadcast = () => {
       setdeleteLoader(true);
       try{
 
-        const userId = localStorage.getItem('userId');
-        const userIdNum = parseInt(userId);
         const token = localStorage.getItem('token');
 
         const resp = await axios.delete(`${ENDPOINT_API}broadcast` ,{
@@ -173,16 +253,45 @@ const Broadcast = () => {
           setDescription("");
           setTitle('');
           setdeleteLoader(false);
+          setdeleteLoader(false);
+          
+          if(!showItResponse){
+          setisErrorResponse(false);
+        setmessageResponse("Le broadcast a été supprimé avec succès.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+
+      }
         }
         else{
           fetchDataBroadCastWithUser();
           setdeleteLoader(false);
-          alert("Une erreur est survenue ! ")
+          
+          if(!showItResponse){
+          setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la suppression du broadcast.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+
+      }
         }
       }
       catch(e){
         setdeleteLoader(false);
-        alert("Une erreur est survenue ! ")
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la suppression du broadcast.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+
+      }
         console.log(e.message);
       }
     }
@@ -222,7 +331,11 @@ const Broadcast = () => {
   return (
     <>
       <NavBar /> 
-       
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       
       <div className={loaderModification ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{

@@ -7,6 +7,7 @@ import formatPhoneNumber from '../../Helpers/formatMobile';
 import LVG from '../Dashboard/Loader.gif'
 import { ENDPOINT_API } from "../../endpoint";
 import PopUp from '../../Components/PopUp';
+import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
@@ -25,11 +26,12 @@ const Profile = () => {
   const [loaderConfirmer, setloaderConfirmer] = useState(null);
   const [isDataCompnayModified, setisDataCompnayModified] = useState(false);
   const [isDataPersonalModified, setisDataPersonalModified] = useState(false);
-
   const [isModifiedInfosClicked, setisModifiedInfosClicked] = useState(false);
  
-  const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
-
+ 
+  const [showItResponse, setshowItResponse] = useState(false);
+  const [isErrorResponse, setisErrorResponse] = useState(false);
+  const [messageResponse, setmessageResponse] = useState(null);
 
  
 
@@ -100,9 +102,28 @@ const Profile = () => {
               localStorage.setItem('mobile', mobile ? mobile : "---");
               localStorage.setItem('fullName', fullName ? fullName : "---");
               localStorage.setItem('email', email ? email : "---");
+              if(!showItResponse){
+              setisErrorResponse(false);
+              setmessageResponse("Votre profil a été modifié avec succès.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
+
+
             }
             else{
-              alert('Oops, somethign went wrong ! ');
+          
+              if(!showItResponse){
+              setisErrorResponse(true);
+          
+              setmessageResponse("Une erreur est survenue lors de la modification du profil.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             }
           }
         }
@@ -125,15 +146,32 @@ const Profile = () => {
               localStorage.setItem('company_mobile', MobileCompany ? MobileCompany : "---");
               localStorage.setItem('company_name', NameCompany ? NameCompany : "---");
               localStorage.setItem('company_email', EmailCompany ? EmailCompany : "---");
+              if(!showItResponse){
+              setisErrorResponse(false);
+              setmessageResponse("Votre profil a été modifié avec succès.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
             }
             else{
-              alert('Oops, somethign went wrong ! ');
+               
             }
           }
         }
       }
       catch(e){
-        alert('Oops, somethign went wrong ! ');
+        
+        if(!showItResponse){
+        setisErrorResponse(true);
+          
+              setmessageResponse("Une erreur est survenue lors de la modification du profil.");
+              setshowItResponse(true);
+              setTimeout(()=>{          
+                setshowItResponse(false);
+              }, 4500);
+            }
         console.log(e.message);
       }
       finally{
@@ -159,6 +197,11 @@ const Profile = () => {
     <>
       <NavBar /> 
       <PopUp/>
+      <ErrorSuccess  
+        isError={isErrorResponse}
+        showIt={showItResponse}
+        message={messageResponse}  
+      />
       <div className={loaderConfirmer ? "popUp6666 showpopUp" : "popUp6666"}>
         <span style={{
           fontSize : '16px', 
