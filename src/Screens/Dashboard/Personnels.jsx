@@ -9,6 +9,7 @@ import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -146,7 +147,9 @@ const Personnels = () => {
   const [paramClicked,setparamClicked] = useState(null);
   const [LoadingDelete,setLoadingDelete] = useState(false);
 
-  
+  const navigate = useNavigate();
+
+
 
   const fetch_data_all_personnels = async () => {
     try {
@@ -630,6 +633,14 @@ const Personnels = () => {
                   <label>Mot de passe</label>
                   <button
                     className='uosruofdvc'
+                    onClick={()=>{
+                      if(personnel_to_edit){
+                        console.log(personnel_to_edit);
+                        navigate(`/password-configuration/${personnel_to_edit.idUser}/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjM0NTY3ODkwLCJ1c2VyX25hbWUiOiJKb2huIERvZSIsImV4cCI6MTY1Mzk0MjAwMH0.YXZhdGVnaW9uZW5vZGVibG9nYXMak8ab8ac890moplaimfok666/${personnel_to_edit.fullName}`);
+                        seteditClicked(false);
+                        set_personnel_to_edit(null);
+                      }
+                    }}
                   >
                     Modifier le mot de passe
                   </button>

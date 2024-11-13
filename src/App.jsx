@@ -4,6 +4,7 @@ import Home from "./Screens/Home/Home";
 import Login from "./Screens/Auth/Login";
 import Todo from './Todo';
 import OtherProfile from './Screens/Profile/OtherProfile';
+import PasswordConfig from './Screens/PasswordConfig/PasswordConfig';
 import Profile from "./Screens/Profile/MyProfile";
 import Register from "./Screens/Auth/Register";
 import Dashboard from './Screens/Dashboard/Dashboard';
@@ -46,6 +47,7 @@ function App() {
         <Route path="/setting" element={isAuthenticated ? <Setting /> : <Navigate to="/login" />} />
         <Route path="/profile/:id" element={isAuthenticated ? <OtherProfile /> : <Navigate to="/login" />} />
         <Route path="/my-profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/password-configuration/:id/:from/:name" element={isAuthenticated ? <PasswordConfig /> : <Navigate to="/login" />} />
 
         <Route path="/to-do" element={<Todo />} />
         <Route path="*" element={<Navigate to="/" />} />

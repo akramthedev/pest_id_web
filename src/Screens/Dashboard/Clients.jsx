@@ -10,7 +10,7 @@ import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -20,6 +20,7 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
   
   const handleEdit = () => {
     console.log('Edit:', params.row);
+    setUserToEdit(params.row);
     seteditClicked(!editClicked);
   };
 
@@ -119,7 +120,7 @@ const Clients = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [loadingAllUsers, setLoadingAllUsers] = useState(true);
   const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
-
+  const navigate = useNavigate();
   const [fullname,setFullname] = useState("");
   const [email,setEmail] = useState("");
   const [mobile,setMobile] = useState("");
@@ -141,6 +142,8 @@ const Clients = () => {
   const [InfosOfHisProperty, setInfosOfHisProperty] = useState(null);
   const [LoaderOfPropertyInfos, setLoaderOfPropertyInfos] = useState(false);
   const [loaderOfPermission, setLoaderPermission] = useState(false);
+
+  
 
   
   const fetch_data_allUsers = async () => {
@@ -429,6 +432,7 @@ const Clients = () => {
               password: staff.user ? staff.user.password : "---",
               type: staff.user ? staff.user.type : "---",
               idUser: staff.user ? staff.user.id : "---",
+              permission: staff.user.canAccess === 1 ? "yes" : "no",
               image: staff.user ? staff.user.image : "---",
               email: staff.user ? staff.user.email : "---",
               mobile: staff.user ? staff.user.mobile : "---",
@@ -713,6 +717,13 @@ useEffect(()=>{
                 <div className="rowInp">
                   <label>Mot de passe</label>
                   <button
+                    onClick={()=>{
+                      if(userToEdit){
+                        navigate(`/password-configuration/${userToEdit.idUser}/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjM0NTY3ODkwLCJ1c2VyX25hbWUiOiJKb2huIERvZSIsImV4cCI6MTY1Mzk0MjAwMH0.YXZhdGVnaW9uZW5vZGVibG9nYXMak8ab8ac890moplaimfok6668/${userToEdit.fullName}`);
+                        seteditClicked(false);
+                        setUserToEdit(null);
+                      }
+                    }}
                     className='uosruofdvc'
                   >
                     Modifier le mot de passe
@@ -938,7 +949,7 @@ useEffect(()=>{
                         {
                           AlllHisStaffs.map((staff, index)=>{
                             return(
-                              <div className="otem">
+                              <div className="otem" key={index}>
                                 <div className="caseuzhcsd8989">
                                   <div className="otemom">
                                     <span>Nom complet : &nbsp;</span>
@@ -964,10 +975,21 @@ useEffect(()=>{
                                     }
                                     </span>
                                   </div>
+                                  <div className="otemom">
+                                    <span>Permission d'accès : &nbsp;</span>
+                                    <span>
+                                    {
+                                      staff.permission === "yes" ? "Autorisé" : "Restreint"
+                                    }
+                                    </span>
+                                  </div>
                                 </div>
                                 <div className="caseuzhcsd89">
                                   <button className='uosfvuouo'>
-                                    <i className='fa-solid fa-pen' ></i>
+                                    <i className='fa-solid fa-lock' ></i>
+                                  </button>
+                                  <button className='zirvhnzvf' >
+                                    <i className='fa-solid fa-pen'></i>
                                   </button>
                                   <button className='zirvhnzvf' >
                                     <i className='fa-solid fa-trash'></i>
