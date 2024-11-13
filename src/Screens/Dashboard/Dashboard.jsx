@@ -53,9 +53,6 @@ const Dashboard = () => {
 
 
 
-  
-
-
   const fetch_data_allUsers = async () => {
     try {
       setLoadingAllUsers(true);
@@ -103,14 +100,14 @@ const Dashboard = () => {
             const previousDate = new Date(chartData[chartData.length - 1].date);
             const daysBetween = Math.floor((currentDate - previousDate) / (1000 * 60 * 60 * 24));
             
-            // If gap is greater than 7 days, we add intermediate dates
+            // If gap is larger than 7 days, we reduce it to only two points
             if (daysBetween > 7) {
-              const intermediateDays = Math.floor(daysBetween / 2); // Number of intermediate dates to insert
+              const intermediateDays = 2; // Add only two intermediate days for large gaps
               
-              // Add intermediate dates with 0 users to smooth out the line
+              // Add two intermediate dates with 0 users to smooth out the line
               for (let i = 1; i <= intermediateDays; i++) {
                 const intermediateDate = new Date(previousDate);
-                intermediateDate.setDate(previousDate.getDate() + i);
+                intermediateDate.setDate(previousDate.getDate() + Math.floor(i * daysBetween / (intermediateDays + 1)));
                 chartData.push({
                   date: intermediateDate.toISOString().split('T')[0],
                   userCount: 0
@@ -148,10 +145,11 @@ const Dashboard = () => {
       setLoadingAllUsers(false);
     }
   };
-
   
 
-  
+
+
+
 
   useEffect(()=>{
     fetch_data_allUsers();
