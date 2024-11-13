@@ -29,7 +29,8 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     let access;
       try{  
 
-        
+
+        console.warn(params.row)
 
         if(params.row.permission === "Autorisé"){
            access = "canAccess"; 
@@ -39,7 +40,7 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
            access = "canNotAccess"; 
            console.log("We Give him Access");
         } 
-        const resp = await axios.get(`${ENDPOINT_API}updateUserRestriction/${params.id}/${access}`, {
+        const resp = await axios.get(`${ENDPOINT_API}updateUserRestriction/${parseInt(params.row.id)}/${access}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -95,9 +96,9 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
         <>
         {
           params.row.permission === "Restreint" ? 
-          <i class="fa-solid fa-unlock"></i>
-          :
           <i class="fa-solid fa-lock"></i>
+          :
+          <i class="fa-solid fa-unlock"></i>
         }
         </>
       }

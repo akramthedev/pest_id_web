@@ -14,7 +14,7 @@ import PopUp from '../../Components/PopUp';
 
 
 
-const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ) => {
+const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ,setLoaderPermission,loaderOfPermission, setisDeletedClicked,paramClicked, setparamClicked) => {
 
   
   const handleEdit = () => {
@@ -22,6 +22,60 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
     set_personnel_to_edit(params.row);
     seteditClicked(!editClicked);
   };
+
+
+
+
+  const handleChangePermission = async () => {
+    setLoaderPermission(true);
+    const token = localStorage.getItem('token');
+    let access;
+      try{  
+
+
+
+        console.warn(params.row)
+ 
+
+        if(params.row.permission === "Autorisé"){
+           access = "canAccess"; 
+           console.log("We restrict him");
+        }
+        else if(params.row.permission === "Restreint"){
+           access = "canNotAccess"; 
+           console.log("We Give him Access");
+        } 
+        const resp = await axios.get(`${ENDPOINT_API}updateUserRestriction/${parseInt(params.row.idUser)}/${access}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if(resp.status === 200){
+
+          set_all_personnels((prevPersonnels) =>
+            prevPersonnels.map((person) =>
+              person.id === params.id
+                ? { ...person, permission : access === "canNotAccess" ? "Autorisé" : "Restreint"}
+                : person
+            )
+          );
+          //setRefresh(!refresh);
+          setLoaderPermission(false);
+        }
+        else{
+          setLoaderPermission(false);
+        }
+
+      }
+      catch(e){
+        console.log(e.message);
+        setLoaderPermission(false);
+      }
+      setLoaderPermission(false);
+
+  };
+
 
 
   
@@ -32,39 +86,30 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
   };
 
 
-  const handleDelete = async () => {
-    set_all_personnels(prevall_personnels => 
-      prevall_personnels.filter(item => item.id !== params.row.id)
-    );
-    try{
-
-      const token = localStorage.getItem('token');
-
-      const response = await axios.delete(`${ENDPOINT_API}deleteUserStaffNotAdmin/${parseInt(params.row.idUser)}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if(response.status === 200){
-      }
-      else{
-        alert('Not deleted');
-        setRefresh(!refresh);
-      }
-     
-    }
-    catch(e){
-      alert('Not deleted');
-      setRefresh(!refresh);
-      console.log(e.message);
-    }
-  };
+  
+  const handleDelete = ()=>{
+    setparamClicked(params);
+    setisDeletedClicked(true);
+  }
+ 
 
   return (
     <div className='uefuvzou'>
       <button className='uoersf'   onClick={handleView}  >
         <i class="fa-solid fa-eye"></i>
+      </button>
+      <button disabled={loaderOfPermission} className='uoersf'   onClick={handleChangePermission}  >
+      {
+        params && 
+        <>
+        {
+          params.row.permission === "Restreint" ? 
+          <i class="fa-solid fa-lock"></i>
+          :
+          <i class="fa-solid fa-unlock"></i>
+        }
+        </>
+      }
       </button>
       <button className='uoersf'   onClick={handleEdit}  >
       <i class="fa-solid fa-pencil"></i>
@@ -96,7 +141,10 @@ const Personnels = () => {
   const [personnel_to_edit, set_personnel_to_edit] = useState(null);
   const [loadingCreationPersonnel, setLoadingCreationOfPersonnel] = useState(false);
   const [refresh,setRefresh] = useState(false);
-
+  const [loaderOfPermission, setLoaderPermission] = useState(false);
+  const [isDeletedClicked,setisDeletedClicked] = useState(false);
+  const [paramClicked,setparamClicked] = useState(null);
+  const [LoadingDelete,setLoadingDelete] = useState(false);
 
   
 
@@ -127,6 +175,7 @@ const Personnels = () => {
               fullName : item.user.fullName ? item.user.fullName : "---", 
               password : item.user.password ? item.user.password : "---", 
               type : item.user.type ? item.user.type : "---", 
+              permission: item.user.canAccess === 1 ? "Autorisé" : "Restreint",
               idUser : item.user.id ? item.user.id : "---",
               image : item.user.image ? item.user.image : "---", 
               email : item.user.email ? item.user.email : "---", 
@@ -310,6 +359,45 @@ const Personnels = () => {
 
 
 
+
+
+
+  const handleDeleteStaff = async () => {
+    setisDeletedClicked(false);
+    setLoadingDelete(true);
+    try{
+
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${ENDPOINT_API}deleteUserStaffNotAdmin/${parseInt(paramClicked.row.idUser)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if(response.status === 200){
+        set_all_personnels(prevall_personnels => 
+          prevall_personnels.filter(item => item.id !== paramClicked.row.id)
+        );
+        setLoadingDelete(false);
+      }
+      else{
+        alert('Not deleted');
+        setLoadingDelete(false);
+      }
+    }
+    catch(e){
+      alert('Not deleted');
+      setLoadingDelete(false);
+      console.log(e.message);
+    }  
+    setLoadingDelete(false);
+
+  };
+
+
+
+
+
   const columns = [
     { 
       field: 'id', 
@@ -342,10 +430,39 @@ const Personnels = () => {
       align: 'center',
       flex: 1 // Allow the column to stretch
     },
+    
+    {
+      field : 'permission', 
+      headerName: "Permission d'accès", 
+      minWidth: 160, 
+      headerAlign: 'center', 
+      align: 'center',
+      flex: 1,
+      renderCell: (params) => {
+        const isAuthorized = params.value === 'Autorisé';
+        return (
+          <div
+             
+          >
+            <span
+              style={{
+                backgroundColor: isAuthorized ? '#e0ffc1' : '#ffe1e1',
+                color : isAuthorized ? '#477a14' : '#c90000',
+                padding : "0.3rem 1rem", 
+                borderRadius : "3rem", 
+                fontWeight : "500"
+              }}
+            >
+              {params.value}
+            </span>
+          </div>
+        );
+      },
+    },
     { 
       field: 'email', 
       headerName: 'Adresse Email', 
-      minWidth: 300, 
+      minWidth: 250, 
       headerAlign: 'center', 
       align: 'center',
       flex: 1 // Allow the column to stretch
@@ -368,7 +485,7 @@ const Personnels = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ), 
+      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked,setLoaderPermission,loaderOfPermission,setisDeletedClicked,paramClicked,setparamClicked ), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 
@@ -389,6 +506,71 @@ const Personnels = () => {
       <NavBar /> 
       <SideBar />
       <PopUp/>
+
+
+
+      <div className={LoadingDelete ? "popUp6666  showpopUp" : "popUp6666 "}>
+        <span style={{
+          fontSize : '16px', 
+          fontWeight : "500",
+          display : "flex", 
+          alignItems : "center", 
+          justifyContent :"center"
+        }}>
+          <img src={LVG} alt="..." height={21} width={21} />
+          &nbsp;&nbsp;Suppression en cours...
+        </span>
+      </div>
+
+
+
+          {/*   delete Personnel    */}
+
+
+      <div className={isDeletedClicked ? "popUp  showpopUp" : "popUp "}>
+        <div className="contPopUp popUp1 popUp1popUp1popUp12    popUp1popUp1popUp12345 popUp6666Modifi7">
+          <div className="caseD11">
+            <span className='svowdjc'><i class="fa-solid fa-triangle-exclamation fa-triangle-exclamation2"></i>&nbsp;&nbsp;Confirmer&nbsp;</span><span className='svowdjc'>&nbsp;la suppression</span>
+          </div>
+          <div className="uzuovsououzv">
+            &nbsp;&nbsp;La suppression de ce personnel est irréversible et entraînera la perte définitive de ses données !
+          </div>
+          <div className="rowInp rowInpModified">
+              <button 
+                className='jofzvno' 
+                disabled={LoadingDelete} 
+                onClick={()=>{
+                  setisDeletedClicked(false);
+                  setparamClicked(null);
+                }} 
+              >
+                Annuler
+              </button>
+              <button 
+                disabled={LoadingDelete}
+                onClick={()=>{
+                  handleDeleteStaff();
+                }}
+                className={LoadingDelete ? "efvofvz22 efvofvz2" : "efvofvz22"}
+              >
+              {
+                LoadingDelete ? "Traitement en cours..."
+                :
+                "Oui, je confirme"
+              }
+              </button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
       {/*   edit Personnel    */}
 
         <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>
