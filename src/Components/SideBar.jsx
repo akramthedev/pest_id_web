@@ -172,7 +172,7 @@ const SideBar = () => {
                   <div  
                     className={`icons ${location.pathname === "/fermes" ? 'textActi' : ''}`}
                   >
-                    <i class="fa-solid fa-leaf"></i>
+                    <i class="fa-solid fa-seedling"></i>
                   </div>
                   <div  
                     className={`textx ${location.pathname === "/fermes" ? 'textActi' : ''}`}

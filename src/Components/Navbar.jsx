@@ -173,6 +173,8 @@ const NavBar = () => {
                 localStorage.removeItem('email');
                 localStorage.removeItem('created_at');
 
+                localStorage.removeItem('typeEncrypted');
+
                 localStorage.removeItem('company_email');
                 localStorage.removeItem('company_mobile');
                 localStorage.removeItem('company_name');

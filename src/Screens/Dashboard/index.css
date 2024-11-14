@@ -1012,3 +1012,36 @@
     height: 555px !important; 
     max-height: 555px !important;
 }
+
+
+
+.odosfvoufnosfovefsouv222{
+    width: 100%;
+    height: 100%;
+    color: gray;
+    font-size: 13px !important;
+    font-weight: 300 !important;
+    display: flex;
+    align-items: left !important;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.NOSD7I9999NOSD7I9999{
+    height: 100%;
+    width: calc(100% - 140px);
+    padding-bottom: 0rem !important;
+    padding-right: 1.5rem;
+}
+
+.row66322{
+    padding-right: 2rem !important;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.2rem !important;
+    justify-content: space-between;
+}
+.row6632 span:first-child{
+    font-weight: 600;
+}

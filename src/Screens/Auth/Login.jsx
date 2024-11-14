@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from "react-router-dom";
 import ErrorSuccess from '../../Components/ErrorSuccess';
+import CryptoJS from 'crypto-js';
 
 
 
@@ -79,6 +80,13 @@ function Login() {
         localStorage.setItem('fullName', user.fullName ? user.fullName : "---");
         localStorage.setItem('email', user.email ? user.email : "---");
         localStorage.setItem('created_at', user.created_at ? user.created_at : "---");
+        
+        const secretKey = "PCSAGRI3759426586252";
+        if (!secretKey) {
+          alert("Secret key is undefined. Make sure REACT_APP_SECRET_KEY_ONE is defined in the .env file.");
+        }
+        const encryptedData = CryptoJS.AES.encrypt(response.data.user.type, secretKey).toString();
+        localStorage.setItem('typeEncrypted', encryptedData);
 
         localStorage.setItem('isNoticeOfBroadCastSeen', user.isNoticeOfBroadCastSeen === 1 ? "seen" : "notseen")
         localStorage.setItem('is_np', user.is_np === 1 ? "activated" : "desactivated");
@@ -105,7 +113,7 @@ function Login() {
             localStorage.setItem('company_email', "---");
           }
         }
-
+        
         navigate(0);
       }
       else{
