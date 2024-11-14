@@ -1425,7 +1425,7 @@ const Dashboard = () => {
                   <div className="rowCardX2">
                     <div className="NOSD7IO9">
                     {
-                      data3 ? data3.sum : ""
+                      data3 ? data3.sum : 0
                     }
                     </div>
                     <div className="NOSD7I9999NOSD7I9999">
