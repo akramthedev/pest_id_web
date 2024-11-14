@@ -8,7 +8,7 @@ import PopUp from '../../Components/PopUp';
 import axios from 'axios';
 import ErrorSuccess from '../../Components/ErrorSuccess';
 import LVG from './Loader.gif'
-import { LineChart, Line,Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { LineChart, Line,Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, BarChart, Bar, AreaChart } from 'recharts';
 import CryptoJS from 'crypto-js';
 
 
@@ -769,26 +769,28 @@ const Dashboard = () => {
                       <>
                       {
                       ChartData ? 
-                      <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={ChartData}>
-                          
-                          <CartesianGrid strokeDasharray="3 3" stroke="none" />
-                          <XAxis 
-                            dataKey="date" 
-                            hide={true}   
-                          />
-                          <YAxis hide={true} />
-                          <Tooltip />
-                          <Line 
-                            connectNulls={true}  
-                            type="monotone" 
-                            dataKey="Utilisateurs" 
-                            stroke="#67c10c" 
-                            dot={false}  
-                            strokeWidth={2}  // Set line thickness
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={ChartData}>
+                            <defs>
+                              <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#8cd83f" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="none" />
+                            <XAxis dataKey="date" hide={true} />
+                            <YAxis hide={true} />
+                            <Tooltip />
+                            <Area
+                              type="monotone"
+                              dataKey="Utilisateurs"
+                              stroke="#67c10c"
+                              fill="url(#gradient)" // Applying the gradient here
+                              strokeWidth={1.8}
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+
                       :
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
@@ -820,25 +822,27 @@ const Dashboard = () => {
                       {
                       chartData2 ? 
                       <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData2}>
-                          
-                          <CartesianGrid strokeDasharray="3 3" stroke="none" />
-                          <XAxis 
-                            dataKey="date" 
-                            hide={true}   
-                          />
-                          <YAxis hide={true} />
-                          <Tooltip />
-                          <Line 
-                            connectNulls={true}  
-                            type="monotone" 
-                            dataKey="Images" 
-                            stroke="#67c10c" 
-                            dot={false}  
-                            strokeWidth={2}   
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
+                      <AreaChart data={chartData2}>
+                        <defs>
+                          <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#8cd83f" stopOpacity={1} />
+                            <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="none" />
+                        <XAxis dataKey="date" hide={true} />
+                        <YAxis hide={true} />
+                        <Tooltip />
+                        <Area
+                          type="monotone"
+                          dataKey="Images"
+                          stroke="#67c10c"
+                          fill="url(#gradient)" // Applying the gradient here
+                          strokeWidth={1.8}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                    
                       :
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
@@ -871,26 +875,28 @@ const Dashboard = () => {
                       {
                       chartData3 ? 
                       <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData3}>
-                          
+                        <AreaChart data={chartData3}>
+                          <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor="#8cd83f" stopOpacity={1} />
+                              <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                            </linearGradient>
+                          </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="none" />
-                          <XAxis 
-                            dataKey="date" 
-                            hide={true}   
-                          />
+                          <XAxis dataKey="date" hide={true} />
                           <YAxis hide={true} />
                           <Tooltip />
-                          <Line 
-                            connectNulls={true}  
-                            type="monotone" 
-                            dataKey="Fermes" 
-                            stroke="#67c10c" 
-                            dot={false}  
-                            strokeWidth={2}   
+                          <Area
+                            type="monotone"
+                            dataKey="Fermes"
+                            stroke="#67c10c"
+                            fill="url(#gradient)" // Gradient fill applied here
+                            strokeWidth={1.8}
                           />
-                        </LineChart>
+                        </AreaChart>
                       </ResponsiveContainer>
-                      :
+
+                        :
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
                       </div>
@@ -947,25 +953,27 @@ const Dashboard = () => {
                       {
                       ChartData ? 
                       <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={ChartData}>
-                          
+                        <AreaChart data={ChartData}>
+                          <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor="#8cd83f" stopOpacity={1} />
+                              <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                            </linearGradient>
+                          </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="none" />
-                          <XAxis 
-                            dataKey="date" 
-                            hide={true}   
-                          />
+                          <XAxis dataKey="date" hide={true} />
                           <YAxis hide={true} />
                           <Tooltip />
-                          <Line 
-                            connectNulls={true}  
-                            type="monotone" 
-                            dataKey="Fermes" 
-                            stroke="#67c10c" 
-                            dot={false}  
-                            strokeWidth={2}  // Set line thickness
+                          <Area
+                            type="monotone"
+                            dataKey="Fermes"
+                            stroke="#67c10c"
+                            fill="url(#gradient)" // Gradient fill applied here
+                            strokeWidth={1.8}
                           />
-                        </LineChart>
+                        </AreaChart>
                       </ResponsiveContainer>
+
                       :
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
@@ -1010,25 +1018,27 @@ const Dashboard = () => {
                       {
                       chartData2 ? 
                       <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData2}>
-                          
+                        <AreaChart data={chartData2}>
+                          <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor="#9fe857" stopOpacity={1} />
+                              <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                            </linearGradient>
+                          </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="none" />
-                          <XAxis 
-                            dataKey="date" 
-                            hide={true}   
-                          />
+                          <XAxis dataKey="date" hide={true} />
                           <YAxis hide={true} />
                           <Tooltip />
-                          <Line 
-                            connectNulls={true}  
-                            type="monotone" 
-                            dataKey="Insectes" 
-                            stroke="#67c10c" 
-                            dot={false}  
-                            strokeWidth={2}   
+                          <Area
+                            type="monotone"
+                            dataKey="Insectes"
+                            stroke="#67c10c"
+                            fill="url(#gradient)" // Applying the gradient here
+                            strokeWidth={1.8}
                           />
-                        </LineChart>
+                        </AreaChart>
                       </ResponsiveContainer>
+
                       :
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
