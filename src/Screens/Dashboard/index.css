@@ -928,7 +928,7 @@
     align-items: center;
     justify-content: left;
     padding: 0 1.4rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
 }
 
@@ -943,21 +943,44 @@
 
 
 .NOSD7IO9{
-    height: 100%;
-    width: 150px;
-    padding: 0 1.4rem;
-    padding-left: 1.4rem;
-    font-size: 3rem;
+    height: 90%;
+    width: 140px;
+    font-size: 3.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
+    font-weight: 600 !important;
     font-family: "PT Serif", serif;
 }
 
+.NOSD7IO9NOSD7IO9{
+    height: 90%;
+    width: 140px;
+    font-size: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600 !important;
+    font-family: "PT Serif", serif;
+}
 .NOSD7I9999{
     height: 100%;
-    width: calc(100% - 150px);
-    padding-bottom: 1rem;
-    padding-right: 1rem;
+    width: calc(100% - 140px);
+    padding-bottom: 1.5rem;
+    padding-right: 1.5rem;
+
+}
+
+
+.odosfvoufnosfovefsouv{
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    color: gray;
+    font-size: 13px !important;
+    font-weight: 300 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
