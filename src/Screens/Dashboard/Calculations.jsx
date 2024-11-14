@@ -327,17 +327,41 @@ const Calculations = () => {
       setloadingAllFarms(true);
       setoptions([]);
       const userId = localStorage.getItem('userId');
-      const userIdNum = parseInt(userId);
+      const type = localStorage.getItem('type');
       const token = localStorage.getItem('token'); 
 
-      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhouses/${userIdNum}`, {
+      let userIdNum = null
+
+      if(type === "staff"){
+        
+        const responseAdminId = await axios.get(`${ENDPOINT_API}getUserByIdAndHisStaffData/${parseInt(userId)}`, {
+        
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(responseAdminId.status === 200){
+          userIdNum = responseAdminId.data.staffs[0].admin_id;
+        }
+        else{ 
+          setloadingAllFarms(false);
+          return;
+        }
+
+      }
+      else{
+        userIdNum = userId;
+      }
+
+      
+      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhouses/${parseInt(userIdNum)}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       if (response.status === 200) {
-          console.log(response.data);
+          console.log("Farms With GreenHouses : "+response.data);
           setFarms(response.data);
           console.log(response.data);
       
