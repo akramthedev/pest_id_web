@@ -98,7 +98,9 @@ const Dashboard = () => {
 
   const fetch_data_data1 = async () => {
     try {
+      setChartData(null);
       setLoading1(true);
+      setData1(null);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
@@ -201,7 +203,9 @@ const Dashboard = () => {
 
   const fetch_data_Images_Traites = async () => {
     try {
+      setChartData2(null);
       setLoading2(true);
+      setData2(null);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
@@ -301,7 +305,9 @@ const Dashboard = () => {
   
   const fetch_All_Farms_For_SuperAdmin = async () => {
     try {
-      setLoading2(true);
+      setChartData3(null);
+      setLoading3(true);
+      setData3(null);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
@@ -334,7 +340,7 @@ const Dashboard = () => {
         const firstDate = new Date(Math.min(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
         const lastDate = new Date(Math.max(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
   
-        const PredictionsPerDay = allDates.reduce((acc, date) => {
+        const FarmsPerDay = allDates.reduce((acc, date) => {
           acc[date] = (acc[date] || 0) + 1;
           return acc;
         }, {});
@@ -365,7 +371,7 @@ const Dashboard = () => {
   
           chartData.push({
             date: dateString,
-            Fermes: PredictionsPerDay[dateString] || 0,
+            Fermes: FarmsPerDay[dateString] || 0,
           });
   
           currentDate.setDate(currentDate.getDate() + 1);
@@ -403,6 +409,9 @@ const Dashboard = () => {
   const fetchFarms = async () => {
     try {
       setLoading1(true);
+      setChartData(null);
+      setData1(null);
+
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
@@ -516,7 +525,10 @@ const Dashboard = () => {
     try {
       setLoading2(true);
       setLoading3(true);
-  
+      setChartData2(null);
+      setChartData3(null);
+      setData2(null);
+      setData3(null);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token');
@@ -849,15 +861,16 @@ const Dashboard = () => {
                     }
                     </div>
                     <div className="NOSD7I9999">
+                    <>
                     {
-                      Loading3 ? 
+                      Loading2 ? 
                       <div className='odosfvoufnosfovefsouv'>
                         <img src={LVG} alt="..." height={16} width={16} />&nbsp;&nbsp;Chargement...
                       </div>                :
                       <>
                       {
-                        chartData3 ? 
-                        <ResponsiveContainer width="100%" height="100%">
+                      chartData3 ? 
+                      <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={chartData3}>
                           
                           <CartesianGrid strokeDasharray="3 3" stroke="none" />
@@ -873,7 +886,7 @@ const Dashboard = () => {
                             dataKey="Fermes" 
                             stroke="#67c10c" 
                             dot={false}  
-                            strokeWidth={2}  // Set line thickness
+                            strokeWidth={2}   
                           />
                         </LineChart>
                       </ResponsiveContainer>
@@ -881,9 +894,11 @@ const Dashboard = () => {
                       <div className='odosfvoufnosfovefsouv'>
                       Aucune donnée pour tracer le graphique.
                       </div>
-                      }
+                    }
                       </>
                     }
+                    </>
+                     
                     </div>
                   </div>
                 </div>
@@ -944,7 +959,7 @@ const Dashboard = () => {
                           <Line 
                             connectNulls={true}  
                             type="monotone" 
-                            dataKey="Utilisateurs" 
+                            dataKey="Fermes" 
                             stroke="#67c10c" 
                             dot={false}  
                             strokeWidth={2}  // Set line thickness
