@@ -12,6 +12,22 @@ import { LineChart, Line,Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveC
 import CryptoJS from 'crypto-js';
 
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc', width : "200px" }}>
+        <div style={{ color: 'black', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#" ,fontWeight : "500", }} >Date :</span>{`${label}`}</div>
+        <div style={{ color: '#da0404', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#da0404" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
+        <div style={{ color: '#8a2be2', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#8a2be2" ,fontWeight : "500", }} >Mineuses :</span> {` ${payload.find(p => p.dataKey === 'Mineuses')?.value || 0}`}</div>
+        <div style={{ color: '#67c10c', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#67c10c" ,fontWeight : "500", }} >Thrips :</span> {` ${payload.find(p => p.dataKey === 'Thrips')?.value || 0}`}</div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+
 
 
 const Dashboard = () => {
@@ -29,13 +45,25 @@ const Dashboard = () => {
   const [Loading2,setLoading2] = useState(true);
   const [Loading3,setLoading3] = useState(true);
 
+  const [Loading4,setLoading4] = useState(true);
+
+
   const [data1, setData1] = useState(null);
   const [data2, setData2] = useState(null);
   const [data3, setData3] = useState(null);
+  const [data4, setData4] = useState(null);
 
   const [ChartData, setChartData] =useState(null);
   const [chartData2, setChartData2] =useState(null);
   const [chartData3, setChartData3] =useState(null);
+  const [chartData4, setChartData4] =useState(null);
+
+
+
+  const [voirMouches, setvoirMouches] = useState(true);
+  const [voirMineuses, setvoirMineuses] = useState(true);
+  const [voirThrips, setvoirThrips] = useState(true);
+
 
 
   useEffect(()=>{
@@ -520,8 +548,119 @@ const Dashboard = () => {
 
 
 
+  const fetch____data____second_chart = async () => {
+    try {
+      setLoading4(true);
+      setChartData4(null);
 
-  const fetchDataOfAdministrator = async () => {
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token');
+  
+      const response = await axios.get(`${ENDPOINT_API}users/${userIdNum}/p_with_image_version_two`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      if (response.status === 200) {
+        if (response.data.length === 0) {
+          setChartData4([]);
+        } else {
+  
+          // Log the raw data fetched from the server
+          const transformedData = response.data.map(prediction => {
+            return {
+              id: prediction.id,
+              plaque_id: prediction.plaque_id,
+              serre_id: prediction.serre_id,
+              farm_id: prediction.farm_id,
+              created_at: prediction.created_at && prediction.created_at,
+              Mouches: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_A === 'number' ? prediction.images[0].class_A : 0,
+              Mineuses: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_B === 'number' ? prediction.images[0].class_B : 0,
+              Thrips: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_C === 'number' ? prediction.images[0].class_C : 0,
+            };
+          });
+  
+  
+          // Group the data by date and calculate sum of class_A + class_B + class_C for each day
+          const dailySums = transformedData.reduce((acc, prediction) => {
+          const date = new Date(prediction.created_at).toISOString().split('T')[0];
+
+            
+            if (!acc[date]) {
+              acc[date] = {
+                Mouches: 0,
+                Mineuses: 0,
+                Thrips: 0,
+              };
+            }
+  
+            acc[date].Mouches += prediction.Mouches || 0;
+            acc[date].Mineuses += prediction.Mineuses || 0;
+            acc[date].Thrips += prediction.Thrips || 0;
+  
+            return acc;
+          }, {});
+  
+          // Prepare chart data
+          const allDates = Object.keys(dailySums);
+          const firstDate = new Date(Math.min(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
+          const lastDate = new Date(Math.max(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
+  
+          const chartData = [];
+          let currentDate = new Date(firstDate);
+  
+          while (currentDate <= new Date(lastDate)) {
+            const dateString = currentDate.toISOString().split('T')[0];
+  
+            chartData.push({
+              date: dateString,
+              Mouches: dailySums[dateString]?.Mouches || 0,
+              Mineuses: dailySums[dateString]?.Mineuses || 0,
+              Thrips: dailySums[dateString]?.Thrips || 0,
+            });
+  
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+  
+          // Log the prepared chart data
+          console.log('Chart Data:', chartData);
+  
+          setChartData4(chartData);
+        }
+      } else {
+        setChartData4([]);
+      }
+    } catch (error) {
+      setChartData4([]);
+      if (!showItResponse) {
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la récupération des données.");
+        setshowItResponse(true);
+        setTimeout(() => {
+          setshowItResponse(false);
+        }, 4500);
+      }
+      console.error('Erreur:', error.message);
+    } finally {
+      setLoading4(false);
+    }
+  };
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+  const fetch_predictions_of_admin = async () => {
     try {
       setLoading2(true);
       setLoading3(true);
@@ -577,8 +716,6 @@ const Dashboard = () => {
   
           const moyenne = filteredData.length > 0 ? totalInsects / filteredData.length : 0;
   
-          console.log('Total insects in the last 7 days:', totalInsects);
-          console.log('Average insects per entry in the last 7 days:', moyenne);
   
           // Find the record with the maximum sum of class_A + class_B + class_C
           predictionWithMaximumValues = filteredData.reduce((max, prediction) => {
@@ -652,17 +789,7 @@ const Dashboard = () => {
     }
   };
   
-  
-
-  
-
-
-
-
-
-
-
-
+   
 
 
   
@@ -679,11 +806,13 @@ const Dashboard = () => {
         fetch_data_data1();
         fetch_All_Farms_For_SuperAdmin();
         fetch_data_Images_Traites();
+        fetch____data____second_chart();
       }
       else if(isSuperAdministrator === "admin"){
         //admin
         fetchFarms();
-        fetchDataOfAdministrator();
+        fetch_predictions_of_admin();
+        fetch____data____second_chart();
       }
       else{
         //staff
@@ -910,7 +1039,164 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="rowD3ab">
+                <div className="colorss">
+                    <div className="case9887253">
+                      <div className="iosfvijsv89435 iosfvijsv894352">
+                        <div className="meaningCARO6">
+                          Nombre d'insectes sélectionnés par jour :
+                        </div>
+                      </div>
+                      <div className="iosfvijsv89435">
+                        <div className="caro"
+                          onClick={()=>{
+                               setvoirMouches(!voirMouches);
+                          
+                          }}
+                        >
+                        {
+                          voirMouches && <i className='fa-solid fa-check'></i>
+                        }
+                        </div>
+                        <div className="meaningCARO1">
+                          Mouches
+                        </div>
+                      </div>
+                      <div className="iosfvijsv89435">
+                        <div className="caro2"
+                          onClick={()=>{
+                            setvoirMineuses(!voirMineuses);
+                          }}
+                        >
+                        {
+                          voirMineuses && <i className='fa-solid fa-check'></i>
+                        }
+                        </div>
+                        <div className="meaningCARO2">
+                          Mineuses
+                        </div>
+                      </div>
+                      <div className="iosfvijsv89435">
+                        <div className="caro3"
+                          onClick={()=>{
+                            setvoirThrips(!voirThrips);
+                          }}
+                        >
+                        {
+                          voirThrips && <i className='fa-solid fa-check'></i>
+                        }
+                        </div>
+                        <div className="meaningCARO3">
+                          Thrips
+                        </div>
+                      </div>
+                    </div>
+                    <div className="case8243527">
+                      buttons
+                    </div>
+                </div>
+              {
+                      Loading4 ? 
+                      <div className='odosfvoufnosfovefsouv'>
+                        <img src={LVG} alt="..." height={16} width={16} />&nbsp;&nbsp;Chargement...
+                      </div>                
+                      :
+                      <div className='surfvhuoshfovhsofuhvoush'>
+                      {
+                      chartData4 ? 
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart 
+                            isAnimationActive={true}
+                            data={chartData4}
+                            tick={{ fontSize: 14 }}
+                          >
+                            <defs>
+                              <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#da0404" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                              </linearGradient>
+                              <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#8a2be2" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                              </linearGradient>
+                              <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#67c10c" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="2.5 2.5"  />
+                            <Tooltip content={<CustomTooltip />} />
+                          
 
+
+                            {
+                              voirThrips && 
+                              <>
+                              {/* class_C Area */}
+                              <Area
+                                animationEasing="ease-in-out"
+                                animationDuration={3000}
+                                type="monotone"
+                                dataKey="Thrips"
+                                stroke="#67c10c"
+                                fill="url(#gradient3)"
+                                strokeWidth={1.8}
+                              />
+                              </>
+                            }
+
+
+
+
+
+                            {
+                              voirMouches && 
+                              <>
+                              {/* class_A Area */}
+                                <Area
+                                  animationEasing="ease-in-out"
+                                  animationDuration={10000}
+                                  type="monotone"
+                                  dataKey="Mouches"
+                                  stroke="#da0404"
+                                  fill="url(#gradient1)"
+                                  strokeWidth={1.8}
+                                />
+                              </>
+                            }
+
+
+                            
+
+                            {
+                              voirMineuses && 
+                              <>
+                              {/* class_B Area */}
+                              <Area
+                                animationEasing="ease-in-out"
+                                animationDuration={6000}
+                                type="monotone"
+                                dataKey="Mineuses"
+                                stroke="#8a2be2"
+                                fill="url(#gradient2)"
+                                strokeWidth={1.8}
+                              />
+                              </>
+                            }
+   
+                            
+                            
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      :
+                      <div className='odosfvoufnosfovefsouv'>
+                      Aucune donnée pour tracer le graphique.
+                      </div>
+                    }
+                      </div>
+                    }
               </div>
             </div>
             </>
@@ -1107,7 +1393,7 @@ const Dashboard = () => {
             </>
             :
             <>
-              Dash Admin
+              Dash Staff
               //todo Next Scope : Dashboard for Admins and Staffs
               //! After Next Scope : Mka esure that the personal get All Farms and Serres of his administrator not of him like the way u did in Mobile 
             </>
