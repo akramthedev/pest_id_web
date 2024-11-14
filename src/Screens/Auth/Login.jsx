@@ -32,7 +32,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = {};
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (email.length <= 4) {
       
       validationErrors.email = 'Adresse email invalide';
       

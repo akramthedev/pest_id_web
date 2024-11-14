@@ -806,7 +806,7 @@ const Personnels = () => {
       {/*   Add new Calculation    */}
 
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
-        <div className="contPopUp">
+        <div className="contPopUp contPopUpcontPopUpcontPopUp888">
           <div className="caseD11">
             <span>Nouveau</span><span>&nbsp;&nbsp;Personnel</span>
           </div>

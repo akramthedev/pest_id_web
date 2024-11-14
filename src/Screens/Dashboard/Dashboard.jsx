@@ -556,7 +556,9 @@ const Dashboard = () => {
       </>
       :
       <>
-        Hallo
+        //! BUT FIRST MAKE A REQUEST to get TYPE , do not base the dashboard only on the localStorage okay ? !
+        //todo Next Scope : Dashboard for Admins and Staffs
+        //! After Next Scope : Mka esure that the personal get All Farms and Serres of his administrator not of him like the way u did in Mobile 
       </>
     }
 

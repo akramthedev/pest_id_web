@@ -64,11 +64,11 @@ const Profile = () => {
 
 
     const handleChangeData = async ()=>{
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      
       if(isDataCompnayModified || isDataPersonalModified){
 
       
-      if (!email || !emailRegex.test(email)) {
+      if (email.length <= 4) {
         alert("Invalid email address");
         return;
       }
