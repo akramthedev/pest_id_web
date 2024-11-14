@@ -379,27 +379,28 @@ const Dashboard = () => {
         message={messageResponse}  
       />
      
-     
 
-       
- 
-
-      <div className="containerDash containerDashCustomized1">
+    {
+      localStorage.getItem("type") === "superadmin" ? 
+      <>
+         <div className="containerDash containerDashCustomized1">
         <div className="rowD1">
           <div className="caseD1 caseD1mod">
             <span>Tableau</span><span>&nbsp;de Board</span>
             {
-                loadingAllUsers || LoadingX || LoadingY &&
+                loadingAllUsers || LoadingX || LoadingY ?
                 <>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src={LVG} alt="..." height={23} width={23} />
+                  <img style={{marginLeft : "1.3rem"}} src={LVG} alt="..." height={23} width={23} />
                 </>
+                :
+                <button className='isbvdussofbvsuofbvousf' onClick={()=>{setRefresh(!refresh)}} disabled={LoadingX || LoadingY || loadingAllUsers} ><i className='fa-solid fa-arrows-rotate' ></i></button>
             }
           </div>
         </div>
         <div className="rowD2ab">
         <div className="cardX">
             <div className="rowCardX">
-              <i className='fa-solid fa-users'></i>&nbsp;&nbsp;Total des utilisateurs
+              <i className='fa-solid fa-user'></i>&nbsp;&nbsp;Total des utilisateurs
             </div>
             <div className="rowCardX2">
               <div className="NOSD7IO9">
@@ -461,7 +462,7 @@ const Dashboard = () => {
                <>
                {
                 LoadingX ? 
-<div className='odosfvoufnosfovefsouv'>
+                <div className='odosfvoufnosfovefsouv'>
                   <img src={LVG} alt="..." height={16} width={16} />&nbsp;&nbsp;Chargement...
                 </div>                :
                 <>
@@ -552,6 +553,17 @@ const Dashboard = () => {
 
         </div>
       </div>
+      </>
+      :
+      <>
+        Hallo
+      </>
+    }
+
+       
+ 
+
+     
     </div>
   )
 }

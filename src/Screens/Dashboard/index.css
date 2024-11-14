@@ -984,3 +984,24 @@
     justify-content: center;
     
 }
+
+.isbvdussofbvsuofbvousf{
+    margin-left: 1rem;
+    height: 34px;
+    width: 34px;
+    background-color: #ebffd7;
+    display: flex;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: .16s all ease-in-out;
+    align-items: center;
+    justify-content: center;
+}
+.isbvdussofbvsuofbvousf i{
+    color: #477a14 !important;
+    font-size: 16px;
+}
+
+.isbvdussofbvsuofbvousf:hover{
+    background-color: #daffb6;
+}
