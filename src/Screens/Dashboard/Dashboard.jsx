@@ -441,10 +441,34 @@ const Dashboard = () => {
       setData1(null);
 
       const userId = localStorage.getItem('userId');
-      const userIdNum = parseInt(userId);
+      const type = localStorage.getItem('type');
+      let userIdNum = null;
       const token = localStorage.getItem('token');
+
+
+      if(type === "staff"){
+        
+        const respX = await axios.get(`${ENDPOINT_API}getUserByIdAndHisStaffData/${parseInt(userId)}`, {
+        
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if(respX.status === 200){
+          userIdNum = respX.data.staffs[0].admin_id;
+        }
+        else{
+          setLoading1(false);
+          alert('Une erreur est survenue lors de la récupération des données.');
+        }
+
+      }
+      else{
+        userIdNum = parseInt(userId);
+      }
       
-      const response = await axios.get(`${ENDPOINT_API}farms/${userIdNum}`, {
+      const response = await axios.get(`${ENDPOINT_API}farms/${parseInt(userIdNum)}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -822,6 +846,9 @@ const Dashboard = () => {
       }
       else{
         //staff
+        fetchFarms();
+        fetch_predictions_of_admin();
+        fetch____data____second_chart();
       }
     }
   }, [refresh, isSuperAdministrator]);
@@ -1282,7 +1309,7 @@ const Dashboard = () => {
             </div>
             </>
             :
-            isSuperAdministrator === 'admin' ? 
+            
             <>
             <div className="containerDash containerDashCustomized1">
               <div className="rowD1">
@@ -1652,12 +1679,6 @@ const Dashboard = () => {
                     }
               </div>
             </div>
-            </>
-            :
-            <>
-              Dash Staff
-              //todo Next Scope : Dashboard for Admins and Staffs
-              //! After Next Scope : Mka esure that the personal get All Farms and Serres of his administrator not of him like the way u did in Mobile 
             </>
           }
         </>
