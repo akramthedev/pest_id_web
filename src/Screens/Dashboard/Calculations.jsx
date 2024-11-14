@@ -206,8 +206,7 @@ const Calculations = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
-
- 
+  const [IsImageToSeenClicked, setIsImageToSeenClicked] = useState(null);
 
   
 
@@ -664,6 +663,21 @@ const Calculations = () => {
 
 
 
+      <div className={IsImageToSeenClicked ? "popUp  showpopUp kakakakakak1" : "popUp kakakakakak1"}>
+        <div className="kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1">
+            <img src="https://www.jardiner-malin.fr/wp-content/uploads/2021/05/mouche-mineuse-feuille-tomate.jpg" alt="" />
+              <button 
+                onClick={()=>{
+                  setIsImageToSeenClicked(null);
+                }} 
+              >
+                <i className='fa-solid fa-xmark'></i>
+              </button>
+        </div>
+      </div>
+
+
+
       {/*   edit Calculation    */}
 
         <div className={editClicked ? "popUp po showpopUp" : "popUp po"}>
@@ -821,6 +835,9 @@ const Calculations = () => {
                    Image du calcul
                   </label>
                   <button 
+                    onClick={()=>{
+                      setIsImageToSeenClicked(calculToEdit.image);
+                    }}
                     style={{
                       cursor : "pointer", 
                       background : "#f4f4f4",
