@@ -65,6 +65,15 @@
 
 }
 
+.caseD2 .eofvouszfv112{
+    background-color: #242424;
+}
+.caseD2 .eofvouszfv112:hover{
+    background-color: #4d4d4d;
+}
+.caseD2 .eofvouszfv112 i{
+}
+
 .caseD2 button:last-child, .caseD2 .annulerd2{
     background-color: rgb(255, 255, 255) !important;
     color: #5fa21b !important ;
@@ -909,6 +918,7 @@
 .rowD3ab{
     height: 440px;
     border-radius: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .cardX{
@@ -1087,7 +1097,7 @@
 .caro2{
     cursor: pointer;
     width: 18px;
-    border:2px solid #8a2be2;
+    border:2px solid #5fa21b;
     height: 18px;
     border-radius: 0.2rem;
     display: flex;
@@ -1096,7 +1106,7 @@
     margin-right: 0.5rem;
 }
 .meaningCARO2{
-    color: #8a2be2;
+    color: #5fa21b;
 
 }
 .caro3{
@@ -1128,7 +1138,7 @@
 
 }
 .caro2 i{
-    color: #8a2be2;
+    color: #5fa21b;
 
 }
 .caro3 i{
@@ -1241,3 +1251,75 @@
     border-top-right-radius: 0;
     right: 1rem;
 }
+
+
+.zurçgçuzrfçhzrçfh{
+    display: flex;
+    align-items: center;
+}
+
+.oefbbofoufzuofzsoefbbofoufzuofzs2{
+    width: 40px !important;
+}
+
+.esuorhuzhvuosrhsuovozshfov{
+    border: 1px solid #5fa21b;
+    height: 38px;
+    border-radius: 50%;
+    background-color: white;
+    color: #5fa21b;
+    cursor: pointer;
+    width: 38px;
+}
+.esuorhuzhvuosrhsuovozshfov i{
+    color: #477a14;
+}
+ 
+
+
+    /* Style pour la ligne parent */
+    .parent-row {
+
+    }
+  
+  /* Style pour la ligne enfant */
+  .child-row {
+    background-color: #f4f4f4 !important;  /* Exemple de couleur pour la ligne enfant */
+  }
+  .child-row:hover{
+        background-color: #f4f4f4 !important;  /* Exemple de couleur pour la ligne enfant */
+
+  }
+  .child-row:active{
+        background-color: #f4f4f4 !important;  /* Exemple de couleur pour la ligne enfant */
+
+  }
+  .child-row:focus{
+        background-color: #f4f4f4 !important;  /* Exemple de couleur pour la ligne enfant */
+
+  }
+  /* Style pour la colonne "Ferme" dans la ligne enfant */
+  .child-row .MuiDataGrid-cell[data-field="name"] {
+    font-weight: bold;
+    color: #116500;  /* Exemple de couleur spécifique pour la colonne "Ferme" dans la ligne enfant */
+  }
+  
+
+  .clickeici{
+    color: #457d0e;
+    margin-top: 1rem;
+  }
+
+  .fa-question-circle{
+    color: #5fa21b;
+  }
+
+  .clickeici em{
+    color: #457d0e;
+  }
+
+  .popUp1popUp1popUp122749632976491326491236{
+    min-height: 366px !important;
+    height: 366px !important; 
+    max-height: 366px !important;
+  }

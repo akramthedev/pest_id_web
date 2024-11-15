@@ -152,7 +152,7 @@ const SideBar = () => {
           <div  
             className={`textx ${location.pathname === "/calculations" ? 'textActi' : ''}`}
           >
-            Mes Calculations
+            Mes Calculs
           </div>
         </div>
 

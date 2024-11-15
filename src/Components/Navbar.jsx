@@ -103,8 +103,7 @@ const NavBar = () => {
 
             
             
-            {isProfilePage && (
-              <div 
+               <div 
                 onClick={() => {
                   navigate("/dashboard");setIsProfileOpen(false);
                   
@@ -116,7 +115,6 @@ const NavBar = () => {
                 </div>
                 Tableau de Board
               </div>
-            )}
 
 
 

@@ -196,17 +196,26 @@ const Calculations = () => {
   const [loadingAllPred, setloadingAllPred] = useState(true);
   const [loadingAllFarms, setloadingAllFarms] = useState(true);
   const [loadingEdit, setloadingEdit] = useState(false);
+  
   const [farms, setFarms] = useState([]);
-  const [selectedFarm, setSelectedFarm] = useState('');
+  const [selectedFarm, setSelectedFarm] = useState(null);
+
   const [greenhouses, setGreenhouses] = useState([]);
-  const [selectedGreenhouse, setSelectedGreenhouse] = useState('');
+  const [selectedGreenhouse, setSelectedGreenhouse] = useState(null);
+
+  const [plaques, setplaques] = useState([]);
+  const [selectedPlaque, setselectedPlaque] = useState(null);
+  
   const [options, setoptions] = useState([]);
   const [showClicked,setshowClicked] = useState(false);
-   const [showItResponse, setshowItResponse] = useState(false);
+  const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
   const [IsImageToSeenClicked, setIsImageToSeenClicked] = useState(null);
-    const customStyles = {
+
+
+
+  const customStyles = {
     control: (provided, state) => ({
       ...provided,
       height : "45px",
@@ -253,14 +262,13 @@ const Calculations = () => {
   
       
       if (predictionsResponse.status === 200) {
+        console.log(predictionsResponse.data);
         let i = 0;
         const transformedData = await Promise.all(
           predictionsResponse.data.map(async (item, index) => {
             i++;
             let createdAt = formatDateForCreatedAt(item.created_at);
       
-            console.log("---------");
-            console.warn(item);
       
             return {
               idInc: index + 1,
@@ -268,10 +276,10 @@ const Calculations = () => {
               farm_id: item.farm_id || "---",
               serre_id: item.serre_id || "---",
               plaque_id: item.plaque_id || "---",
+              plaque_name: item.plaque? item.plaque.name : "---",
               result: item.result ? `${item.result}%` : "---",
               class_A: item.images[0]?.class_A || "---",
               class_B: item.images[0]?.class_B || "---",
-              class_C: item.images[0]?.class_C || "---",
               image: item.images[0]?.name || "---",
               created_at: createdAt || "---",
               created_at_notmodified : item.created_at  ,
@@ -317,7 +325,7 @@ const Calculations = () => {
   
 
 
-  const fetchDataFarmsWithSerres = async () => {
+  const fetchDataFarmsWithSerresWithPlaquess = async () => {
     try {
       setloadingAllFarms(true);
       setoptions([]);
@@ -349,16 +357,14 @@ const Calculations = () => {
       }
 
       
-      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhouses/${parseInt(userIdNum)}`, {
+      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhousesWithPlaques/${parseInt(userIdNum)}/${localStorage.getItem('type')}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       if (response.status === 200) {
-          console.log("Farms With GreenHouses : "+response.data);
           setFarms(response.data);
-          console.log(response.data);
       
           const newOptions = response.data.map((farm) => ({
               value: farm.id,
@@ -386,35 +392,94 @@ const Calculations = () => {
 
 
   useEffect(() => {
-    fetchDataFarmsWithSerres();
+    fetchDataFarmsWithSerresWithPlaquess();
   }, []);
 
 
 
 
+  
+  
+
+
+
   const handleFarmChange = (farmId) => {
-
-      setSelectedGreenhouse(null);
-
-      if(farmId.value !== null){
-        setSelectedFarm(farmId);
-        const selectedFarm = farms.find(farm => farm.id === farmId.value);
-
-        if (selectedFarm) {
-          const greenhouseOptions = selectedFarm.serres.map(serre => ({
-            value: serre.id,
-            label: serre.name
-          }));
-          setGreenhouses(greenhouseOptions);
-        } else {
-          setGreenhouses([]);
-        }
-      }
-      else{
-        setSelectedFarm([]);
+    setSelectedGreenhouse(null);  // Clear previously selected greenhouse
+    setselectedPlaque(null);  // Clear previously selected plaque
+  
+    // If a farm is selected
+    if (farmId !== null) {
+      setSelectedFarm(farmId);
+  
+      // Find the selected farm in the farms array
+      const selectedFarm = farms.find(farm => farm.id === farmId.value);
+  
+      if (selectedFarm) {
+        // Extract the greenhouses (serres) for the selected farm
+        const greenhouseOptions = selectedFarm.serres.map(serre => ({
+          value: serre.id,
+          label: serre.name
+        }));
+  
+        // Set the greenhouses for the selected farm
+        setGreenhouses(greenhouseOptions);
+  
+        // Reset plaques as we are selecting a new farm
+        setplaques([]);
+      } else {
         setGreenhouses([]);
+        setplaques([]);
       }
+    } else {
+      // If no farm is selected, reset everything
+      setSelectedFarm(null);
+      setGreenhouses([]);
+      setplaques([]);
+    }
   };
+  
+  const handleGreenhouseChange = (greenhouseId) => {
+    setselectedPlaque(null);  // Clear previously selected plaque
+  
+    // If a greenhouse is selected
+    if (greenhouseId !== null) {
+      setSelectedGreenhouse(greenhouseId);
+  
+      // Find the selected greenhouse in the serres array
+      const selectedFarm = farms.find(farm =>
+        farm.serres.some(serre => serre.id === greenhouseId.value)
+      );
+  
+      const selectedGreenhouse = selectedFarm?.serres.find(serre => serre.id === greenhouseId.value);
+  
+      if (selectedGreenhouse) {
+        // Extract the plaques for the selected greenhouse
+        const plaqueOptions = selectedGreenhouse.plaques.map(plaque => ({
+          value: plaque.id,
+          label: plaque.name
+        }));
+  
+        // Set the plaques for the selected greenhouse
+        setplaques(plaqueOptions);
+      } else {
+        setplaques([]);
+      }
+    } else {
+      // If no greenhouse is selected, reset plaques
+      setSelectedGreenhouse(null);
+      setplaques([]);
+    }
+  };
+  
+  
+
+
+
+
+
+
+
+  
 
 
     const handleSauvegardeModifications = async()=>{
@@ -480,6 +545,7 @@ const Calculations = () => {
           setTimeout(()=>{          
             setshowItResponse(false);
           }, 4500);
+          return;
         }
       }
       else{
@@ -491,11 +557,12 @@ const Calculations = () => {
 
           let idFarm = selectedFarm ? parseInt(selectedFarm.value) : null;
           let idSerre = selectedGreenhouse ? parseInt(selectedGreenhouse.value) : null;
+          let idPlaque = selectedPlaque ? parseInt(selectedPlaque.value) : null;
 
           let formData = {
             image : imageName, 
             user_id : parseInt(userIdNum), 
-            plaque_id : IDplaque, 
+            plaque_id : idPlaque, 
             created_at : new Date().toISOString().slice(0, 19).replace('T', ' '),
             serre_id : idSerre,
             farm_id : idFarm
@@ -509,15 +576,16 @@ const Calculations = () => {
           });
 
           if(response.status === 201){
+            document.querySelector('input[type="file"]').value = '';
             setRefresh(!refresh);
             setaddClicked(false);
             setImageName(null);
             setSelectedFarm(null);
             setSelectedGreenhouse(null);
-            setIDplaque("");
+            setIDplaque(null);
+            setselectedPlaque(null);
             setImageFile(null);
             setaddClicked(false);
-            document.querySelector('input[type="file"]').value = '';
           }        
           else{
            if(!showItResponse){
@@ -563,6 +631,14 @@ const Calculations = () => {
         hide: true  
       },
       { 
+        field: 'created_at', 
+        headerName: 'Date création', 
+        width: 120, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 // Allow the column to stretch
+      },
+      { 
         field: 'idInc', 
         headerName: 'ID', 
         width: 100, 
@@ -588,7 +664,7 @@ const Calculations = () => {
       { 
         field: 'farm_name', 
         headerName: 'Ferme', 
-        minWidth: 200, 
+        minWidth: 260, 
         headerAlign: 'center', 
         align: 'center',
         flex: 1 // Allow the column to stretch
@@ -596,7 +672,7 @@ const Calculations = () => {
       { 
         field: 'serre_name', 
         headerName: 'Serre', 
-        minWidth: 200, 
+        minWidth: 260, 
         headerAlign: 'center', 
         align: 'center',
         flex: 1 // Allow the column to stretch
@@ -610,9 +686,9 @@ const Calculations = () => {
         flex: 1 // Allow the column to stretch
       },
       { 
-        field: 'result', 
-        headerName: 'Résultat', 
-        width: 100, 
+        field: 'plaque_name', 
+        headerName: 'Plaque', 
+        minWidth: 260, 
         headerAlign: 'center', 
         align: 'center',
         flex: 1 // Allow the column to stretch
@@ -620,31 +696,15 @@ const Calculations = () => {
       { 
         field: 'class_A', 
         headerName: 'Mouches', 
-        width: 100, 
+        width: 50, 
         headerAlign: 'center', 
         align: 'center',
         flex: 1 // Allow the column to stretch
       },
       { 
         field: 'class_B', 
-        headerName: 'Mineuses', 
-        width: 100, 
-        headerAlign: 'center', 
-        align: 'center',
-        flex: 1 // Allow the column to stretch
-      },
-      { 
-        field: 'class_C', 
-        headerName: 'Thrips', 
-        width: 100, 
-        headerAlign: 'center', 
-        align: 'center',
-        flex: 1 // Allow the column to stretch
-      },
-      { 
-        field: 'created_at', 
-        headerName: 'Date création', 
-        width: 120, 
+        headerName: 'Tuta', 
+        width: 50, 
         headerAlign: 'center', 
         align: 'center',
         flex: 1 // Allow the column to stretch
@@ -709,27 +769,12 @@ const Calculations = () => {
             calculToEdit !== null && 
               <>
                 <div className="rowInp">
-                  <label>ID Plaque</label>
-                  <input 
-                    onChange={(e)=>{
-                      setCalculToEdit({
-                        ...calculToEdit,
-                        plaque_id : e.target.value
-                      })
-                    }}
-                    type="text"
-                    value={calculToEdit.plaque_id}
-                    className='idplaque' 
-                    placeholder="Veuillez saisir l'id de la plaque..."
-                  />
-                </div>
-                <div className="rowInp">
                   <label>Ferme</label>
                   <Select
                     value={selectedFarm}
                     onChange={(itemValue) => handleFarmChange(itemValue)}
                     options={options}
-                    disabled={loadingAllFarms}
+                    isDisabled={loadingAllFarms}
                     placeholder="Choisissez une option"
                     styles={customStyles}
                   />
@@ -740,7 +785,18 @@ const Calculations = () => {
                     value={selectedGreenhouse}
                     onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
                     options={greenhouses}
-                    disabled={!selectedFarm}
+                    isDisabled={!selectedFarm}
+                    placeholder="Choisissez une option"
+                    styles={customStyles}
+                  />
+                </div>
+                <div className="rowInp">
+                  <label>Plaque</label>
+                  <Select
+                    value={selectedPlaque}
+                    onChange={(value) => setselectedPlaque(value)}
+                    options={plaques}
+                    isDisabled={!selectedGreenhouse}
                     placeholder="Choisissez une option"
                     styles={customStyles}
                   />
@@ -832,21 +888,11 @@ const Calculations = () => {
                 </div>
                 <div className="rowInp rowInp1">
                   <label>
-                    Effectif des Mineuses
+                    Effectif des Tuta
                   </label>
                   <label>
                     {
                       calculToEdit.class_B
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Effectif des Thrips
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.class_C
                     }
                   </label>
                 </div>
@@ -900,40 +946,46 @@ const Calculations = () => {
           <div className="caseD11">
             <span>Nouveau</span><span>&nbsp;&nbsp;Calcul</span>
           </div>
-          <div className="rowInp">
-            <label>ID Plaque</label>
-            <input 
-              onChange={(e)=>{setIDplaque(e.target.value)}}
-              type="text"
-              value={IDplaque}
-              className='idplaque' 
-              placeholder="Veuillez saisir l'id de la plaque..."
-            />
-          </div>
-          <div className="rowInp">
-                  <label>Ferme</label>
-                  <Select
-                    value={selectedFarm}
-                    onChange={(itemValue) => handleFarmChange(itemValue)}
-                    options={options}
-                    disabled={loadingAllFarms}
-                    placeholder="Choisissez une option"
-                    
-                    styles={customStyles}
-                  />
-                </div>
-                <div className="rowInp">
-                  <label>Serre</label>
-                  <Select
-                    value={selectedGreenhouse}
-                    onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
-                    options={greenhouses}
-                    disabled={!selectedFarm}
-                    placeholder="Choisissez une option"
-                    
-                    styles={customStyles}
-                  />
-                </div>
+           
+
+              <div className="rowInp">
+                <label>Ferme</label>
+                <Select
+                  value={selectedFarm}
+                  onChange={(itemValue) => handleFarmChange(itemValue)}
+                  options={options}  // Farm options
+                  disabled={loadingAllFarms}
+                  placeholder="Choisissez une option"
+                  styles={customStyles}
+                />
+              </div>
+
+              <div className="rowInp">
+                <label>Serre</label>
+                <Select
+                  value={selectedGreenhouse}
+                  onChange={(itemValue) => handleGreenhouseChange(itemValue)}
+                  options={greenhouses}  // Greenhouse options that will be populated based on selected farm
+                  disabled={!selectedFarm}  // Disable unless a farm is selected
+                  placeholder="Choisissez une option"
+                  styles={customStyles}
+                />
+              </div>
+
+              <div className="rowInp">
+                <label>Plaque</label>
+                <Select
+                  value={selectedPlaque}
+                  onChange={(itemValue) => setselectedPlaque(itemValue)}
+                  options={plaques}  // Plaques options that will be populated based on selected greenhouse
+                  disabled={!selectedGreenhouse}  // Disable unless a greenhouse is selected
+                  placeholder="Choisissez une option"
+                  styles={customStyles}
+                />
+              </div>
+
+                
+          
           <div className="rowInp">
             <label
             className='ofnov'
@@ -960,7 +1012,7 @@ const Calculations = () => {
             </label>
           </div>
           <div className="rowInp rowInpModified">
-            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFile(null);setIDplaque(""); setSelectedFarm(null);setSelectedGreenhouse(null);}} >Annuler</button>
+            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFile(null);setselectedPlaque(null); setSelectedGreenhouse(null);setSelectedFarm(null);}} >Annuler</button>
             <button 
               disabled={loading}
               onClick={()=>{
@@ -980,7 +1032,7 @@ const Calculations = () => {
       <div className="containerDash">
           <div className="rowD1">
             <div className="caseD1">
-              <span>Mes</span><span>&nbsp;Calculations</span>
+              <span>Mes</span><span>&nbsp;Calculs</span>
               {
                 loadingAllPred ? 
                 <>
@@ -1015,7 +1067,7 @@ const Calculations = () => {
               }}
             >
               <DataGrid
-                columns={columns.filter(column => !['id','idInc', 'farm_id', 'serre_id'].includes(column.field))}
+                columns={columns.filter(column => !['id','idInc', 'farm_id', 'serre_id', 'plaque_id'].includes(column.field))}
                 hideFooter 
                 rows={Calculations}
                 loading={loadingAllPred}

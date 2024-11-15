@@ -16,15 +16,24 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const options = [
-  { value: 'fruit', label: "Fruit" },
-  { value: 'vegetable', label: 'Légume' },
-  { value: 'flower', label: 'Fleur' },
-];
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    height : "45px",
+    border: '1px solid #ccc',     
+    boxShadow: state.isFocused ? 'none' : 'none', 
+    '&:hover': { border: '1px solid #ccc' } 
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#5fa21b' : '#fff',
+    color: state.isSelected ? '#fff' : '#333',
+    '&:hover': state.isSelected ? { backgroundColor: '#5fa21b', color: '#fff' } : { backgroundColor: '#c9ff93' },
+  }),
+};
 
 
-
-const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
+const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
   
   
   const handleEdit = () => {
@@ -39,7 +48,6 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
     setFarmToShow(params.row);
     setFarmToEdit(params.row);
     setshowClicked(!showClicked);
-    fetchSerresByFarm(params.row.id);
 
   };
 
@@ -87,7 +95,7 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
   return (
     <div className='uefuvzou'>
       <button className='uoersf'   onClick={handleView}  >
-        <i class="fa-solid fa-eye"></i>
+        <i class="fa-solid fa-plus"></i>
       </button>
       <button className='uoersf'   onClick={handleEdit}  >
       <i class="fa-solid fa-pencil"></i>
@@ -106,8 +114,10 @@ const Fermes = () => {
   const [refresh,setRefresh] = useState(false);
   const [showClicked,setshowClicked] = useState(false);
   const [Appelation,setAppelation] = useState("");
+  const [Appelation2,setAppelation2] = useState("");
   const [Fermes, setFermes] = useState([]);
   const [addClicked, setaddClicked] = useState(false);
+  const [addClicked2, setaddClicked2] = useState(false);
   const [editClicked, seteditClicked] = useState(false);
   const [FarmToEdit, setFarmToEdit] = useState(null);
   const [FarmToShow, setFarmToShow] = useState(null);
@@ -118,7 +128,6 @@ const Fermes = () => {
   const [loadingAllFarms, setloadingAllFarms] = useState(true);
   const [loadingEdit, setloadingEdit] = useState(false);
   const [dataSerre, setDataSerre] = useState(null);
-  const [loadingdataSerre, setLoadingDataSerre] = useState(false);
   const [addNewSerreClick, setaddNewSerreClick] = useState(false);
   const [nameS, setNameS] = useState(null);
   const [sizeS, setSizeS] = useState(null);
@@ -126,71 +135,96 @@ const Fermes = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
+  const [expandedRows, setExpandedRows] = useState([]);
+  const [rowsWithChildren, setRowsWithChildren] = useState([]);
+
+  const [farms, setFarms] = useState([]);
+  const [selectedFarm, setSelectedFarm] = useState(null);
+  const [greenhouses, setGreenhouses] = useState([]);
+  const [selectedGreenhouse, setSelectedGreenhouse] = useState(null);
+  const [options, setoptions] = useState([]);
+  const [LoadingCreatingNewPlaque, setLoadingCreatingNewPlaque] = useState(false);
 
  
-
-
  
-  const fetchSerresByFarm = async(id)=>{
-    setDataSerre(null);
-      try{
-        setLoadingDataSerre(true);
-        
-        const token = localStorage.getItem('token');
-        const response2 = await axios.get(`${ENDPOINT_API}serres-per-farm/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
   
-        if (response2.status === 200) {
-          setDataSerre(response2.data);
-        }
-        else{
-          setDataSerre([]);
-        }
-      }
-      catch(e){
-        setDataSerre([]);
-        console.log(e.message);
-      } finally{
-        setLoadingDataSerre(false);
-      }
-    
-  }
  
 
 
   const fetchDataAllFarmsX = async () => {
     try {
+  
       setloadingAllFarms(true);
       const userId = localStorage.getItem('userId');
       const userIdNum = parseInt(userId);
       const token = localStorage.getItem('token'); 
 
-      const response = await axios.get(`${ENDPOINT_API}farms/${userIdNum}`, {
+      const response = await axios.get(`${ENDPOINT_API}getAllFarmsWithTheirSerres/${userIdNum}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
+      
       if (response.status === 200) {
+
+
+        setFarms(response.data);
+        
+        const newOptions = response.data.map((farm) => ({
+          value: farm.id,
+          label: farm.name,
+        }));
+        
+        setoptions(newOptions);
+
         let i = 0;
-        console.log(response.data);
-        const transformedData = response.data.map(item => {
+      
+        // Transformation des données des fermes
+        const transformedData = response.data.map((item) => {
           i++;
-          let createdAt = formatDateForCreatedAt(item.created_at)
+          let createdAt = formatDateForCreatedAt(item.created_at);
           return {
-            idInc : i,
-            id : item.id,
-            name : item.name ? item.name : "---", 
-            location : item.location ? item.location : "---", 
-            size : item.size ? item.size : "---", 
-            created_at:  item.created_at ? createdAt : "---",
+            idInc: i,
+            id: item.id,
+            name: item.name ? item.name : "---",
+            serres: item.serres,
+            location: item.location ? item.location : "---",
+            size: item.size ? item.size : "---",
+            created_at: item.created_at ? createdAt : "---",
           };
         });
+      
+        
+        // Initialisation des lignes parent (fermes)
+        const initialRowsWithChildren = transformedData.map((farm) => ({
+          ...farm,
+          isChild: false,  // Lignes parents ont `isChild: false`
+        }));
+      
+
+
+        // Ajouter les lignes enfants (serres)
+        transformedData.forEach((farm) => {
+          if (expandedRows.includes(farm.id)) {
+            farm.serres.forEach((serre) => {
+              // Ajouter les serres comme lignes enfants
+              initialRowsWithChildren.push({
+                id: `${farm.id}-${serre.id}`,  // Identifier la serre avec l'ID de la ferme + celui de la serre
+                name: serre.name,  // Afficher le nom de la serre
+                size: serre.size,  // Taille de la serre
+                location: farm.location,   // Valeur par défaut pour la localisation
+                isChild: true,     // Marquer cette ligne comme enfant
+              });
+            });
+          }
+        });
+      
+        // Mettre à jour les états avec les données transformées
         setFermes(transformedData);
+        setRowsWithChildren(initialRowsWithChildren);
       }
+      
       
       else {
         if(!showItResponse){
@@ -257,17 +291,17 @@ const Fermes = () => {
         
         if(resp0.status === 201){
           setloadingCreationOf_New_Serre(false);
-          setaddNewSerreClick(false);
-          setshowClicked(true);
+          setshowClicked(false);
           setNameS('');
           setSizeS('');
-          fetchSerresByFarm(FarmToShow.id);
-        }
+          setExpandedRows([]);
+          setRowsWithChildren([]);
+          fetchDataAllFarmsX();
+         }
         else{
           setloadingCreationOf_New_Serre(false);
-          setaddNewSerreClick(false);
-          setshowClicked(true);
-          if(!showItResponse){
+          setshowClicked(false);
+           if(!showItResponse){
             setisErrorResponse(true);
             setmessageResponse("Une erreur est survenue lors de la création de la serre .");
             setshowItResponse(true);
@@ -437,8 +471,93 @@ const Fermes = () => {
 
 
 
+
+    const toggleRow = (farmId) => {
+      setRowsWithChildren((prev) => {
+        const isExpanded = expandedRows.includes(farmId);
+    
+        if (isExpanded) {
+          // Collapse: Remove child rows for the farm
+          return prev.filter((row) => {
+            // Ensure the row.id is treated as a string before checking with startsWith
+            return !(String(row.id).startsWith(`${farmId}-`));
+          });
+        } else {
+          // Expand: Add child rows for the farm
+          const farm = Fermes.find((f) => f.id === farmId);
+          const childRows = farm.serres.map((serre) => {
+            let createdAt = formatDateForCreatedAt(serre.created_at);
+            return{
+              id: `${farmId}-${serre.id}`, // Unique ID for child row
+              name: `${serre.name}`,
+              size: serre.size,
+              location: farm.location,
+              created_at: createdAt ? createdAt : "---"
+            }  
+          });
+    
+          const farmIndex = prev.findIndex((row) => row.id === farmId);
+    
+          return [
+            ...prev.slice(0, farmIndex + 1),
+            ...childRows,
+            ...prev.slice(farmIndex + 1),
+          ];
+        }
+      });
+    
+      // Update expanded rows
+      setExpandedRows((prev) =>
+        prev.includes(farmId) ? prev.filter((id) => id !== farmId) : [...prev, farmId]
+      );
+    };
+    
+    
+
+
     
     const columns = [
+      {
+        field: 'expand',
+        headerName: 'Voir Serres',
+        width: 130,
+        headerAlign: 'center',
+        align: 'center',
+        renderCell: (params) => {
+
+          const hasChildren = params.row.serres && params.row.serres.length > 0;  
+
+          if (!hasChildren) {
+            return null;  
+          }
+
+          const isChildRow = String(params.row.id).includes('-');    
+          if (isChildRow) {
+            return null;
+          }
+         
+          const isExpanded = expandedRows.includes(params.row.id);
+          return (
+            <button
+              className={`esuorhuzhvuosrhsuovozshfov ${isExpanded ? "jackIsChan" : "jackisNotCHan"}`}
+              variant="contained"
+              onClick={() => toggleRow(params.row.id)}  
+            >
+              {isExpanded ? <i className='fa-solid fa-minus' ></i> : <i className='fa-solid fa-plus' ></i>} 
+            </button>
+          );
+        },
+        sortable: false,
+        filterable: false,
+      },
+      { 
+        field: 'created_at', 
+        headerName: 'Date création', 
+        width: 200, 
+        headerAlign: 'center', 
+        align: 'center',
+        flex: 1 
+      },
       { 
         field: 'id', 
         headerName: 'idReal', 
@@ -456,7 +575,7 @@ const Fermes = () => {
       },
       { 
         field: 'name', 
-        headerName: 'Appelation', 
+        headerName: 'Ferme / Serre', 
         minWidth: 350, 
         headerAlign: 'center', 
         align: 'center',
@@ -479,16 +598,8 @@ const Fermes = () => {
         flex: 1 // Allow the column to stretch
       },
       { 
-        field: 'created_at', 
-        headerName: 'Date création', 
-        width: 200, 
-        headerAlign: 'center', 
-        align: 'center',
-        flex: 1 // Allow the column to stretch
-      },
-      { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,fetchSerresByFarm,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
+        renderCell: (params) => actionTemplate(params, setFermes, setRefresh, refresh, seteditClicked, editClicked, setFarmToEdit, showClicked, setshowClicked,  setFarmToShow,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
         headerName: 'Actions', 
         minWidth: 200, 
         headerAlign: 'center', 
@@ -501,7 +612,135 @@ const Fermes = () => {
    
     
     
+    const Created_New_Plaque = async ()=> {
+      if(Appelation2=== "" || Appelation2 === null){
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Le nom de la plaque ne peut pas etre vide.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+        return;
+      }
+      if(selectedFarm  === null || selectedFarm === ''){
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Vous devez obligatoirement choisir une ferme, ainsi qu'une serre.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+        return;
+      }
+      if(selectedGreenhouse  === null || selectedGreenhouse === ''){
+        if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Vous devez obligatoirement choisir une serre.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+        return;
+      }
+      else{
+        try{  
+          setLoadingCreatingNewPlaque(true);
+
+          let IDGreenHouse = parseInt(selectedGreenhouse.value);
+          let IDFarm = parseInt(selectedFarm.value);
+          
+          console.log("IDFarm : "+IDFarm);
+          console.log("IDGreenHouse : "+IDGreenHouse);
+
+          const token = localStorage.getItem('token');
+
+
+          let dataX = {
+            name : Appelation2, 
+            idSerre : IDGreenHouse,
+            idFarm : IDFarm, 
+          }
+
+          const resp0 = await axios.post(`${ENDPOINT_API}createPlaque`, dataX, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if(resp0.status === 201){
+            
+            setaddClicked2(false);
+            setRefresh(!refresh);
+            setFarmToEdit(null);
+            setFarmToShow(null);
+            seteditClicked(false);
+            setAppelation2('');
+            setSelectedGreenhouse(null);
+            setSelectedFarm(null);
+
+          }        
+          else{
+            if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création de la plaque.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+          }    
+        }
+        catch(e){
+          if(!showItResponse){
+          setisErrorResponse(true);
+          setmessageResponse("Une erreur est survenue lors de la création de la plaque.");
+          setshowItResponse(true);
+          setTimeout(()=>{          
+            setshowItResponse(false);
+          }, 4500);
+        }
+          console.log(e.message);
+        }finally{
+          setLoadingCreatingNewPlaque(false);
+        }
+
+      }
+    }
+ 
+
     
+
+
+    const handleFarmChange = (farmId) => {
+
+      setSelectedGreenhouse(null);
+
+      if(farmId.value !== null){
+        setSelectedFarm(farmId);
+        const selectedFarm = farms.find(farm => farm.id === farmId.value);
+
+        if (selectedFarm) {
+          const greenhouseOptions = selectedFarm.serres.map(serre => ({
+            value: serre.id,
+            label: serre.name
+          }));
+          setGreenhouses(greenhouseOptions);
+        } else {
+          setGreenhouses([]);
+        }
+      }
+      else{
+        setSelectedFarm([]);
+        setGreenhouses([]);
+      }
+  };
+
+
+
 
   
 
@@ -521,13 +760,11 @@ const Fermes = () => {
            
         }
         else{
-          fetchSerresByFarm(parseInt(idFarm));
-          alert('Oops, something went wrong ! ');
+           alert('Oops, something went wrong ! ');
         }
       }
       catch(e){
-        fetchSerresByFarm(parseInt(idFarm));
-        alert('Oops, something went wrong ! ');
+         alert('Oops, something went wrong ! ');
         console.log(e.message);
       } finally{
         setloaderDelete(false);
@@ -623,138 +860,7 @@ const Fermes = () => {
         </div>
       
 
-
-
-      {/*   show a Farm    */}
-      <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
-          <div className="popUp12">
-            <div className="caseD11">
-              <span>Informations&nbsp;de la</span><span>&nbsp;Ferme</span>
-            </div>
-            {
-            FarmToShow !== null && 
-              <>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Appelation
-                  </label>
-                  <label>
-                    {
-                      FarmToShow.name
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Localisation
-                  </label>
-                  <label>
-                    {
-                      FarmToShow.location
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Mesure en m²
-                  </label>
-                  <label>
-                    {
-                      FarmToShow.size
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Date de création
-                  </label>
-                  <label>
-                    {
-                      FarmToShow.created_at
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1 rowInp122">
-                  <label>
-                    Serres associées&nbsp;<>{!loadingdataSerre && dataSerre && <>{dataSerre.length === 0 ? ": 0" : `: ${dataSerre.length}`}</>}</>
-                  </label>
-                    <button
-                      className='eionfv'
-                      onClick={()=>{
-                        setshowClicked(false);
-                        setaddNewSerreClick(!addNewSerreClick);
-                      }}
-                    > 
-                      <i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une serre
-                    </button>
-                </div>
-                {
-                  loadingdataSerre && !dataSerre ? 
-                  <div className="rowInp123">
-                    <div className="rowSerre1">
-                      Chargement...
-                    </div> 
-                  </div>
-                  :
-                  <div className="rowInp123">
-                  {
-                    dataSerre && 
-                    dataSerre.length === 0 ?
-                    <div className="rowSerre1">
-                      Aucune donnée
-                    </div> 
-                    : 
-                    dataSerre.map((serre)=>{
-                      return(
-                        <div key={serre.id} className="rowSerre">
-                          <div className="casej1">
-                          {
-                            serre.name
-                          }
-                          </div>
-                          <div className="casej1">
-                          {
-                            serre.size
-                          }&nbsp;m²                           
-                          </div>
-                          <div className="casej1">
-                          {
-                            formatDateForCreatedAt(serre.created_at)
-                          } 
-                          </div>
-                          <div className="casej1">
-                            <button
-                              disabled={loaderDelete}
-                              onClick={()=>{
-                                deleteSingleSerre(serre.id, serre.farm_id);
-                              }}
-                            >
-                              <i class="fa-solid fa-trash"></i>
-                            </button>
-                          </div>
-                        </div> 
-                      )
-                    })
-                  }
-                  </div>
-                }
-              </>
-            }
-            <div className="rowInp rowInpModified2">
-              <button className='jofzvno'  onClick={()=>{setshowClicked(false);setFarmToShow(null);setFarmToEdit(null);}} >Fermer</button>
-              <button 
-                onClick={()=>{
-                  setshowClicked(false);
-                  seteditClicked(true);
-                }}
-                className="efvofvz"
-              >
-                Modifier la ferme
-              </button>
-            </div>
-          </div>
-        </div>
-      
+ 
 
 
 
@@ -762,7 +868,10 @@ const Fermes = () => {
       {/*   Add new Farm    */}
       <div className={addClicked ? "popUp showpopUp" : "popUp"}>
         <div className="contPopUp popUp1popUp1popUp1">
-          <div className="caseD11">
+          {
+            addClicked && 
+            <>
+            <div className="caseD11">
             <span>Nouvelle</span><span>&nbsp;&nbsp;Ferme</span>
           </div>
           <div className="rowInp">
@@ -799,6 +908,8 @@ const Fermes = () => {
             />
           </div>
          
+            </>
+          }
           
           <div className="rowInp rowInpModified">
             <button className='jofzvno' disabled={loadingCreation} onClick={()=>{setaddClicked(false);setSize("");setLocalisation("");setAppelation("");}} >Annuler</button>
@@ -824,11 +935,87 @@ const Fermes = () => {
 
 
 
+        {/*   Add new Plaque    */}
+        <div className={addClicked2 ? "popUp showpopUp" : "popUp"}>
+        <div className="contPopUp popUp1popUp1popUp1">
+          <div className="caseD11">
+            <span>Nouvelle</span><span>&nbsp;&nbsp;Plaque</span>
+          </div>
+          <div className="rowInp">
+            <label>Appelation</label>
+            <input 
+              onChange={(e)=>{setAppelation2(e.target.value)}}
+              type="text"
+              value={Appelation2}
+              maxLength={60}
+              className='idplaque' 
+              placeholder="Veuillez saisir le nom de la plaque..."
+            />
+          </div>
+  
+
+
+          {
+            addClicked2 && 
+            <>
+            
+          <div className="rowInp">
+              <label>Ferme</label>
+              <Select
+                value={selectedFarm}
+                onChange={(itemValue) => handleFarmChange(itemValue)}
+                options={options}
+                disabled={loadingAllFarms}
+                placeholder="Choisissez une option"                    
+                styles={customStyles}
+              />
+          </div>
+          
+          <div className="rowInp">
+              <label>Serre</label>
+                <Select
+                value={selectedGreenhouse}
+                onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
+                options={greenhouses}
+                disabled={!selectedFarm}
+                placeholder="Choisissez une option"
+                styles={customStyles}
+              />
+          </div>
+            </>
+          }
+          
+         
+          
+          <div className="rowInp rowInpModified">
+            <button className='jofzvno' disabled={LoadingCreatingNewPlaque} onClick={()=>{setaddClicked2(false);setSelectedFarm(null);setSelectedGreenhouse(null);setAppelation2("");}} >Annuler</button>
+            <button 
+              disabled={LoadingCreatingNewPlaque}
+              onClick={()=>{
+                Created_New_Plaque();
+              }}
+              className={LoadingCreatingNewPlaque ? "efvofvz efvofvz2" : "efvofvz"}
+            >
+            {
+              LoadingCreatingNewPlaque ? "Création en cours..."
+              :
+              "Créer la nouvelle plaque"
+            }
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
 
        {/*   Add new Serre    */}
-       <div className={addNewSerreClick ? "popUp popUpX showpopUp" : "popUp popUpX"}>
+       <div className={showClicked ? "popUp popUpX showpopUp" : "popUp popUpX"}>
         {
-          addNewSerreClick &&
+          showClicked &&
         <div className="contPopUp contPopUpcontPopUp">
           <div className="caseD11">
             <span>Nouvelle</span><span>&nbsp;&nbsp;Serre</span>
@@ -857,10 +1044,9 @@ const Fermes = () => {
           </div>
           <div className="rowInp rowInpModified">
             <button className='jofzvno' disabled={loadingCreationOf_New_Serre} onClick={()=>{
-                setaddNewSerreClick(false);
+                setshowClicked(false);
                 setNameS("");
                 setSizeS('');
-                setshowClicked(true);
               }} 
             >
               Annuler
@@ -908,8 +1094,8 @@ const Fermes = () => {
               }
             </div>
             <div className="caseD2">
-              <button className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} disabled={loadingAllFarms} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une ferme</button>
+              <button  className='eofvouszfv11 eofvouszfv112'  onClick={()=>{setaddClicked2(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une plaque</button>
               <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>
@@ -926,9 +1112,13 @@ const Fermes = () => {
               <DataGrid
                 columns={columns.filter(column => !['id','idInc'].includes(column.field))}
                 hideFooter 
+                rows={rowsWithChildren}
+                getRowClassName={(params) => {
+                  const rowId = String(params.row.id);  
+                  return rowId.includes('-') ? 'child-row' : 'parent-row';
+                }}
                 className='euosvuouof'
                 loading={loadingAllFarms}
-                rows={Fermes}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: false  }}
                 sx={{
@@ -949,6 +1139,9 @@ const Fermes = () => {
               />
             </Box>
           }
+          <div className="clickeici">
+            <i className='fa-solid fa-question-circle'></i>&nbsp;&nbsp;En appuyant sur le bouton plus de la colonne `<em>Voir Serres</em>`, vos serres s'afficheront.
+          </div>
       </div>
     </div>
   )

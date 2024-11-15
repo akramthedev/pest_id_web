@@ -456,8 +456,7 @@ const Demandes = () => {
               }
             </div>
             <div className="caseD2">
-              <button  disabled={loadingNouvDem}  className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
-              <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  disabled={loadingNouvDem}  className='eofvouszfv00 oefbbofoufzuofzs oefbbofoufzuofzsoefbbofoufzuofzs2' onClick={()=>{setRefresh(!refresh)}} > <i className='fa-solid fa-arrows-rotate' ></i></button>
             </div>
           </div>
           {
