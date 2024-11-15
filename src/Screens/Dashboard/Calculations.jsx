@@ -202,15 +202,11 @@ const Calculations = () => {
   const [selectedGreenhouse, setSelectedGreenhouse] = useState('');
   const [options, setoptions] = useState([]);
   const [showClicked,setshowClicked] = useState(false);
-
-  const [showItResponse, setshowItResponse] = useState(false);
+   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
   const [IsImageToSeenClicked, setIsImageToSeenClicked] = useState(null);
-
-  
-
-  const customStyles = {
+    const customStyles = {
     control: (provided, state) => ({
       ...provided,
       height : "45px",
@@ -225,9 +221,7 @@ const Calculations = () => {
       '&:hover': state.isSelected ? { backgroundColor: '#5fa21b', color: '#fff' } : { backgroundColor: '#c9ff93' },
     }),
   };
-
-
-
+ 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -280,6 +274,7 @@ const Calculations = () => {
               class_C: item.images[0]?.class_C || "---",
               image: item.images[0]?.name || "---",
               created_at: createdAt || "---",
+              created_at_notmodified : item.created_at  ,
               farm_name: item.farm ? item.farm.name : "---",
               serre_name: item.serre ? item.serre.name : "---",
             };
@@ -430,7 +425,8 @@ const Calculations = () => {
         let dataJOJO = {
           plaque_id : calculToEdit.plaque_id,
           farm_id : selectedFarm && selectedFarm.value, 
-          serre_id : selectedGreenhouse && selectedGreenhouse.value
+          serre_id : selectedGreenhouse && selectedGreenhouse.value, 
+          created_at : calculToEdit.created_at_notmodified
         }
         const response = await axios.patch(`${ENDPOINT_API}predictions/${parseInt(calculToEdit.id)}`, dataJOJO , {
           headers: {
@@ -497,7 +493,7 @@ const Calculations = () => {
           let idSerre = selectedGreenhouse ? parseInt(selectedGreenhouse.value) : null;
 
           let formData = {
-            image : imageFile, 
+            image : imageName, 
             user_id : parseInt(userIdNum), 
             plaque_id : IDplaque, 
             created_at : new Date().toISOString().slice(0, 19).replace('T', ' '),
@@ -689,7 +685,7 @@ const Calculations = () => {
 
       <div className={IsImageToSeenClicked ? "popUp  showpopUp kakakakakak1" : "popUp kakakakakak1"}>
         <div className="kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1">
-            <img src="https://www.jardiner-malin.fr/wp-content/uploads/2021/05/mouche-mineuse-feuille-tomate.jpg" alt="" />
+            <img src="https://www.autourdupotager.com/wp-content/uploads/2023/07/mineuse.jpg.webp" alt="" />
               <button 
                 onClick={()=>{
                   setIsImageToSeenClicked(null);
@@ -860,7 +856,7 @@ const Calculations = () => {
                   </label>
                   <button 
                     onClick={()=>{
-                      setIsImageToSeenClicked(calculToEdit.image);
+                       setIsImageToSeenClicked(calculToEdit.image);
                     }}
                     style={{
                       cursor : "pointer", 

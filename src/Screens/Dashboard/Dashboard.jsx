@@ -688,7 +688,7 @@ const Dashboard = () => {
 
 
 
-
+  
 
   const fetch_predictions_of_admin = async () => {
     try {
@@ -728,27 +728,16 @@ const Dashboard = () => {
             };
           });
   
-          const sevenDaysAgo = new Date();
-          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  
-          const filteredData = transformedData.filter(prediction => {
-            const predictionDate = new Date(prediction.created_at);
-            return predictionDate >= sevenDaysAgo;
-          });
-  
-          // Calculate the total sum of insects
-          const totalInsects = filteredData.reduce((sum, prediction) => {
+          // No filtering for the last 7 days; we now use the entire data set
+          const totalInsects = transformedData.reduce((sum, prediction) => {
             const classA = typeof prediction.class_A === 'number' ? prediction.class_A : 0;
             const classB = typeof prediction.class_B === 'number' ? prediction.class_B : 0;
             const classC = typeof prediction.class_C === 'number' ? prediction.class_C : 0;
             return sum + classA + classB + classC;
           }, 0);
   
-          const moyenne = filteredData.length > 0 ? totalInsects / filteredData.length : 0;
-  
-  
-          // Find the record with the maximum sum of class_A + class_B + class_C
-          predictionWithMaximumValues = filteredData.reduce((max, prediction) => {
+          const moyenne = transformedData.length > 0 ? totalInsects / transformedData.length : 0;
+          predictionWithMaximumValues = transformedData.reduce((max, prediction) => {
             const sum = (prediction.class_A || 0) + (prediction.class_B || 0) + (prediction.class_C || 0);
             if (sum > (max.sum || 0)) {
               return { ...prediction, sum };
@@ -759,31 +748,26 @@ const Dashboard = () => {
           setData3(predictionWithMaximumValues);
           setData2(moyenne);
   
-          // Group the data by date and calculate sum of class_A + class_B + class_C for each day
-          const dailySums = filteredData.reduce((acc, prediction) => {
+          // Calculating daily sums over all dates, without filtering to last 7 days
+          const dailySums = transformedData.reduce((acc, prediction) => {
             const date = new Date(prediction.created_at).toISOString().split('T')[0];
             const sum = (prediction.class_A || 0) + (prediction.class_B || 0) + (prediction.class_C || 0);
-  
             if (acc[date]) {
               acc[date] += sum;
             } else {
               acc[date] = sum;
             }
-  
             return acc;
           }, {});
   
-          // Prepare chart data
           const allDates = Object.keys(dailySums);
           const firstDate = new Date(Math.min(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
           const lastDate = new Date(Math.max(...allDates.map(date => new Date(date).getTime()))).toISOString().split('T')[0];
   
           const chartData = [];
           let currentDate = new Date(firstDate);
-  
           while (currentDate <= new Date(lastDate)) {
             const dateString = currentDate.toISOString().split('T')[0];
-  
             chartData.push({
               date: dateString,
               Insectes: dailySums[dateString] || 0,
@@ -819,7 +803,12 @@ const Dashboard = () => {
     }
   };
   
-   
+
+
+
+
+
+
 
 
   
@@ -1247,21 +1236,7 @@ const Dashboard = () => {
 
 
 
-                            {
-                              voirMouches && 
-                              <>
-                              {/* class_A Area */}
-                                <Area
-                                  animationEasing="ease-in-out"
-                                  animationDuration={6666}
-                                  type="monotone"
-                                  dataKey="Mouches"
-                                  stroke="#da0404"
-                                  fill="url(#gradient1)"
-                                  strokeWidth={1.8}
-                                />
-                              </>
-                            }
+                           
 
 
                             
@@ -1282,6 +1257,23 @@ const Dashboard = () => {
                               </>
                             }
    
+
+   {
+                              voirMouches && 
+                              <>
+                              {/* class_A Area */}
+                                <Area
+                                  animationEasing="ease-in-out"
+                                  animationDuration={6666}
+                                  type="monotone"
+                                  dataKey="Mouches"
+                                  stroke="#da0404"
+                                  fill="url(#gradient1)"
+                                  strokeWidth={1.8}
+                                />
+                              </>
+                            }
+
                             
                             
                             <XAxis 
@@ -1428,7 +1420,7 @@ const Dashboard = () => {
                             type="monotone"
                             dataKey="Insectes"
                             stroke="#67c10c"
-                            fill="url(#gradient)" // Applying the gradient here
+                            fill="url(#gradient)"
                             strokeWidth={1.8}
                           />
                         </AreaChart>
@@ -1449,10 +1441,10 @@ const Dashboard = () => {
                   <div className="rowCardX">
                     <i class="fa-solid fa-turn-up"></i>&nbsp;&nbsp;Plaque à captures maximales
                   </div>
-                  <div className="rowCardX2">
-                    <div className="NOSD7IO9">
+                  <div className="">
+                    <div className="NOSrowCardX2D7IO9">
                     {
-                      data3 ? data3.sum : 0
+                      data3 && data3.sum 
                     }
                     </div>
                     <div className="NOSD7I9999NOSD7I9999">
@@ -1619,22 +1611,7 @@ const Dashboard = () => {
 
 
 
-                            {
-                              voirMouches && 
-                              <>
-                              {/* class_A Area */}
-                                <Area
-                                  animationEasing="ease-in-out"
-                                  animationDuration={6666}
-                                  type="monotone"
-                                  dataKey="Mouches"
-                                  stroke="#da0404"
-                                  fill="url(#gradient1)"
-                                  strokeWidth={1.8}
-                                />
-                              </>
-                            }
-
+                           
 
                             
 
@@ -1655,7 +1632,24 @@ const Dashboard = () => {
                             }
    
                             
-                            
+   {
+                              voirMouches && 
+                              <>
+                              {/* class_A Area */}
+                                <Area
+                                  animationEasing="ease-in-out"
+                                  animationDuration={6666}
+                                  type="monotone"
+                                  dataKey="Mouches"
+                                  stroke="#da0404"
+                                  fill="url(#gradient1)"
+                                  strokeWidth={1.8}
+                                />
+                              </>
+                            }
+
+
+
                             <XAxis 
                               dataKey="date" 
                               tickFormatter={(tick) => {

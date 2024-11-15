@@ -124,10 +124,7 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     </div>
   );
 };
-
-
 const Clients = () => {
-
   const [allUsers, setAllUsers] = useState([]);
   const [loadingAllUsers, setLoadingAllUsers] = useState(true);
   const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
@@ -136,7 +133,6 @@ const Clients = () => {
   const [email,setEmail] = useState("");
   const [mobile,setMobile] = useState("");
   const [password,setPassword] = useState("");
-
   const [addClicked, setaddClicked] = useState(false);
   const [editClicked, seteditClicked] = useState(false);
   const [showClicked,setshowClicked] = useState(false);
@@ -156,11 +152,6 @@ const Clients = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
-
- 
-  
-
-  
   const fetch_data_allUsers = async () => {
     try {
       setLoadingAllUsers(true);
