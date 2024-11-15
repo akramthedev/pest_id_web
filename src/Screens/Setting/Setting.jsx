@@ -290,17 +290,7 @@ const Setting = () => {
             </div>
           </div>
 
-          <div  className="sfovwdsfovwd">
-            <div className="OFSUV7934NF">Journalisation des Activités</div>
-            <div className="ivz7979n">
-              <SwitchButton
-                isEnabled={isJournalisation}
-                loader={loader}
-                onToggle={(newState) => setIsJournalisation(newState)}
-                label="Enregistrez un historique de toutes vos actions pour faciliter le suivi et les rapports d’utilisation."
-              />
-            </div>
-          </div>
+ 
           </>
           :
           <>

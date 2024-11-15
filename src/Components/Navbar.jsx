@@ -120,17 +120,7 @@ const NavBar = () => {
 
 
 
-
-            <div 
-              onClick={()=>{
-                navigate("/activity");setIsProfileOpen(false);
-              }}
-              className="profile-item"> 
-              <div className="uevuofz">
-                <i class="fa-solid fa-book"></i>
-              </div> 
-              Journal d'activité
-            </div>
+ 
 
             <div
               onClick={()=>{

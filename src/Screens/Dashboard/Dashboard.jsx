@@ -1233,7 +1233,7 @@ const Dashboard = () => {
                               {/* class_C Area */}
                               <Area
                                 animationEasing="ease-in-out"
-                                animationDuration={2500}
+                                animationDuration={9999}
                                 type="monotone"
                                 dataKey="Thrips"
                                 stroke="#67c10c"
@@ -1253,7 +1253,7 @@ const Dashboard = () => {
                               {/* class_A Area */}
                                 <Area
                                   animationEasing="ease-in-out"
-                                  animationDuration={5000}
+                                  animationDuration={6666}
                                   type="monotone"
                                   dataKey="Mouches"
                                   stroke="#da0404"
@@ -1272,7 +1272,7 @@ const Dashboard = () => {
                               {/* class_B Area */}
                               <Area
                                 animationEasing="ease-in-out"
-                                animationDuration={1500}
+                                animationDuration={3333}
                                 type="monotone"
                                 dataKey="Mineuses"
                                 stroke="#8a2be2"
@@ -1605,7 +1605,7 @@ const Dashboard = () => {
                               {/* class_C Area */}
                               <Area
                                 animationEasing="ease-in-out"
-                                animationDuration={2500}
+                                animationDuration={9999}
                                 type="monotone"
                                 dataKey="Thrips"
                                 stroke="#67c10c"
@@ -1625,7 +1625,7 @@ const Dashboard = () => {
                               {/* class_A Area */}
                                 <Area
                                   animationEasing="ease-in-out"
-                                  animationDuration={5000}
+                                  animationDuration={6666}
                                   type="monotone"
                                   dataKey="Mouches"
                                   stroke="#da0404"
@@ -1644,7 +1644,7 @@ const Dashboard = () => {
                               {/* class_B Area */}
                               <Area
                                 animationEasing="ease-in-out"
-                                animationDuration={1500}
+                                animationDuration={3333}
                                 type="monotone"
                                 dataKey="Mineuses"
                                 stroke="#8a2be2"
