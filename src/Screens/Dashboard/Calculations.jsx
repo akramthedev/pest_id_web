@@ -30,53 +30,100 @@ const actionTemplate = (params,
     showClicked , 
     setSelectedGreenhouse, 
     setSelectedFarm, 
-    farms,
+    farms,setplaques,
     setGreenhouses, 
-    showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse
+    showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse,
+    doFctOne
   ) => {
   
-  const handleEdit = () => {
-    console.log('Edit:', params.row);
 
-    if(params.row.farm_id !== null && params.row.farm_id !== "---"){
-      setSelectedFarm({ 
-        value : params.row.farm_id,
-        label : params.row.farm_name
-      });
-      setCalculToEdit({
-        ...calculToEdit, 
-        farm_id : params.row.farm_id,
-        farm_name : params.row.farm_name
-      });
+    
 
-        
-      const selectedFarmX = farms.find(farm => farm.id === params.row.farm_id);
-      if (selectedFarmX) {
-        const greenhouseOptions = selectedFarmX.serres.map(serre => ({
-          value: serre.id,
-          label: serre.name
-        }));
-        setGreenhouses(greenhouseOptions);
-      } else {
-        setGreenhouses([]);
+
+
+
+
+
+
+
+    const handleEdit = () => {
+      console.log("Edit:", params.row);
+    
+      let updatedCalcul = { ...params.row }; // Start with the row's data
+    
+      // Handle farm selection
+      if (params.row.farm_id && params.row.farm_id !== "---") {
+        setSelectedFarm({
+          value: params.row.farm_id,
+          label: params.row.farm_name,
+        });
+    
+        updatedCalcul = {
+          ...updatedCalcul,
+          farm_id: params.row.farm_id,
+          farm_name: params.row.farm_name,
+        };
+    
+        const selectedFarmX = farms.find((farm) => farm.id === params.row.farm_id);
+    
+        if (selectedFarmX) {
+          // Populate greenhouses
+          const greenhouseOptions = selectedFarmX.serres.map((serre) => ({
+            value: serre.id,
+            label: serre.name,
+          }));
+          setGreenhouses(greenhouseOptions);
+     
+          const selectedGreenhouseJack = selectedFarmX.serres.find(
+            (serre) => serre.id === params.row.serre_id
+          );
+    
+          if (selectedGreenhouseJack) {
+            console.warn(selectedGreenhouseJack);
+            // Populate plaques
+            const plaquesOptions = selectedGreenhouseJack.plaques.map((plaque) => ({
+              value: plaque.id,
+              label: plaque.name,
+            }));
+            console.warn(plaquesOptions);
+            setplaques(plaquesOptions);
+           } else {
+            setplaques([]); // Clear plaques if no greenhouse matches
+          }
+        } else {
+          setGreenhouses([]); // Clear greenhouses if no farm matches
+          setplaques([]);
+        }
       }
+    
 
+      console.log("Data Of Edit : "+params.row);
 
-      if(params.row.serre_id !== null && params.row.serre_id !== "---"){
+      if (params.row.serre_id && params.row.serre_id !== "---") {
+        console.log("Entering the part : Greenhouse");
         setSelectedGreenhouse({
-          value : params.row.serre_id,
-          label : params.row.serre_name
+          value: params.row.serre_id,
+          label: params.row.serre_name,
         });
-        setCalculToEdit({
-          ...calculToEdit, 
-          serre_id : params.row.serre_id,
-          serre_name : params.row.serre_name
-        });
+    
+        updatedCalcul = {
+          ...updatedCalcul,
+          serre_id: params.row.serre_id,
+          serre_name: params.row.serre_name,
+        };
+    
+
       }
-    }
-    setCalculToEdit(params.row);
-    seteditClicked(!editClicked);
-  };
+ 
+      doFctOne();
+      // Final updates
+      setCalculToEdit(updatedCalcul);
+      seteditClicked(!editClicked);
+    };
+
+    
+
+
 
 
   
@@ -101,6 +148,7 @@ const actionTemplate = (params,
           label: serre.name
         }));
         setGreenhouses(greenhouseOptions);
+        //setplaques([]);
       } else {
         setGreenhouses([]);
       }
@@ -190,7 +238,7 @@ const Calculations = () => {
   const [addClicked, setaddClicked] = useState(false);
   const [editClicked, seteditClicked] = useState(false);
   const [calculToEdit, setCalculToEdit] = useState(null);
-  const [imageFile, setImageFile] = useState('');
+  const [imageFiles, setImageFiles] = useState([]);   
   const [imageName, setImageName] = useState('');
   const [loading, setloading] = useState(false);
   const [loadingAllPred, setloadingAllPred] = useState(true);
@@ -232,14 +280,13 @@ const Calculations = () => {
   };
  
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImageFile(file); 
-      setImageName(file.name); 
-    } else {
-      setImageFile(""); 
-      setImageName(''); 
-    }
+      const filex = Array.from(event.target.files);  
+      if (filex.length > 0) {
+        console.log(filex)
+        setImageFiles(filex);  
+      } else {
+        setImageFiles([]);   
+      }
   };
 
 
@@ -266,30 +313,35 @@ const Calculations = () => {
         let i = 0;
         const transformedData = await Promise.all(
           predictionsResponse.data.map(async (item, index) => {
-            i++;
             let createdAt = formatDateForCreatedAt(item.created_at);
-      
-      
+        
+            const totalClassA = item.images.reduce((acc, image) => acc + (image.class_A || 0), 0);
+            const totalClassB = item.images.reduce((acc, image) => acc + (image.class_B || 0), 0);
+        
             return {
               idInc: index + 1,
               id: item.id,
               farm_id: item.farm_id || "---",
               serre_id: item.serre_id || "---",
               plaque_id: item.plaque_id || "---",
-              plaque_name: item.plaque? item.plaque.name : "---",
+              plaque_name: item.plaque ? item.plaque.name : "---",
               result: item.result ? `${item.result}%` : "---",
-              class_A: item.images[0]?.class_A || "---",
-              class_B: item.images[0]?.class_B || "---",
-              image: item.images[0]?.name || "---",
+              class_A: totalClassA || 0,  // Somme de class_A
+              class_B: totalClassB || 0,  // Somme de class_B
+              images: item.images.map(image => ({
+                class_A: image.class_A,
+                class_B: image.class_B,
+                name: image.name  
+              })) || [],
               created_at: createdAt || "---",
-              created_at_notmodified : item.created_at  ,
+              created_at_notmodified: item.created_at,
               farm_name: item.farm ? item.farm.name : "---",
               serre_name: item.serre ? item.serre.name : "---",
             };
-
-
           })
         );
+        
+        
       
         setCalculations(transformedData);
       }
@@ -399,82 +451,82 @@ const Calculations = () => {
 
 
   
-  
 
 
 
-  const handleFarmChange = (farmId) => {
-    setSelectedGreenhouse(null);  // Clear previously selected greenhouse
-    setselectedPlaque(null);  // Clear previously selected plaque
+
+  const handleSelectionChange = (type, selectedOption) => {
+    if (type === "farm") {
+      // Handle farm selection
+      setSelectedGreenhouse(null);  // Clear previously selected greenhouse
+      setselectedPlaque(null);      // Clear previously selected plaque
   
-    // If a farm is selected
-    if (farmId !== null) {
-      setSelectedFarm(farmId);
+      if (selectedOption !== null) {
+        setSelectedFarm(selectedOption);
   
-      // Find the selected farm in the farms array
-      const selectedFarm = farms.find(farm => farm.id === farmId.value);
+        // Find the selected farm in the farms array
+        const selectedFarm = farms.find(farm => farm.id === selectedOption.value);
   
-      if (selectedFarm) {
-        // Extract the greenhouses (serres) for the selected farm
-        const greenhouseOptions = selectedFarm.serres.map(serre => ({
-          value: serre.id,
-          label: serre.name
-        }));
-  
-        // Set the greenhouses for the selected farm
-        setGreenhouses(greenhouseOptions);
-  
-        // Reset plaques as we are selecting a new farm
-        setplaques([]);
+        if (selectedFarm) {
+          // Populate greenhouses
+          const greenhouseOptions = selectedFarm.serres.map((serre) => ({
+            value: serre.id,
+            label: serre.name,
+          }));
+          setGreenhouses(greenhouseOptions);
+        } else {
+          setGreenhouses([]); // Clear greenhouses if no farm matches
+          setplaques([]);     // Clear plaques
+        }
       } else {
+        // If no farm is selected, reset everything
+        setSelectedFarm(null);
         setGreenhouses([]);
         setplaques([]);
       }
-    } else {
-      // If no farm is selected, reset everything
-      setSelectedFarm(null);
-      setGreenhouses([]);
-      setplaques([]);
-    }
-  };
+    } else if (type === "greenhouse") {
+      // Handle greenhouse selection
+      setselectedPlaque(null);  // Clear previously selected plaque
   
-  const handleGreenhouseChange = (greenhouseId) => {
-    setselectedPlaque(null);  // Clear previously selected plaque
+      if (selectedOption !== null) {
+        setSelectedGreenhouse(selectedOption);
   
-    // If a greenhouse is selected
-    if (greenhouseId !== null) {
-      setSelectedGreenhouse(greenhouseId);
+        // Find the selected greenhouse in the farms array
+        const selectedFarm = farms.find(farm =>
+          farm.serres.some(serre => serre.id === selectedOption.value)
+        );
   
-      // Find the selected greenhouse in the serres array
-      const selectedFarm = farms.find(farm =>
-        farm.serres.some(serre => serre.id === greenhouseId.value)
-      );
+        const selectedGreenhouseX = selectedFarm?.serres.find(
+          serre => serre.id === selectedOption.value
+        );
   
-      const selectedGreenhouse = selectedFarm?.serres.find(serre => serre.id === greenhouseId.value);
-  
-      if (selectedGreenhouse) {
-        // Extract the plaques for the selected greenhouse
-        const plaqueOptions = selectedGreenhouse.plaques.map(plaque => ({
-          value: plaque.id,
-          label: plaque.name
-        }));
-  
-        // Set the plaques for the selected greenhouse
-        setplaques(plaqueOptions);
+        if (selectedGreenhouseX) {
+          // Extract the plaques for the selected greenhouse
+          const plaqueOptions = selectedGreenhouseX.plaques.map(plaque => ({
+            value: plaque.id,
+            label: plaque.name,
+          }));
+          setplaques(plaqueOptions); // Set plaques
+        } else {
+          setplaques([]); // Clear plaques if no greenhouse matches
+        }
       } else {
+        // If no greenhouse is selected, reset plaques
+        setSelectedGreenhouse(null);
         setplaques([]);
+        setselectedPlaque(null);
       }
-    } else {
-      // If no greenhouse is selected, reset plaques
-      setSelectedGreenhouse(null);
-      setplaques([]);
     }
   };
   
+
+
+
+
+
+
+
   
-
-
-
 
 
 
@@ -488,7 +540,7 @@ const Calculations = () => {
         const token = localStorage.getItem('token');
 
         let dataJOJO = {
-          plaque_id : calculToEdit.plaque_id,
+          plaque_id : selectedPlaque && selectedPlaque.value,
           farm_id : selectedFarm && selectedFarm.value, 
           serre_id : selectedGreenhouse && selectedGreenhouse.value, 
           created_at : calculToEdit.created_at_notmodified
@@ -502,9 +554,10 @@ const Calculations = () => {
           seteditClicked(false);
           setCalculToEdit(null);
           setSelectedFarm(null);
-          setImageFile(null);
+          setImageFiles([]);
           setImageName(null);
           setSelectedGreenhouse(null);
+          setselectedPlaque(null);
           fetchDataPrediction();
         }
         else{
@@ -534,19 +587,23 @@ const Calculations = () => {
       }
     }
 
+
+
+
+
     
 
     const handleSauvegarde = async ()=> {
-      if (imageFile === undefined || imageFile === null || imageFile === ""){
-        if(!showItResponse){
-          setisErrorResponse(true);
-          setmessageResponse("L'image du calcul ne peut pas être vide.");
-          setshowItResponse(true);
-          setTimeout(()=>{          
-            setshowItResponse(false);
-          }, 4500);
-          return;
+      if (imageFiles.length === 0) {
+        if (!showItResponse) {
+            setisErrorResponse(true);
+            setmessageResponse("L'image du calcul ne peut pas être vide.");
+            setshowItResponse(true);
+            setTimeout(() => {
+                setshowItResponse(false);
+            }, 4500);
         }
+        return;
       }
       else{
         try{  
@@ -559,14 +616,18 @@ const Calculations = () => {
           let idSerre = selectedGreenhouse ? parseInt(selectedGreenhouse.value) : null;
           let idPlaque = selectedPlaque ? parseInt(selectedPlaque.value) : null;
 
-          let formData = {
-            image : imageName, 
-            user_id : parseInt(userIdNum), 
-            plaque_id : idPlaque, 
-            created_at : new Date().toISOString().slice(0, 19).replace('T', ' '),
-            serre_id : idSerre,
-            farm_id : idFarm
-          };
+          let formData = new FormData();
+            
+          imageFiles.forEach((file) => {
+            formData.append('images[]', file);
+          });
+ 
+          formData.append('user_id', parseInt(userIdNum));
+          formData.append('plaque_id', idPlaque);
+          formData.append('created_at', new Date().toISOString().slice(0, 19).replace('T', ' '));
+          formData.append('serre_id', idSerre);
+          formData.append('farm_id', idFarm);
+
 
           const response = await axios.post(`${ENDPOINT_API}create_prediction`, formData, {
             headers: {
@@ -584,7 +645,7 @@ const Calculations = () => {
             setSelectedGreenhouse(null);
             setIDplaque(null);
             setselectedPlaque(null);
-            setImageFile(null);
+            setImageFiles([]);
             setaddClicked(false);
           }        
           else{
@@ -617,6 +678,22 @@ const Calculations = () => {
  
 
 
+
+    const doFctOne = ()=>{
+      
+     if(calculToEdit){
+      console.log("Render fct : DoFctOne");
+      console.log(calculToEdit);
+        setselectedPlaque({
+          value: calculToEdit.plaque_id,
+          label: calculToEdit.plaque_name,
+        });
+     }
+    }
+
+    useEffect(()=>{
+      doFctOne();
+    },[editClicked]);
 
 
     
@@ -711,7 +788,7 @@ const Calculations = () => {
       },
       { 
         field: 'actions', 
-        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setGreenhouses, showItResponse, isErrorResponse, setisErrorResponse, setshowItResponse, setmessageResponse),
+        renderCell: (params) => actionTemplate(params, setCalculations, setRefresh, refresh, seteditClicked, editClicked, setCalculToEdit, calculToEdit, setshowClicked, showClicked , setSelectedGreenhouse, setSelectedFarm, farms,setplaques,setGreenhouses, showItResponse, isErrorResponse, setisErrorResponse, setshowItResponse, setmessageResponse ,doFctOne),
         headerName: 'Actions', 
         minWidth: 200, 
         headerAlign: 'center', 
@@ -768,11 +845,12 @@ const Calculations = () => {
             {
             calculToEdit !== null && 
               <>
+                
                 <div className="rowInp">
                   <label>Ferme</label>
                   <Select
                     value={selectedFarm}
-                    onChange={(itemValue) => handleFarmChange(itemValue)}
+                    onChange={(itemValue) => handleSelectionChange("farm", itemValue)} // Use the combined function
                     options={options}
                     isDisabled={loadingAllFarms}
                     placeholder="Choisissez une option"
@@ -783,7 +861,7 @@ const Calculations = () => {
                   <label>Serre</label>
                   <Select
                     value={selectedGreenhouse}
-                    onChange={(itemValue) => setSelectedGreenhouse(itemValue)}
+                    onChange={(itemValue) => handleSelectionChange("greenhouse", itemValue)} // Use the combined function
                     options={greenhouses}
                     isDisabled={!selectedFarm}
                     placeholder="Choisissez une option"
@@ -794,17 +872,19 @@ const Calculations = () => {
                   <label>Plaque</label>
                   <Select
                     value={selectedPlaque}
-                    onChange={(value) => setselectedPlaque(value)}
+                    onChange={(value) => setselectedPlaque(value)} // This remains direct as plaques are independent of further changes
                     options={plaques}
                     isDisabled={!selectedGreenhouse}
                     placeholder="Choisissez une option"
                     styles={customStyles}
                   />
                 </div>
+
+
               </>
             }
             <div className="rowInp rowInpModified">
-              <button className='jofzvno' disabled={loading} onClick={()=>{seteditClicked(false);setCalculToEdit(null);setSelectedFarm(null);setSelectedGreenhouse(null);}} >Annuler</button>
+              <button className='jofzvno' disabled={loading} onClick={()=>{seteditClicked(false);setCalculToEdit(null);setselectedPlaque(null);setSelectedFarm(null);setSelectedGreenhouse(null);setplaques(null)}} >Annuler</button>
               <button 
                 disabled={loadingEdit}
                 onClick={()=>{
@@ -826,7 +906,7 @@ const Calculations = () => {
 
 
 
-        {/*   show Calculation    */}
+        {/*   show Calculation Images    */}
               
         <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
                   <div className="contPopUp popUp1 popUp1popUp1popUp1">
@@ -836,102 +916,9 @@ const Calculations = () => {
             {
             calculToEdit !== null && 
               <>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Ferme
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.farm_name
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Serre
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.serre_name
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    ID plaque
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.plaque_id
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Résultat
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.result
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Effectif des Mouches
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.class_A
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                    Effectif des Tuta
-                  </label>
-                  <label>
-                    {
-                      calculToEdit.class_B
-                    }
-                  </label>
-                </div>
-                <div className="rowInp rowInp1">
-                  <label>
-                   Image du calcul
-                  </label>
-                  <button 
-                    onClick={()=>{
-                       setIsImageToSeenClicked(calculToEdit.image);
-                    }}
-                    style={{
-                      cursor : "pointer", 
-                      background : "#f4f4f4",
-                      border : "1px solid #dbdbdb", 
-                      height : "24px", 
-                      padding : "0 1rem", 
-                      alignItems : "center", 
-                      justifyContent : "center", 
-                      display : "center"
-                    }}
-                  >
-                    Voir l'image
-                  </button>
-                </div>
+               
               </>
             }
-            <div className="rowInp rowInpModified">
-              <button className='jofzvno'  onClick={()=>{setshowClicked(false);setCalculToEdit(null);}} >Fermer</button>
-              <button 
-                onClick={()=>{
-                  setshowClicked(false);
-                  seteditClicked(true);
-                }}
-                className={loadingEdit ? "efvofvz efvofvz2" : "efvofvz"}
-              >
-               Modifier le calcul
-              </button>
-            </div>
           </div>
         </div>
       
@@ -948,41 +935,43 @@ const Calculations = () => {
           </div>
            
 
-              <div className="rowInp">
-                <label>Ferme</label>
-                <Select
-                  value={selectedFarm}
-                  onChange={(itemValue) => handleFarmChange(itemValue)}
-                  options={options}  // Farm options
-                  disabled={loadingAllFarms}
-                  placeholder="Choisissez une option"
-                  styles={customStyles}
-                />
-              </div>
+              
+          <div className="rowInp">
+            <label>Ferme</label>
+            <Select
+              value={selectedFarm}
+              onChange={(itemValue) => handleSelectionChange("farm", itemValue)} // Trigger combined handler for farm
+              options={options} // Farm options
+              isDisabled={loadingAllFarms}
+              placeholder="Choisissez une option"
+              styles={customStyles}
+            />
+          </div>
 
-              <div className="rowInp">
-                <label>Serre</label>
-                <Select
-                  value={selectedGreenhouse}
-                  onChange={(itemValue) => handleGreenhouseChange(itemValue)}
-                  options={greenhouses}  // Greenhouse options that will be populated based on selected farm
-                  disabled={!selectedFarm}  // Disable unless a farm is selected
-                  placeholder="Choisissez une option"
-                  styles={customStyles}
-                />
-              </div>
+          <div className="rowInp">
+            <label>Serre</label>
+            <Select
+              value={selectedGreenhouse}
+              onChange={(itemValue) => handleSelectionChange("greenhouse", itemValue)} // Trigger combined handler for greenhouse
+              options={greenhouses} // Greenhouse options based on selected farm
+              isDisabled={!selectedFarm} // Disable unless a farm is selected
+              placeholder="Choisissez une option"
+              styles={customStyles}
+            />
+          </div>
 
-              <div className="rowInp">
-                <label>Plaque</label>
-                <Select
-                  value={selectedPlaque}
-                  onChange={(itemValue) => setselectedPlaque(itemValue)}
-                  options={plaques}  // Plaques options that will be populated based on selected greenhouse
-                  disabled={!selectedGreenhouse}  // Disable unless a greenhouse is selected
-                  placeholder="Choisissez une option"
-                  styles={customStyles}
-                />
-              </div>
+          <div className="rowInp">
+            <label>Plaque</label>
+            <Select
+              value={selectedPlaque}
+              onChange={(itemValue) => setselectedPlaque(itemValue)} // Directly update the selected plaque
+              options={plaques} // Plaque options based on selected greenhouse
+              isDisabled={!selectedGreenhouse} // Disable unless a greenhouse is selected
+              placeholder="Choisissez une option"
+              styles={customStyles}
+            />
+          </div>
+
 
                 
           
@@ -1002,17 +991,28 @@ const Calculations = () => {
                 textAlign: 'center',
               }}
             >
-              {imageName ? `Image séléctionnée : ${imageName}` : 'Choisir une image'}
+            {
+              imageFiles !== null && 
+              <>
+              {
+                imageFiles.length >=1 ? 
+                  `${imageFiles.length} image${imageFiles.length>1 ? "s" : ""} ${imageFiles.length>1 ? "ont" : "a"} été séléctionnée${imageFiles.length>1 ? "s" : "" }` 
+                  : 
+                  'Choisir des images'
+              }
+              </>
+            }
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
                 style={{ display: 'none' }}   
               />
             </label>
           </div>
           <div className="rowInp rowInpModified">
-            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFile(null);setselectedPlaque(null); setSelectedGreenhouse(null);setSelectedFarm(null);}} >Annuler</button>
+            <button className='jofzvno' disabled={loading} onClick={()=>{setaddClicked(false);setImageName(null);setImageFiles([]);setselectedPlaque(null); setSelectedGreenhouse(null);setSelectedFarm(null);}} >Annuler</button>
             <button 
               disabled={loading}
               onClick={()=>{
