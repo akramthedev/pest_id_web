@@ -1371,9 +1371,9 @@
 }
 
 .zirsqfd{
-    max-width: 550px;
     width: 100%;
     display: flex;
+    padding:  0 3rem !important;
     flex-direction: column;
 }
 .rowInFoS{
@@ -1389,12 +1389,13 @@
 }
 
 .eyvfyrziyiyzfiyfz{
-    color: blueviolet !important;
+    color: #519a08 !important;
     font-weight: 600 !important;
+    margin-top: 0.4rem;
 }
 
 .eyvfyrziyiyzfiyfz2{
-    color: #003cff !important;
+    color: #519a08 !important;
     font-weight: 600 !important;
 }
 
