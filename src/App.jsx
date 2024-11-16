@@ -17,6 +17,7 @@ import Broadcast from "./Screens/Broadcast/Broadcast";
 import Activity from "./Screens/Activity/Activity";
 import About from "./Screens/About/About";
 import Setting from './Screens/Setting/Setting';
+import DashboardFromViewOfSuperAdmin from "./Screens/Dashboard/DashboardFromViewOfSuperAdmin";
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
 
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
         <Route path="/clients" element={isAuthenticated ? <Clients /> : <Navigate to="/login" />} />
         <Route path="/demandes" element={isAuthenticated ? <Demandes /> : <Navigate to="/login" />} />
         <Route path="/personnels" element={isAuthenticated ? <Personnels /> : <Navigate to="/login" />} />

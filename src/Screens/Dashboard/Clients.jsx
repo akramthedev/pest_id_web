@@ -18,7 +18,7 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 
 
 
-const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff,setLoaderPermission, loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
+const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked ,setisDeletedClicked, setparamClicked,  setRefreshStaff, RefreshStaff,setLoaderPermission, loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse, navigate) => {
 
   
   const handleEdit = () => {
@@ -97,8 +97,16 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     setisDeletedClicked(true);
   }
 
+
+  const handleViewDashboard = ()=>{
+    navigate(`/DashboardFromViewOfSuperAdmin/${params.row.idUser}/${params.row.fullName}`);
+  }
+
   return (
     <div className='uefuvzou'>
+      <button className='uoersf'   onClick={handleViewDashboard}  >
+        <i class="fa-solid fa-chart-simple"></i>
+      </button>
       <button className='uoersf'   onClick={handleView}  >
         <i class="fa-solid fa-eye"></i>
       </button>
@@ -689,7 +697,7 @@ useEffect(()=>{
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff,setLoaderPermission,loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse), 
+      renderCell: (params) => actionTemplate(params, setAllUsers, setRefresh, refresh, seteditClicked, editClicked, setUserToEdit, userToEdit, setshowClicked, showClicked,setisDeletedClicked, setparamClicked, setRefreshStaff,RefreshStaff,setLoaderPermission,loaderOfPermission,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse,navigate), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 

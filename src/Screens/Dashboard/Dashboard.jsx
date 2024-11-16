@@ -50,7 +50,6 @@ const Dashboard = () => {
   const [data1, setData1] = useState(null);
   const [data2, setData2] = useState(null);
   const [data3, setData3] = useState(null);
-  const [data4, setData4] = useState(null);
 
   const [ChartData, setChartData] =useState(null);
   const [chartData2, setChartData2] =useState(null);
@@ -714,7 +713,7 @@ const Dashboard = () => {
       if (response.status === 200) {
         if (response.data.length === 0) {
           setData2(0);
-          setData3(null);
+          setData3(0);
         } else {
           let predictionWithMaximumValues = null;
   
@@ -783,12 +782,12 @@ const Dashboard = () => {
       } else {
         setData2(0);
         setChartData3(null);
-        setData3(null);
+          setData3(0);
       }
     } catch (error) {
       setData2(0);
       setChartData3(null);
-      setData3(null);
+          setData3(0);
       if (!showItResponse) {
         setisErrorResponse(true);
         setmessageResponse("Une erreur est survenue lors de la récupération des données.");
@@ -1343,7 +1342,7 @@ const Dashboard = () => {
                       alignItems : "center !important"
                     }}
                   >
-                    <i class="fa-solid fa-magnifying-glass"></i>&nbsp;&nbsp;Moyenne de capture <span
+                    <i class="fa-solid fa-magnifying-glass"></i>&nbsp;&nbsp;Moyenne de capture / jour <span
                       style={{
                         fontSize : "15px !important", 
                         color : "gray",
@@ -1407,13 +1406,13 @@ const Dashboard = () => {
                   <div className="rowCardX">
                     <i class="fa-solid fa-turn-up"></i>&nbsp;&nbsp;Plaque à captures maximales
                   </div>
-                  <div className="">
-                    <div className="NOSrowCardX2D7IO9">
+                  <div className="rowCardX2">
+                    <div className="NOSrowCardX2D7IO9 NOSD7IO9NOSD7IO9">
                     {
                       data3 && data3.sum 
                     }
                     </div>
-                    <div className="NOSD7I9999NOSD7I9999">
+                    <div className="NOSD7I9999">
                     {
                       Loading3 ? 
                       <div className='odosfvoufnosfovefsouv'>

@@ -5,168 +5,148 @@ import { ENDPOINT_API } from "../../endpoint";
 import { useNavigate } from 'react-router-dom';
 import ErrorSuccess from '../../Components/ErrorSuccess';
 
-
-
 function Register() {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mobile, setmobile] = useState('');
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', mobile: '' });
   const [errors, setErrors] = useState({});
-  const [showItResponse, setshowItResponse] = useState(false);
-  const [isErrorResponse, setisErrorResponse] = useState(false);
-  const [messageResponse, setmessageResponse] = useState(null);
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    digit: false,
+    specialChar: false,
+  });
+  const [responseInfo, setResponseInfo] = useState({ show: false, isError: false, message: '' });
 
- 
-  const handleInputChange = (e, field) => {
-    setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
 
-    if (field === 'name') {
-      setName(e.target.value);
-    } else if (field === 'email') {
-      setEmail(e.target.value);
-    } else if (field === 'password') {
-      setPassword(e.target.value);
-    }
-      else if (field === 'mobile') {
-        setmobile(e.target.value);
+    if (name === 'password') {
+      setPasswordValidation({
+        length: value.length >= 8,
+        uppercase: /[A-Z]/.test(value),
+        lowercase: /[a-z]/.test(value),
+        digit: /[0-9]/.test(value),
+        specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(value),
+      });
     }
   };
 
+  const validateForm = () => {
+    const validationErrors = {};
+    const { fullName, email, mobile, password } = formData;
+
+    if (!fullName) validationErrors.fullName = 'Nom et prénom requis';
+    if (fullName.length <= 2) validationErrors.fullName = 'Nom et prénom invalide';
+    if (!email || !/\S+@\S+\.\S+/.test(email)) validationErrors.email = 'Adresse email invalide';
+
+    if (!password || password.length < 8) {
+      validationErrors.password = 'Mot de passe invalide.';
+    }  
+      if (!/[A-Z]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
+      if (!/[a-z]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
+      if (!/[0-9]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) validationErrors.password = 'Mot de passe invalide.';
+  
+
+    return validationErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = {};
-
-    if (!name) validationErrors.name = 'Nom et prénom requis';
-    if (!email || !/\S+@\S+\.\S+/.test(email)) validationErrors.email = 'Adresse email invalide';
-    if (!password || password.length < 5) validationErrors.password = 'Au moins 5 caractères';
+    const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      if(
-!showItResponse){     setisErrorResponse(true);
-        setmessageResponse("Les informations fournies sont incorrectes.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);}
+      setResponseInfo({ show: true, isError: true, message: 'Les informations fournies sont incorrectes.' });
+      setTimeout(() => setResponseInfo({ ...responseInfo, show: false }), 4500);
       return;
     }
 
     try {
       setLoader(true);
-      const response = await axios.post(`${ENDPOINT_API}register`, { fullName : name,email : email,password : password, mobile : mobile });
+      const response = await axios.post(`${ENDPOINT_API}register`, formData);
       if (response.status === 201) {
-        setEmail('');
-        setPassword('');
-        setName('');
-        setmobile('');
-        setisErrorResponse(false);
-        setmessageResponse("Inscription confirmée. Nous procéderons à l'examen de votre profil et vous recevrez un email dans les 24 heures pour la prochaine étape.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 30000);
-      }
-      else if(response.status === 205) {
-        if(
-!showItResponse){       setisErrorResponse(true);
-        setmessageResponse("Une erreur est survenue lors de l'inscription. Veuillez réessayer !");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);}
+        setFormData({ fullName: '', email: '', password: '', mobile: '' });
+        setResponseInfo({
+          show: true,
+          isError: false,
+          message: "Inscription réussie. Vous recevrez un email sous 24 heures pour la prochaine étape.",
+        });
+        setTimeout(() => setResponseInfo({ ...responseInfo, show: false }), 30000);
+      } else {
+        setResponseInfo({
+          show: true,
+          isError: true,
+          message: "Une erreur est survenue lors de l'inscription. Veuillez réessayer !",
+        });
+        setTimeout(() => setResponseInfo({ ...responseInfo, show: false }), 4500);
       }
     } catch (error) {
-      if( !showItResponse){
-      setisErrorResponse(true);
-        setmessageResponse("Une erreur est survenue lors de l'inscription. Veuillez réessayer !");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);}
-      console.log(error);
-    } finally{
+      setResponseInfo({
+        show: true,
+        isError: true,
+        message: "Une erreur est survenue. Veuillez réessayer plus tard.",
+      });
+      setTimeout(() => setResponseInfo({ ...responseInfo, show: false }), 4500);
+    } finally {
       setLoader(false);
     }
   };
 
   return (
     <div className="login-container">
-      <ErrorSuccess  
-        isError={isErrorResponse}
-        showIt={showItResponse}
-        message={messageResponse}  
-      />
+      <ErrorSuccess isError={responseInfo.isError} showIt={responseInfo.show} message={responseInfo.message} />
       <h2 className="login-title">Rejoignez-nous !</h2>
       <p className="login-subtitle3">Rejoignez notre communauté dès maintenant et découvrez tous nos avantages !</p>
       <form className="login-form" onSubmit={handleSubmit}>
-        
-        <label className="login-label" htmlFor="name">
-          Nom et prénom 
-          {errors.name && <p className="error-message">{errors.name}</p>}
-
-        </label>
-        <input
-          id="name"
-          className={`login-input ${errors.name ? 'input-error' : ''}`}
-          placeholder="Votre Nom et Prénom"
-          value={name}
-          maxLength={100}
-          onChange={(e) => handleInputChange(e, 'name')}
-        />
-        
-        <label className="login-label" htmlFor="email">
-          Adresse Email 
-          {errors.email && <p className="error-message">{errors.email}</p>}
-
-        </label>
-        <input
-          id="email"
-          maxLength={100}
-          className={`login-input ${errors.email ? 'input-error' : ''}`}
-          placeholder="your@email.com"
-          value={email}
-          onChange={(e) => handleInputChange(e, 'email')}
-        />
-
-        <label className="login-label" htmlFor="mobile">
-          Numéro de téléphone 
-
-        </label>
-        <input
-          id="mobile"
-          maxLength={20}
-          className={`login-input`}
-          placeholder="+212 XXX XXX XXX"
-          value={mobile}
-          onChange={(e) => handleInputChange(e, 'mobile')}
-        />
-        
-        <label className="login-label" htmlFor="pass">
-          Mot de passe 
-          {errors.password && <p className="error-message">{errors.password}</p>}
-        </label>
-        <input
-          type="password"
-          id="pass"
-          className={`login-input ${errors.password ? 'input-error' : ''}`}
-          placeholder="Votre Mot de passe"
-          value={password}
-          onChange={(e) => handleInputChange(e, 'password')}
-        />
-        
-        <button 
-          disabled={loader}
-          type="submit"
-          className={`login-button ${loader ? 'disabled-button' : ''}`}
-        >
-        {
-          loader ? "Création du compte en cours..." : "S’inscrire"  
-        }
+        {['fullName', 'email', 'mobile', 'password'].map((field) => (
+          <div key={field}>
+            <label className="login-label" htmlFor={field}>
+              {field === 'fullName' && 'Nom et prénom'}
+              {field === 'email' && 'Adresse Email'}
+              {field === 'mobile' && 'Numéro de téléphone'}
+              {field === 'password' && 'Mot de passe'}
+              {errors[field] && <p className="error-message">{errors[field]}</p>}
+            </label>
+            <input
+              id={field}
+              name={field}
+              type={field === 'password' ? 'password' : 'text'}
+              maxLength={field === 'mobile' ? 20 : 100}
+              className={`login-input ${errors[field] ? 'input-error' : ''}`}
+              placeholder={
+                field === 'fullName'
+                  ? 'Votre Nom et Prénom'
+                  : field === 'email'
+                  ? 'your@email.com'
+                  : field === 'mobile'
+                  ? '+212 XXX XXX XXX'
+                  : 'Votre Mot de passe'
+              }
+              value={formData[field]}
+              onChange={handleInputChange}
+            />
+          </div>
+        ))}
+        {formData.password && (
+          <div className="password-helper">
+            {Object.entries(passwordValidation).map(([key, isValid]) => (
+              <p key={key} className={isValid ? 'valid' : 'invalid'}>
+                {key === 'length' && '• Au moins 8 caractères'}
+                {key === 'uppercase' && '• Une lettre majuscule'}
+                {key === 'lowercase' && '• Une lettre minuscule'}
+                {key === 'digit' && '• Un chiffre'}
+                {key === 'specialChar' && '• Un caractère spécial'}
+              </p>
+            ))}
+          </div>
+        )}
+        <button disabled={loader} type="submit" className={`login-button ${loader ? 'disabled-button' : ''}`}>
+          {loader ? 'Création du compte en cours...' : 'S’inscrire'}
         </button>
         <p className="login-subtitle2" onClick={() => navigate('/login')}>
           Déjà inscrit ? Connectez-vous

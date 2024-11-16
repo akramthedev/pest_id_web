@@ -9,197 +9,179 @@ import PopUp from '../../Components/PopUp';
 import ErrorSuccess from '../../Components/ErrorSuccess';
 
 const PasswordConfig = () => {
-
-  const {id, from, name} = useParams();
+  const { id, from, name } = useParams();
   const navigate = useNavigate();
-  const [isModifierMotDePasseClicked,setisModifierMotDePasseClicked] = useState(true);
-  const [password,setpassword] = useState("");
-  const [confirmpassword,setconfirmpassword] = useState("");
+  const [isModifierMotDePasseClicked, setisModifierMotDePasseClicked] = useState(true);
+  const [password, setpassword] = useState('');
+  const [confirmpassword, setconfirmpassword] = useState('');
   const [loadingModification, setLoadingModification] = useState(false);
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
   const [isDone, setisDone] = useState(true);
+  const [passwordVisibility, setPasswordVisibility] = useState(false);  
 
- 
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility); 
+  };
 
-  
-  const handleUpdatePassword = async()=>{
-    
-    if(id && name){
-      if((password !== confirmpassword) && (password.length !== confirmpassword.length)){
-     
-        if(!showItResponse){
-          setisErrorResponse(true);
-          
-          setmessageResponse("le mot de passe et la confirmation ne sont pas identiques.");
-          setshowItResponse(true);
-          setTimeout(()=>{          
-            setshowItResponse(false);
-          }, 4500);}
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    digit: false,
+    specialChar: false,
+  });
+
+  const handlePasswordChange = (value) => {
+    setpassword(value);
+    setPasswordValidation({
+      length: value.length >= 8,
+      uppercase: /[A-Z]/.test(value),
+      lowercase: /[a-z]/.test(value),
+      digit: /[0-9]/.test(value),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(value),
+    });
+  };
+
+  const handleUpdatePassword = async () => {
+    if (id && name) {
+      if (password !== confirmpassword) {
+        setResponseMessage('Les mots de passe ne correspondent pas.', true);
         return;
       }
-      else if(confirmpassword.length <5 || password.length < 5){
-        if(!showItResponse){
-          setisErrorResponse(true);
-          
-          setmessageResponse("Le mot de passe doit contenir au mois 5 caractères.");
-          setshowItResponse(true);
-          setTimeout(()=>{          
-            setshowItResponse(false);
-          }, 4500);}
+      if (Object.values(passwordValidation).includes(false)) {
+        setResponseMessage('Le mot de passe ne remplit pas tous les critères.', true);
         return;
       }
-      try{
+
+      try {
         setLoadingModification(true);
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         const userIdNum = parseInt(id);
-        let dataPss = {
-          nouveau : password, 
-          confirmnouveau : confirmpassword
-        }
-        const resp = await axios.post(`${ENDPOINT_API}updatePasswordByAdmin/${userIdNum}`,dataPss, {
+        const dataPss = {
+          nouveau: password,
+          confirmnouveau: confirmpassword,
+        };
+        const resp = await axios.post(`${ENDPOINT_API}updatePasswordByAdmin/${userIdNum}`, dataPss, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
-        if(resp.status === 200){
-          setpassword("");
-          setconfirmpassword('');
-          setLoadingModification(false);
-          setisDone(true);
-          
-          if(!showItResponse){
-          setisErrorResponse(false);
-          
-          setmessageResponse("Le mot de passe a été modifié avec succès.");
-          setshowItResponse(true);
-          setTimeout(()=>{          
-            setshowItResponse(false);
-          }, 4500);}
 
-          
+        if (resp.status === 200) {
+          resetFields();
+          setResponseMessage('Le mot de passe a été modifié avec succès.', false);
+        } else {
+          setResponseMessage('Une erreur est survenue lors de la modification.', true);
         }
-        else{
-          setLoadingModification(false);
-          if(!showItResponse){ 
-          setisErrorResponse(true);
-        setmessageResponse("Une erreur est survenue lors de la modification du mot de passe.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);}
-        }
-      }
-      catch(e){
-        if(!showItResponse){ 
-        setisErrorResponse(true);
-        setmessageResponse("Une erreur est survenue lors de la modification du mot de passe.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);} 
-        console.log(e.message);
-      }
-      finally{
+      } catch (e) {
+        setResponseMessage('Une erreur est survenue lors de la modification.', true);
+      } finally {
         setLoadingModification(false);
       }
     }
-  }
+  };
+
+  const setResponseMessage = (message, isError) => {
+    setisErrorResponse(isError);
+    setmessageResponse(message);
+    setshowItResponse(true);
+    setTimeout(() => setshowItResponse(false), 4500);
+  };
+
+  const resetFields = () => {
+    setpassword('');
+    setconfirmpassword('');
+    setisDone(true);
+    setPasswordValidation({
+      length: false,
+      uppercase: false,
+      lowercase: false,
+      digit: false,
+      specialChar: false,
+    });
+  };
 
   return (
     <>
       <NavBar />
-      <PopUp/>
-
-      <ErrorSuccess  
-        isError={isErrorResponse}
-        showIt={showItResponse}
-        message={messageResponse}  
-      />
-
-      
+      <PopUp />
+      <ErrorSuccess isError={isErrorResponse} showIt={showItResponse} message={messageResponse} />
       <div className={loadingModification ? 'popUp6666 showpopUp' : 'popUp6666'}>
-        <span style={{
-          fontSize: '16px', 
-          fontWeight: '500',
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center'
-        }}>
+        <span>
           <img src={LVG} alt="..." height={21} width={21} />
           &nbsp;&nbsp;Modification en cours...
         </span>
       </div>
       <div className="profile">
-        <div className="ofs">
-          <div><span>Mot de passe&nbsp;</span><span>&nbsp;&nbsp;/&nbsp;&nbsp;Réinitialisation</span></div>
+        <div className="ofs22">
+          <span className='zsirfddhf'>Mot de passe&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;Réinitialisation</span>
         </div>
         <div className="usfuovuoousuov">
-          
-          <div  className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
+          <div className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
             <div className="OFSUV7934NF">
-              Utilisateur désigné&nbsp;&nbsp;:&nbsp;&nbsp;{name && name}
+              Utilisateur désigné&nbsp;&nbsp;:&nbsp;&nbsp;{name}
             </div>
           </div>
-          <div  className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
+          <div className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
             <div className="OFSUV7934NF">Nouveau mot de passe</div>
             <div className="ivz7979n">
-              <input 
-                onChange={(e)=>{
-                  setpassword(e.target.value);
-                  if(isDone === true){
-                    setisDone(false);
-                  }
-                }}
+              <input
+                onChange={(e) => handlePasswordChange(e.target.value)}
                 value={password}
-                type="password" 
+                type={passwordVisibility ? 'text' : 'password'}
                 disabled={loadingModification}
-                placeholder='Veuillez saisir votre nouveau mot de passe...'  
+                placeholder="Veuillez saisir votre nouveau mot de passe..."
               />
-            </div>
-          </div>
-          <div  className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
-            <div className="OFSUV7934NF">Confirmer le mot de passe </div>
-            <div className="ivz7979n">
-              <input    
-                onChange={(e)=>{
-                  setconfirmpassword(e.target.value);
-                  if(isDone === true){
-                    setisDone(false);
-                  }
-                }}
-                value={confirmpassword}
-                type="password" 
-                disabled={loadingModification}
-                placeholder='Veuillez re-saisir votre nouveau mot de passe...'  
-              />
-            </div>
-          </div>
-          <div  className={isModifierMotDePasseClicked ? "sfovwdsfovwd modifierMotDePasse8modifierMotDePasse8" : "sfovwdsfovwd"}>
-            <button className='modifierMotDePasse8'
-              disabled={loadingModification}
-              onClick={()=>{
-                setisModifierMotDePasseClicked(false);
-                if(from === "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjM0NTY3ODkwLCJ1c2VyX25hbWUiOiJKb2huIERvZSIsImV4cCI6MTY1Mzk0MjAwMH0.YXZhdGVnaW9uZW5vZGVibG9nYXMak8ab8ac890moplaimfok666"){
-                  navigate('/personnels')
-                }
-                else{
-                  navigate('/clients');
-                }
-              }}
-            >
+              <div className="showOrHIde" onClick={togglePasswordVisibility}>
               {
-                isDone ? "Retour" : "Annuler"
+                passwordVisibility ? <i className='fa-solid fa-eye-slash'></i> : <i className='fa-solid fa-eye'></i>
               }
-            </button>
-            <button className='modifierMotDePasse8'
+              </div>
+            </div>
+          </div>
+        
+          <div className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
+            <div className="OFSUV7934NF">Confirmer le mot de passe</div>
+            <div className="ivz7979n">
+              <input
+                onChange={(e) => setconfirmpassword(e.target.value)}
+                value={confirmpassword}
+                type={passwordVisibility ? 'text' : 'password'}
+                disabled={loadingModification}
+                placeholder="Veuillez re-saisir votre nouveau mot de passe..."
+              />
+                 <div className="showOrHIde" onClick={togglePasswordVisibility}>
+              {
+                passwordVisibility ? <i className='fa-solid fa-eye-slash'></i> : <i className='fa-solid fa-eye'></i>
+              }
+              </div>
+            </div>
+          </div>
+
+          {password && (
+              <div className="password-helper">
+                <p className={passwordValidation.length ? 'valid' : 'invalid'}>• Au moins 8 caractères</p>
+                <p className={passwordValidation.uppercase ? 'valid' : 'invalid'}>• Une lettre majuscule</p>
+                <p className={passwordValidation.lowercase ? 'valid' : 'invalid'}>• Une lettre minuscule</p>
+                <p className={passwordValidation.digit ? 'valid' : 'invalid'}>• Un chiffre</p>
+                <p className={passwordValidation.specialChar ? 'valid' : 'invalid'}>• Un caractère spécial</p>
+              </div>
+            )}
+
+          <div
+            className={isModifierMotDePasseClicked ? "sfovwdsfovwd modifierMotDePasse8modifierMotDePasse8" : "sfovwdsfovwd"}
+          >
+            <button
+              className="modifierMotDePasse8"
               disabled={loadingModification}
-              onClick={()=>{
-                handleUpdatePassword();
-              }}
+              onClick={() => navigate(from === "someToken" ? '/personnels' : '/clients')}
             >
-              Enregistrer les modifications 
+              {isDone ? "Retour" : "Annuler"}
+            </button>
+            <button className="modifierMotDePasse8" disabled={loadingModification} onClick={handleUpdatePassword}>
+              Enregistrer les modifications
             </button>
           </div>
         </div>

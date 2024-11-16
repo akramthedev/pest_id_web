@@ -15,8 +15,7 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 const Setting = () => {
   const [type, setType] = useState(null);
   const [token, setToken] = useState(null);
-  
-  
+ 
   // Separate states for each switch
   const [isNotificationsPush, setIsNotificationsPush] = useState(false);
   const [isAbbonnement, setIsAbbonnement] = useState(false);
@@ -35,6 +34,30 @@ const Setting = () => {
   const [messageResponse, setmessageResponse] = useState(null);
 
  
+  const [passwordVisibility, setPasswordVisibility] = useState(false);  
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility); 
+  };
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    digit: false,
+    specialChar: false,
+  });
+
+  const handlePasswordChange = (value) => {
+    setpassword(value);
+    setPasswordValidation({
+      length: value.length >= 8,
+      uppercase: /[A-Z]/.test(value),
+      lowercase: /[a-z]/.test(value),
+      digit: /[0-9]/.test(value),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(value),
+    });
+  };
+
 
   const fetchInfosUser = () => {   
     setLoader(true);
@@ -54,33 +77,43 @@ const Setting = () => {
 
 
 
+  const setResponseMessage = (message, isError) => {
+    setisErrorResponse(isError);
+    setmessageResponse(message);
+    setshowItResponse(true);
+    setTimeout(() => setshowItResponse(false), 4500);
+  };
+
+  const resetFields = () => {
+    setpassword('');
+    setconfirmpassword('');
+    
+    setPasswordValidation({
+      length: false,
+      uppercase: false,
+      lowercase: false,
+      digit: false,
+      specialChar: false,
+    });
+  };
+
+
+
+
 
   const handleUpdatePassword = async()=>{
     
-    if((password !== confirmpassword) && (password.length !== confirmpassword.length)){
-      if(!showItResponse){
-        setisErrorResponse(true);
-        
-        setmessageResponse("le mot de passe et la confirmation ne sont pas identiques.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);}
-      return;     
+ 
 
+    if (password !== confirmpassword) {
+      setResponseMessage('Les mots de passe ne correspondent pas.', true);
+      return;
     }
-    else if(confirmpassword.length <5 || password.length < 5){
-      if(!showItResponse){
-          setisErrorResponse(true);
-          
-          setmessageResponse("Le mot de passe doit contenir au mois 5 caractères.");
-          setshowItResponse(true);
-          setTimeout(()=>{          
-            setshowItResponse(false);
-          }, 4500);}
-        return;
+    if (Object.values(passwordValidation).includes(false)) {
+      setResponseMessage('Le mot de passe ne remplit pas tous les critères.', true);
+      return;
     }
-
+ 
     try{
       setLoadingModification(true);
       const userId = localStorage.getItem('userId');
@@ -98,25 +131,9 @@ const Setting = () => {
 
       if(resp.status === 200){
         
+         resetFields();
+          setResponseMessage('Le mot de passe a été modifié avec succès.', false);
         
-       
-        if(!showItResponse){
-        setisErrorResponse(false);
-        setmessageResponse("Votre mot de passe a été modifié avec succès.");
-        setshowItResponse(true);
-        setTimeout(()=>{          
-          setshowItResponse(false);
-        }, 4500);
-
-      }
-
-        
-       
-
-
-        
-
-
         setpassword("");
         setconfirmpassword('');
         setLoadingModification(false);
@@ -299,13 +316,16 @@ const Setting = () => {
             <div className="OFSUV7934NF">Nouveau mot de passe</div>
             <div className="ivz7979n">
               <input 
-                onChange={(e)=>{
-                  setpassword(e.target.value);
-                }}
+                onChange={(e)=>{handlePasswordChange(e.target.value)}}
                 value={password}
-                type="password" 
+                type={passwordVisibility ? 'text' : 'password'} 
                 placeholder='Veuillez saisir votre nouveau mot de passe...'  
               />
+               <div className="showOrHIde" onClick={togglePasswordVisibility}>
+              {
+                passwordVisibility ? <i className='fa-solid fa-eye-slash'></i> : <i className='fa-solid fa-eye'></i>
+              }
+              </div>
             </div>
           </div>
           <div  className="sfovwdsfovwd sfovwdsfovwd2 sfovwdsfovwd33">
@@ -316,11 +336,28 @@ const Setting = () => {
                   setconfirmpassword(e.target.value);
                 }}
                 value={confirmpassword}
-                type="password" 
+                type={passwordVisibility ? 'text' : 'password'} 
                 placeholder='Veuillez re-saisir votre nouveau mot de passe...'  
               />
+               <div className="showOrHIde" onClick={togglePasswordVisibility}>
+              {
+                passwordVisibility ? <i className='fa-solid fa-eye-slash'></i> : <i className='fa-solid fa-eye'></i>
+              }
+              </div>
             </div>
           </div>
+
+          {password && (
+              <div className="password-helper">
+                <p className={passwordValidation.length ? 'valid' : 'invalid'}>• Au moins 8 caractères</p>
+                <p className={passwordValidation.uppercase ? 'valid' : 'invalid'}>• Une lettre majuscule</p>
+                <p className={passwordValidation.lowercase ? 'valid' : 'invalid'}>• Une lettre minuscule</p>
+                <p className={passwordValidation.digit ? 'valid' : 'invalid'}>• Un chiffre</p>
+                <p className={passwordValidation.specialChar ? 'valid' : 'invalid'}>• Un caractère spécial</p>
+              </div>
+            )}
+
+
           </>
         }
         
