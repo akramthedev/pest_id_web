@@ -317,3 +317,33 @@
   visibility: visible;
   opacity: 1;
 }
+
+
+
+
+.addGlassMor{
+
+  height: 35px !important;
+  width: 35px !important;
+  z-index: 999999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.zrsiqhfduhduq{
+  background-color:#ebebeb !important;
+  position: absolute;
+  z-index: 9999999;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  border-radius: 50%;
+}
+.zrsiqhfduhduq i{
+  color: #579519;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./index.css";
+import ImageCarousel from '../../Components/ImageCarousel';
 import NavBar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,11 +12,7 @@ import LVG from './Loader.gif'
 import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
 import ErrorSuccess from '../../Components/ErrorSuccess';
-
-
-
-
-
+ 
 
 
 const actionTemplate = (params, 
@@ -36,13 +33,7 @@ const actionTemplate = (params,
     doFctOne
   ) => {
   
-
-    
-
-
-
-
-
+ 
 
 
 
@@ -128,49 +119,15 @@ const actionTemplate = (params,
 
   
   const handleView = async () => {
-
     if(params.row.farm_id !== null && params.row.farm_id !== "---"){
-      setSelectedFarm({ 
-        value : params.row.farm_id,
-        label : params.row.farm_name
-      });
-      setCalculToEdit({
-        ...calculToEdit, 
-        farm_id : params.row.farm_id,
-        farm_name : params.row.farm_name
-      });
+      setCalculToEdit(params.row);
+      setshowClicked(!showClicked);
+    };
+  }
 
 
-      const selectedFarmX = farms.find(farm => farm.id === params.row.farm_id);
-      if (selectedFarmX) {
-        const greenhouseOptions = selectedFarmX.serres.map(serre => ({
-          value: serre.id,
-          label: serre.name
-        }));
-        setGreenhouses(greenhouseOptions);
-        //setplaques([]);
-      } else {
-        setGreenhouses([]);
-      }
 
 
-      if(params.row.serre_id !== null && params.row.serre_id !== "---"){
-        setSelectedGreenhouse({
-          value : params.row.serre_id,
-          label : params.row.serre_name
-        });
-        setCalculToEdit({
-          ...calculToEdit, 
-          serre_id : params.row.serre_id,
-          serre_name : params.row.serre_name
-        });
-      }
-    }
-
-    setCalculToEdit(params.row);
-    setshowClicked(!showClicked);
-
-  };
 
 
   const handleDelete = async () => {
@@ -623,10 +580,16 @@ const Calculations = () => {
           });
  
           formData.append('user_id', parseInt(userIdNum));
-          formData.append('plaque_id', idPlaque);
+          if(idPlaque){
+            formData.append('plaque_id', idPlaque);
+          }
           formData.append('created_at', new Date().toISOString().slice(0, 19).replace('T', ' '));
-          formData.append('serre_id', idSerre);
-          formData.append('farm_id', idFarm);
+          if(idSerre){
+            formData.append('serre_id', idSerre);
+          }
+          if(idFarm){
+            formData.append('farm_id', idFarm);
+          }
 
 
           const response = await axios.post(`${ENDPOINT_API}create_prediction`, formData, {
@@ -909,17 +872,54 @@ const Calculations = () => {
         {/*   show Calculation Images    */}
               
         <div className={showClicked ? "popUp  showpopUp" : "popUp "}>
-                  <div className="contPopUp popUp1 popUp1popUp1popUp1">
-            <div className="caseD11">
-              <span>Informations&nbsp;du</span><span>&nbsp;Calcul</span>
-            </div>
-            {
+          {
             calculToEdit !== null && 
-              <>
-               
-              </>
-            }
-          </div>
+              <div className="contPopUp2798326">
+                <button
+                  className='fermeTaGeule'
+                  onClick={()=>{
+                    setshowClicked(false);                    
+                    setCalculToEdit(null);
+                  }}
+                >
+                  <i className='fa-solid fa-xmark' ></i>
+                </button>
+                <div className="caseD11 caseD11caseD11">
+                  <span>Images&nbsp;du</span><span>&nbsp;Calcul</span>
+                </div>
+                <div className="sudiwfh">
+                  {
+                    calculToEdit.images.length === 0 ? 
+                    <div className="casAks casAks2"> 
+                      <span>Aucune donnée</span>
+                    </div>
+                    :
+                    <div className="casAks">
+                      <ImageCarousel images={calculToEdit.images} />
+                    </div>
+                  }
+                  <div className="casAkDs">
+                    <div className="zirsqfd">
+                      <div className="rowInFoS">
+                        <span>Ferme :</span> <span>{calculToEdit.farm_name}</span>
+                      </div>
+                      <div className="rowInFoS">
+                        <span>Serre :</span> <span>{calculToEdit.serre_name}</span>
+                      </div>
+                      <div className="rowInFoS">
+                        <span>Plaque :</span> <span>{calculToEdit.plaque_name}</span>
+                      </div>
+                      <div className="rowInFoS">
+                        <span className='eyvfyrziyiyzfiyfz'>Nombre de Tuta :</span> <span className='eyvfyrziyiyzfiyfz'>{calculToEdit.class_B}</span>
+                      </div>
+                      <div className="rowInFoS">
+                        <span className='eyvfyrziyiyzfiyfz2'>Nombre de Mouche :</span> <span className='eyvfyrziyiyzfiyfz2'>{calculToEdit.class_A}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>                
+              </div>
+          }
         </div>
       
 

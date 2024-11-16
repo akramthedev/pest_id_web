@@ -215,6 +215,16 @@
     min-width: 100px;
     justify-content: center;
 }
+
+ 
+.caseD11caseD11{
+    height: 70px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    min-width: 100px;
+    justify-content: center;
+}
 .caseD111{
     height: 80px;
 }
@@ -1323,3 +1333,157 @@
     height: 366px !important; 
     max-height: 366px !important;
   }
+
+
+
+
+
+.contPopUp2798326{    
+    position: relative;
+    background-color: #ffffff;
+    width: calc(100% - 5rem);
+    height: calc(100% - 5rem);
+    max-height: 1100px;
+    max-width: 600px;
+    border-radius: 0.7rem;
+    position: relative;
+    padding: 0 2rem;
+    padding-bottom: 1rem;
+}
+
+
+.sudiwfh{
+    height: calc(100% - 70px);
+    width: 100%;
+}
+
+.casAks{
+    padding: 1rem 4rem;
+    height: calc(100% - 200px);
+    width: 100%;
+}
+.casAkDs{
+    height: 200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zirsqfd{
+    max-width: 550px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.rowInFoS{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+
+.rowInFoS span:first-child{
+    font-weight: 600;
+}
+
+.eyvfyrziyiyzfiyfz{
+    color: blueviolet !important;
+    font-weight: 600 !important;
+}
+
+.eyvfyrziyiyzfiyfz2{
+    color: #003cff !important;
+    font-weight: 600 !important;
+}
+
+
+.casAks span{
+    color: gray;
+    font-size: 15px;
+}
+
+.casAks2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+/* Container styling for the carousel */
+.carousel-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Styling for individual slides */
+.carousel-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for images in the carousel */
+.carousel-image {
+    width: 100% !important;
+    margin: 0 auto !important;
+    height: auto !important;
+    object-fit :scale-down !important;
+    border-radius: 8px;
+}
+ 
+/* Adjust padding and alignment for the parent containers */
+.sudiwfh {
+    height: calc(100% - 70px);
+    width: 100%;
+}
+
+.casAks {
+    padding: 0 !important;
+    height: calc(100% - 200px);
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Optional: Style for the "No Data" message */
+.casAks2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #999;
+}
+
+
+
+.fermeTaGeule{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    background-color: #67c10c;
+    transition: .1s all ease-in-out;
+    cursor: pointer;
+}
+.fermeTaGeule:hover{
+    background-color: #519a08;
+
+}
+
+.fermeTaGeule i{
+    color: white;
+    font-size: 1.2rem;
+}
