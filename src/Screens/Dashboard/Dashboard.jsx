@@ -565,19 +565,6 @@ const Dashboard = () => {
   };
 
 
-
-  
-
-
-
-
-
-
-
-
-
-
- 
   
 
 
@@ -588,6 +575,77 @@ const Dashboard = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [dailySumsX, setDailySumsX] = useState({});
+  const [selectedFarm, setSelectedFarm] = useState(null);
+  const [selectedSerre, setSelectedSerre] = useState(null);
+  const [selectedPlaque, setSelectedPlaque] = useState(null);
+  const [loadingAllFarms, setloadingAllFarms] = useState(true);
+
+
+
+
+  const fetchDataFarmsWithSerresWithPlaquess = async () => {
+    try {
+      setloadingAllFarms(true);
+      setoptions([]);
+      const userId = localStorage.getItem('userId');
+      const type = localStorage.getItem('type');
+      const token = localStorage.getItem('token'); 
+
+      let userIdNum = null
+
+      if(type === "staff"){
+        
+        const responseAdminId = await axios.get(`${ENDPOINT_API}getUserByIdAndHisStaffData/${parseInt(userId)}`, {
+        
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if(responseAdminId.status === 200){
+          userIdNum = responseAdminId.data.staffs[0].admin_id;
+        }
+        else{ 
+          setloadingAllFarms(false);
+          return;
+        }
+
+      }
+      else{
+        userIdNum = userId;
+      }
+
+      
+      const response = await axios.get(`${ENDPOINT_API}getFarmsWithGreenhousesWithPlaques/${parseInt(userIdNum)}/${localStorage.getItem('type')}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.status === 200) {
+          setFarms(response.data);
+      
+          const newOptions = response.data.map((farm) => ({
+              value: farm.id,
+              label: farm.name,
+          }));
+      
+          setoptions(newOptions);
+      }
+      else{
+        console.log("Not Fetched All Farms With Their Serres");
+      }
+    } catch (error) {
+      console.error('Erreur :', error.message);
+    } finally {
+      setloadingAllFarms(false);
+    }
+  };
+
+  
+  useEffect(()=>{
+    fetchDataFarmsWithSerresWithPlaquess();
+  },[]);
+ 
 
 
   const fetch____data____second_chart = async () => {
@@ -609,16 +667,30 @@ const Dashboard = () => {
         if (response.data.length === 0) {
           setChartData4(null);
         } else {
-  
-          const transformedData = response.data.map(prediction => ({
-            id: prediction.id,
-            plaque_id: prediction.plaque_id,
-            serre_id: prediction.serre_id,
-            farm_id: prediction.farm_id,
-            created_at: prediction.created_at,
-            Mouches: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_A === 'number' ? prediction.images[0].class_A : 0,
-            Tuta: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_B === 'number' ? prediction.images[0].class_B : 0,
-          }));
+
+
+          const transformedData = await Promise.all(
+            response.data.map(async (prediction, index) => {
+          
+              const totalClassA = prediction.images.reduce((acc, image) => acc + (image.class_A || 0), 0);
+              const totalClassB = prediction.images.reduce((acc, image) => acc + (image.class_B || 0), 0);
+          
+              return {
+                id: prediction.id,
+                farm_id: prediction.farm_id || "---",
+                serre_id: prediction.serre_id || "---",
+                plaque_id: prediction.plaque_id || "---",
+                plaque_name: prediction.plaque ? prediction.plaque.name : "---",
+                Mouches: totalClassA || 0,  // Somme de class_A
+                Tuta: totalClassB || 0,  // Somme de class_B
+                created_at: prediction.created_at ,
+                farm_name: prediction.farm ? prediction.farm.name : "---",
+                serre_name: prediction.serre ? prediction.serre.name : "---",
+              };
+            })
+          );
+          
+          console.warn(transformedData);
   
           const dailySums = transformedData.reduce((acc, prediction) => {
             const date = new Date(prediction.created_at).toISOString().split('T')[0];
@@ -642,7 +714,7 @@ const Dashboard = () => {
           setCustomStartDate(firstDate);
           setCustomEndDate(lastDate);
 
-          setDailySumsX(dailySums)
+          setDailySumsX(dailySums);
 
           const chartData = generateChartData(dailySums, firstDate, lastDate);
           setChartData4(chartData);
@@ -676,6 +748,11 @@ const Dashboard = () => {
     }
     return chartData;
   };
+
+
+
+
+
 
   const handleApplyDateRange = () => {
     const correctedStartDate = new Date(customStartDate) > new Date(customEndDate) ? customEndDate : customStartDate;
