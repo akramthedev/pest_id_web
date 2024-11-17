@@ -148,6 +148,7 @@ function Register() {
         <button disabled={loader} type="submit" className={`login-button ${loader ? 'disabled-button' : ''}`}>
           {loader ? 'Création du compte en cours...' : 'S’inscrire'}
         </button>
+        <br />
         <p className="login-subtitle2" onClick={() => navigate('/login')}>
           Déjà inscrit ? Connectez-vous
         </p>

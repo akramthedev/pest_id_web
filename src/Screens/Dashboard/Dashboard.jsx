@@ -10,6 +10,8 @@ import ErrorSuccess from '../../Components/ErrorSuccess';
 import LVG from './Loader.gif'
 import { LineChart, Line,Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, BarChart, Bar, AreaChart } from 'recharts';
 import CryptoJS from 'crypto-js';
+import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -26,6 +28,22 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    height : "45px",
+    border: '1px solid #ccc',     
+    boxShadow: state.isFocused ? 'none' : 'none', 
+    '&:hover': { border: '1px solid #ccc' } 
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#5fa21b' : '#fff',
+    color: state.isSelected ? '#fff' : '#333',
+    '&:hover': state.isSelected ? { backgroundColor: '#5fa21b', color: '#fff' } : { backgroundColor: '#c9ff93' },
+  }),
+};
+
 
 
 
@@ -38,6 +56,8 @@ const Dashboard = () => {
   const [isSuperAdministrator, setisSuperAdministrator] = useState(null);
   const [loadingType, setloading] = useState(true);
 
+
+  const navigate = useNavigate();
 
   //! card & charts
   const [loading1, setLoading1] = useState(true);
@@ -570,16 +590,95 @@ const Dashboard = () => {
 
 
   const [showDateModal, setShowDateModal] = useState(false);
+  const [showDateModal2, setshowDateModal2] = useState(false);
+
+
   const [defaultStartDate, setDefaultStartDate] = useState(null);
   const [defaultEndDate, setDefaultEndDate] = useState(null);
   const [customStartDate, setCustomStartDate] = useState(null);
-  const [customEndDate, setCustomEndDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null); 
+  
   const [dailySumsX, setDailySumsX] = useState({});
+  const [all_Farms, setall_Farms] = useState([]);
+  
   const [selectedFarm, setSelectedFarm] = useState(null);
   const [selectedSerre, setSelectedSerre] = useState(null);
   const [selectedPlaque, setSelectedPlaque] = useState(null);
-  const [loadingAllFarms, setloadingAllFarms] = useState(true);
 
+  const [Serres, setSerres] = useState(null);
+  const [Plaques, setPlaques] = useState(null);
+  
+  const [loadingAllFarms, setloadingAllFarms] = useState(true);
+  const [options, setoptions] = useState([]);
+
+
+
+
+  const handleSelectionChange = (type, selectedOption) => {
+    if(all_Farms && all_Farms.length !== 0){
+      if (type === "farm") {
+        // Handle farm selection
+        setSelectedSerre(null);  // Clear previously selected greenhouse
+        setSelectedPlaque(null);      // Clear previously selected plaque
+    
+        if (selectedOption !== null) {
+          setSelectedFarm(selectedOption);
+    
+          // Find the selected farm in the farms array
+          const selectedFarm = all_Farms.find(farm => farm.id === selectedOption.value);
+    
+          if (selectedFarm) {
+            // Populate greenhouses
+            const greenhouseOptions = selectedFarm.serres.map((serre) => ({
+              value: serre.id,
+              label: serre.name,
+            }));
+            setSerres(greenhouseOptions);
+          } else {
+            setSerres([]); // Clear greenhouses if no farm matches
+            setPlaques([]);     // Clear plaques
+          }
+        } else {
+          // If no farm is selected, reset everything
+          setSelectedFarm(null);
+          setSerres([]);
+          setPlaques([]);
+        }
+      } else if (type === "serre") {
+        // Handle greenhouse selection
+        setSelectedPlaque(null);  // Clear previously selected plaque
+    
+        if (selectedOption !== null) {
+          setSelectedSerre(selectedOption);
+    
+          // Find the selected greenhouse in the farms array
+          const selectedFarm = all_Farms.find(farm =>
+            farm.serres.some(serre => serre.id === selectedOption.value)
+          );
+    
+          const selectedGreenhouseX = selectedFarm?.serres.find(
+            serre => serre.id === selectedOption.value
+          );
+    
+          if (selectedGreenhouseX) {
+            // Extract the plaques for the selected greenhouse
+            const plaqueOptions = selectedGreenhouseX.plaques.map(plaque => ({
+              value: plaque.id,
+              label: plaque.name,
+            }));
+            setPlaques(plaqueOptions); // Set plaques
+          } else {
+            setPlaques([]); // Clear plaques if no greenhouse matches
+          }
+        } else {
+          // If no greenhouse is selected, reset plaques
+          setSelectedSerre(null);
+          setPlaques([]);
+          setSelectedPlaque(null);
+        }
+      }
+    }
+  };
 
 
 
@@ -622,7 +721,7 @@ const Dashboard = () => {
       });
       
       if (response.status === 200) {
-          setFarms(response.data);
+        setall_Farms(response.data);
       
           const newOptions = response.data.map((farm) => ({
               value: farm.id,
@@ -646,6 +745,18 @@ const Dashboard = () => {
     fetchDataFarmsWithSerresWithPlaquess();
   },[]);
  
+
+
+
+  const filterBasedOnFarmsSerresPlaques = (data)=>{
+    return data.filter(prediction => {
+      const farmMatches = selectedFarm ? prediction.farm_id === selectedFarm.value : true;
+      const serreMatches = selectedSerre ? prediction.serre_id === selectedSerre.value : true;
+      const plaqueMatches = selectedPlaque ? prediction.plaque_id === selectedPlaque.value : true;
+      return farmMatches && serreMatches && plaqueMatches;
+    });
+  }
+
 
 
   const fetch____data____second_chart = async () => {
@@ -689,10 +800,18 @@ const Dashboard = () => {
               };
             })
           );
+
+          console.log("--- Before");
+          console.log(transformedData);
+          console.log("--- After");
           
-          console.warn(transformedData);
-  
-          const dailySums = transformedData.reduce((acc, prediction) => {
+          const filteredData = filterBasedOnFarmsSerresPlaques(transformedData);  
+
+          console.log(filteredData);
+          console.log("___________________");
+
+
+          const dailySums = filteredData.reduce((acc, prediction) => {
             const date = new Date(prediction.created_at).toISOString().split('T')[0];
   
             if (!acc[date]) {
@@ -762,6 +881,18 @@ const Dashboard = () => {
     setShowDateModal(false);
   };
   
+
+
+
+
+
+
+ 
+
+
+
+
+
 
 
 
@@ -921,12 +1052,81 @@ const Dashboard = () => {
   
  
 
-
+  useEffect(() => {
+    if (selectedFarm === null && selectedPlaque === null && selectedSerre === null) {
+      fetch____data____second_chart();
+    }
+  }, [selectedFarm, selectedPlaque, selectedSerre]);
 
 
 
   return (
     <div className='Dashboard'>
+
+
+      <div className={showDateModal2 ? "popUp  showpopUp" : "popUp "}>
+        <div className="contPopUp popUp1 popUp1popUp1popUp12    popUp1popUp1popUp12345 popUp6666Modifi7 popUp6666Modifi7999 popUp6666Modifi79990909">
+          <div className="caseD11 caseD111">
+            <span className='svowdjc svowdjccolors'>Sélectionner la plage de dates&nbsp;</span><span className='svowdjc'>&nbsp;</span>
+          </div>
+              <div className="rowInp">
+                <label>Ferme</label>
+                  <Select
+                    value={selectedFarm}
+                    onChange={(itemValue) => handleSelectionChange("farm", itemValue)} 
+                    options={options}
+                    isDisabled={loadingAllFarms}
+                    placeholder="Choisissez une option"
+                    styles={customStyles}
+                  />
+              </div>
+              <div className="rowInp">
+                  <label>Serre</label>
+                  <Select
+                    value={selectedSerre}
+                    onChange={(itemValue) => handleSelectionChange("serre", itemValue)} 
+                    options={Serres}
+                    isDisabled={!selectedFarm}
+                    placeholder="Choisissez une option"
+                    styles={customStyles}
+                  />
+              </div>
+              <div className="rowInp">
+                  <label>Plaque</label>
+                  <Select
+                    value={selectedPlaque}
+                    onChange={(value) => setSelectedPlaque(value)} 
+                    options={Plaques}
+                    isDisabled={!selectedSerre}
+                    placeholder="Choisissez une option"
+                    styles={customStyles}
+                  />
+              </div>
+            <div className="rowInp rowInpModified">
+                <button 
+                  disabled={loadingAllFarms || Loading4}
+                  className='jofzvno' 
+                  onClick={()=>{
+                    setshowDateModal2(false);
+                  }} 
+                >
+                  Fermer
+                </button>
+                <button 
+                  disabled={loadingAllFarms || Loading4}
+                  onClick={()=>{
+                    fetch____data____second_chart();
+                    setshowDateModal2(false);
+                  }}
+                  className={ "efvofvz22 efvofvz22efvofvz22efvofvz2288"} 
+                >
+                {
+                  "Enregistrer la modification"
+                }
+                </button>
+            </div>
+        </div>
+      </div>
 
 
 
@@ -997,12 +1197,12 @@ const Dashboard = () => {
                 <div className="caseD1 caseD1mod">
                   <span>Tableau</span><span>&nbsp;de Board</span>
                   {
-                      loadingType || loading1 || Loading2 || Loading3 ?
+                      loadingType || loading1 || Loading2 || Loading3 || loadingAllFarms ?
                       <>
                         <img style={{marginLeft : "1.3rem"}} src={LVG} alt="..." height={23} width={23} />
                       </>
                       :
-                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{setRefresh(!refresh)}} disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
+                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{navigate(0);}}  disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
                   }
                 </div>
               </div>
@@ -1024,7 +1224,7 @@ const Dashboard = () => {
                         <img style={{marginLeft : "1.3rem"}} src={LVG} alt="..." height={23} width={23} />
                       </>
                       :
-                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{setRefresh(!refresh)}} disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
+                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{navigate(0);}}  disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
                   }
                 </div>
               </div>
@@ -1193,16 +1393,9 @@ const Dashboard = () => {
                 {
                   Loading4 === false && 
                   <>
-                  {
-                    chartData4 && 
-                    <>
+                   
                       <div className="colorss">
                     <div className="case9887253">
-                      <div className="iosfvijsv89435 iosfvijsv894352">
-                        <div className="meaningCARO6">
-                          Nombre d'insectes sélectionnés par jour :
-                        </div>
-                      </div>
                       <div className="iosfvijsv89435">
                         <div className="caro"
                           onClick={()=>{
@@ -1235,14 +1428,37 @@ const Dashboard = () => {
                     </div>
                     <div className="case8243527">
                       <button
+                        onClick={()=>{
+                          setSelectedFarm(null);
+                          setSelectedPlaque(null);
+                          setSelectedSerre(null);
+                          setChartData4(null);
+                          setDailySumsX(null);
+                          setCustomEndDate(null);
+                          setCustomStartDate(null); 
+                          setDefaultEndDate(null);
+                          setDefaultStartDate(null);
+                          fetch____data____second_chart();
+                        }}    
+                      >
+                        <i className='fa-solid fa-arrows-rotate'></i>&nbsp;&nbsp;Rafraîchir
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <button
+                        onClick={() => setshowDateModal2(true)}
+                      >
+                        <i className='fa-solid fa-leaf'></i>&nbsp;&nbsp;Filtrer par Ferme(s)
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <button
                          onClick={() => setShowDateModal(true)}
                       >
-                        <i className='fa-solid fa-pen'></i>&nbsp;&nbsp;Modifier la plage de dates
+                        <i className='fa-solid fa-calendar-days'></i>&nbsp;&nbsp;Filtrer par Date(s)
                       </button>
                     </div>
                 </div>
-                    </>
-                  }
+                    
+                
                   </>
                 }
               {
@@ -1355,7 +1571,7 @@ const Dashboard = () => {
                         <img style={{marginLeft : "1.3rem"}} src={LVG} alt="..." height={23} width={23} />
                       </>
                       :
-                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{setRefresh(!refresh)}} disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
+                      <button className='isbvdussofbvsuofbvousf' onClick={()=>{navigate(0);}} disabled={loadingType || Loading2 || Loading3 || loading1} ><i className='fa-solid fa-arrows-rotate' ></i></button>
                   }
                 </div>
               </div>
@@ -1538,11 +1754,6 @@ const Dashboard = () => {
                     <>
                       <div className="colorss">
                     <div className="case9887253">
-                      <div className="iosfvijsv89435 iosfvijsv894352">
-                        <div className="meaningCARO6">
-                          Nombre d'insectes sélectionnés par jour :
-                        </div>
-                      </div>
                       <div className="iosfvijsv89435">
                         <div className="caro"
                           onClick={()=>{

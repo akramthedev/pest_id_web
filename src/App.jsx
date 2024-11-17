@@ -3,6 +3,7 @@ import './App.css';
 import Home from "./Screens/Home/Home";
 import Login from "./Screens/Auth/Login";
 import Todo from './Todo';
+import CheckOTP from './Screens/Auth/CheckOTP';
 import OtherProfile from './Screens/Profile/OtherProfile';
 import PasswordConfig from './Screens/PasswordConfig/PasswordConfig';
 import Profile from "./Screens/Profile/MyProfile";
@@ -15,6 +16,11 @@ import Calculations from "./Screens/Dashboard/Calculations";
 import Fermes from "./Screens/Dashboard/Fermes";
 import Broadcast from "./Screens/Broadcast/Broadcast";
 import Activity from "./Screens/Activity/Activity";
+
+import NewPassword from './Screens/Auth/NewPassword';
+import ForgotPassword from "./Screens/Auth/ForgotPassword";
+
+
 import About from "./Screens/About/About";
 import Setting from './Screens/Setting/Setting';
 import DashboardFromViewOfSuperAdmin from "./Screens/Dashboard/DashboardFromViewOfSuperAdmin";
@@ -35,7 +41,9 @@ function App() {
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
         <Route path="/about" element={<About />} />
-
+        <Route path="/ForgotPassword" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />}  />
+        <Route path="/CheckOTP" element={!isAuthenticated ? <CheckOTP /> : <Navigate to="/" />}  />
+        <Route path="/NewPassword" element={!isAuthenticated ? <NewPassword /> : <Navigate to="/" />}  />
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />

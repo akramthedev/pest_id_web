@@ -71,6 +71,8 @@ function Login() {
       if (response.status === 200) {
         const token = response.data.token;
         const user = response.data.user;
+
+        localStorage.removeItem("EmailOfRecup");
         localStorage.setItem('token', token);
 
         localStorage.setItem('userId', user.id);
@@ -164,7 +166,9 @@ function Login() {
           onChange={(e) => handleInputChange(e, 'email')}
         />
         
-        <label className="login-label" htmlFor="password">Mot de passe</label>
+        <label className="login-label" htmlFor="password">Mot de passe   <p className="login-subtitle2" onClick={() => navigate('/ForgotPassword')}>
+          Mot de passe oublié ?
+        </p></label>
         <input
           type="password"
           id="password"
@@ -174,7 +178,7 @@ function Login() {
           onChange={(e) => handleInputChange(e, 'password')}
         />
         
-        {errors.general && <p className="error-message">{errors.general}</p>}
+      
 
         <button 
           disabled={loader}
@@ -184,10 +188,12 @@ function Login() {
         {
           loader ? "Connexion en cours..." : "Se connecter"  
         }
-        </button>        
+        </button>      
+        <br />  
         <p className="login-subtitle2" onClick={() => navigate('/become-member')}>
           Nouveau ici ? Inscrivez-vous
         </p>
+       
       </form>
     </div>
   );

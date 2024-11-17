@@ -841,7 +841,7 @@ useEffect(()=>{
                     }}
                     className='uosruofdvc'
                   >
-                    Modifier le mot de passe
+                    Modifier son mot de passe
                   </button>
                 </div>
               </>

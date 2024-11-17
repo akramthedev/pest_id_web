@@ -32,10 +32,10 @@ const PopUp = () => {
   return (
     <div className={!isNoticeOfBroadCastSeen ? "popUpkaka " : "popUpkaka showXuX"} >
       <div className="new">
-        Nouveau Broadcast
+      ✨&nbsp;Nouveau Message
       </div>
       <div className="newdesc">
-        Un nouveau broadcast est disponible. Ouvrez-le pour voir les informations.
+        Vous avez un nouveau message. Cliquez pour en apprendre davantage.
       </div>
       <div className="ouvrir">
         <button
@@ -44,7 +44,7 @@ const PopUp = () => {
             navigate("/broadcast")
           }}
         >
-          En savoir plus
+          Voir le message
         </button>
       </div>
     </div>
