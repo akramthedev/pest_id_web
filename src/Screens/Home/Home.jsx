@@ -93,7 +93,7 @@ const Home = () => {
             <button 
               className='reserverD '
               onClick={()=>{
-                navigate("/appointment/schedule");
+                navigate("/book-demo");
               }}
             >
               Réserver une Démo

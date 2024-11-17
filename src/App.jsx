@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Home from "./Screens/Home/Home";
+import BookDemo from "./Screens/Home/BookDemo"
+import Contact from './Screens/Home/Contact';
 import Login from "./Screens/Auth/Login";
 import Todo from './Todo';
 import CheckOTP from './Screens/Auth/CheckOTP';
@@ -39,11 +41,13 @@ function App() {
         <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Home />} />
         <Route path="/become-member" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
+        <Route path="/book-demo" element={ <BookDemo /> } />
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
         <Route path="/about" element={<About />} />
         <Route path="/ForgotPassword" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />}  />
         <Route path="/CheckOTP" element={!isAuthenticated ? <CheckOTP /> : <Navigate to="/" />}  />
         <Route path="/NewPassword" element={!isAuthenticated ? <NewPassword /> : <Navigate to="/" />}  />
+        <Route path="/contact" element={  <Contact /> }  />
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient/:typeClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
