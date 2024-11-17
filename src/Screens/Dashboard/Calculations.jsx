@@ -873,6 +873,9 @@ const Calculations = () => {
         if (predictionsResponse.status === 200) {
           console.log(predictionsResponse.data);
           let i = 0;
+
+          let predictionWithMaximumValues = null;
+          
           const transformedData = await Promise.all(
             predictionsResponse.data.map(async (item, index) => {
               let createdAt = formatDateForCreatedAt(item.created_at);

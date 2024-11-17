@@ -64,12 +64,12 @@ function ForgotPassword() {
         setEmail('')
 
         if(!showItResponse){
-          setisErrorResponse(true);
+          setisErrorResponse(false);
           setmessageResponse(`Un code à 6 chiffre a été envoyé à votre adresse email !`);
           setshowItResponse(true);
           setTimeout(()=>{          
             setshowItResponse(false);
-            navigate('/NewPassword');
+            navigate('/CheckOTP');
           }, 4500);} 
       }
       else{

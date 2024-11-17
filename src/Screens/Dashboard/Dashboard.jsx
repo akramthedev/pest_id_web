@@ -19,7 +19,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc', width : "200px" }}>
         <div style={{ color: 'black', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#" ,fontWeight : "500", }} >Date :</span>{`${label}`}</div>
-        <div style={{ color: '#da0404', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#da0404" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
+        <div style={{ color: '#ffae00', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#ffae00" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
         <div style={{ color: '#5fa21b', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#5fa21b" ,fontWeight : "500", }} >Tuta :</span> {` ${payload.find(p => p.dataKey === 'Tuta')?.value || 0}`}</div>
        </div>
     );
@@ -779,7 +779,6 @@ const Dashboard = () => {
           setChartData4(null);
         } else {
 
-
           const transformedData = await Promise.all(
             response.data.map(async (prediction, index) => {
           
@@ -925,17 +924,30 @@ const Dashboard = () => {
         } else {
           let predictionWithMaximumValues = null;
   
-          const transformedData = response.data.map(prediction => {
-            return {
-              id: prediction.id,
-              plaque_id: prediction.plaque_id,
-              serre_id: prediction.serre_id,
-              farm_id: prediction.farm_id,
-              created_at: prediction.created_at && prediction.created_at,
-              class_A: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_A === 'number' ? prediction.images[0].class_A : 0,
-              class_B: Array.isArray(prediction.images) && typeof prediction.images[0]?.class_B === 'number' ? prediction.images[0].class_B : 0,
-             };
-          });
+
+         console.warn(response.data);
+          const transformedData = await Promise.all(
+            response.data.map(async (item, index) => {
+          
+              const totalClassA = item.images.reduce((acc, image) => acc + (image.class_A || 0), 0);
+              const totalClassB = item.images.reduce((acc, image) => acc + (image.class_B || 0), 0);
+          
+
+              return {
+                Index: index + 1,
+                id: item.id,
+                plaque_id: item.plaque_id,
+                plaque_name: item.plaque ? item.plaque.name : '---',
+                serre_id: item.serre_id,
+                farm_id: item.farm_id,
+                class_A: totalClassA || 0,  // Somme de class_A
+                class_B: totalClassB || 0,  // Somme de class_B
+                created_at: item.created_at,  // Somme de class_B
+              };
+            })
+          );
+
+          
   
           // No filtering for the last 7 days; we now use the entire data set
           const totalInsects = transformedData.reduce((sum, prediction) => {
@@ -954,6 +966,7 @@ const Dashboard = () => {
           }, {});
   
           setData3(predictionWithMaximumValues);
+          console.warn(predictionWithMaximumValues);
           setData2(moyenne);
   
           // Calculating daily sums over all dates, without filtering to last 7 days
@@ -1447,13 +1460,13 @@ const Dashboard = () => {
                       <button
                         onClick={() => setshowDateModal2(true)}
                       >
-                        <i className='fa-solid fa-leaf'></i>&nbsp;&nbsp;Filtrer par Ferme(s)
+                        <i className='fa-solid fa-leaf'></i>&nbsp;&nbsp;Filtrer par Ferme
                       </button>
                       &nbsp;&nbsp;&nbsp;
                       <button
                          onClick={() => setShowDateModal(true)}
                       >
-                        <i className='fa-solid fa-calendar-days'></i>&nbsp;&nbsp;Filtrer par Date(s)
+                        <i className='fa-solid fa-calendar-days'></i>&nbsp;&nbsp;Filtrer par Date
                       </button>
                     </div>
                 </div>
@@ -1478,7 +1491,7 @@ const Dashboard = () => {
                           >
                             <defs>
                               <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#da0404" stopOpacity={1} />
+                                <stop offset="0%" stopColor="#ffae00" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1531,7 +1544,7 @@ const Dashboard = () => {
                                   animationDuration={1500}
                                   type="monotone"
                                   dataKey="Mouches"
-                                  stroke="#da0404"
+                                  stroke="#ffae00"
                                   fill="url(#gradient1)"
                                   strokeWidth={1.8}
                                 />
@@ -1716,7 +1729,7 @@ const Dashboard = () => {
                       chartData3 ? 
                       <div className='odosfvoufnosfovefsouv222'>
                         <div className="row6632 row66322">
-                          <span>Plaque ID : </span>  <span>{chartData3.plaque_id ? chartData3.plaque_id : "---"}</span>
+                          <span>Plaque : </span>  <span>{chartData3.plaque_name ? chartData3.plaque_name : "---"}</span>
                         </div>
                         {/* {
                           chartData3.farm_id && 
@@ -1787,9 +1800,32 @@ const Dashboard = () => {
                     </div>
                     <div className="case8243527">
                       <button
+                        onClick={()=>{
+                          setSelectedFarm(null);
+                          setSelectedPlaque(null);
+                          setSelectedSerre(null);
+                          setChartData4(null);
+                          setDailySumsX(null);
+                          setCustomEndDate(null);
+                          setCustomStartDate(null); 
+                          setDefaultEndDate(null);
+                          setDefaultStartDate(null);
+                          fetch____data____second_chart();
+                        }}    
+                      >
+                        <i className='fa-solid fa-arrows-rotate'></i>&nbsp;&nbsp;Rafraîchir
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <button
+                        onClick={() => setshowDateModal2(true)}
+                      >
+                        <i className='fa-solid fa-leaf'></i>&nbsp;&nbsp;Filtrer par Ferme
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <button
                          onClick={() => setShowDateModal(true)}
                       >
-                        <i className='fa-solid fa-pen'></i>&nbsp;&nbsp;Modifier la plage de dates
+                        <i className='fa-solid fa-calendar-days'></i>&nbsp;&nbsp;Filtrer par Date
                       </button>
                     </div>
                 </div>
@@ -1814,7 +1850,7 @@ const Dashboard = () => {
                           >
                             <defs>
                               <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#da0404" stopOpacity={1} />
+                                <stop offset="0%" stopColor="#ffae00" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1866,7 +1902,7 @@ const Dashboard = () => {
                                   animationDuration={1500}
                                   type="monotone"
                                   dataKey="Mouches"
-                                  stroke="#da0404"
+                                  stroke="#ffae00"
                                   fill="url(#gradient1)"
                                   strokeWidth={1.8}
                                 />

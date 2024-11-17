@@ -138,23 +138,7 @@ const SideBar = () => {
 
         
 
-        <div 
-          className={`rowOI ${location.pathname === "/calculations" ? 'rowOIactiavted' : ''}`} 
-          onClick={()=>{
-            navigate("/calculations");
-          }}
-        >
-          <div  
-            className={`icons ${location.pathname === "/calculations" ? 'textActi' : ''}`}
-          >
-            <i class="fa-solid fa-square-root-variable"></i>
-          </div>
-          <div  
-            className={`textx ${location.pathname === "/calculations" ? 'textActi' : ''}`}
-          >
-            Mes Calculs
-          </div>
-        </div>
+      
 
 
 
@@ -184,6 +168,25 @@ const SideBar = () => {
           </>
         }
 
+
+
+<div 
+          className={`rowOI ${location.pathname === "/calculations" ? 'rowOIactiavted' : ''}`} 
+          onClick={()=>{
+            navigate("/calculations");
+          }}
+        >
+          <div  
+            className={`icons ${location.pathname === "/calculations" ? 'textActi' : ''}`}
+          >
+            <i class="fa-solid fa-square-root-variable"></i>
+          </div>
+          <div  
+            className={`textx ${location.pathname === "/calculations" ? 'textActi' : ''}`}
+          >
+            Mes Calculs
+          </div>
+        </div>
 
 
       </>

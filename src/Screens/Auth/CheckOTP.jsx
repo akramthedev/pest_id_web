@@ -66,7 +66,7 @@ function CheckOTP() {
       else{
         if(!showItResponse){
         setisErrorResponse(true);
-        setmessageResponse(`${resp.message}`);
+        setmessageResponse(`Le code saisi est invalide.`);
         setshowItResponse(true);
         setTimeout(()=>{          
           setshowItResponse(false);
@@ -118,7 +118,7 @@ function CheckOTP() {
           className={`login-button ${loader ? 'disabled-button' : ''}`}
           >
         {
-          loader ? "Envoi en cours..." : "Recevoir le code OTP"  
+          loader ? "Envoi en cours..." : "Vérifier le code"  
         }
         </button>
         <br />        

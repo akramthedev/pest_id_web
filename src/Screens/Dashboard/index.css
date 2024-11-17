@@ -1099,7 +1099,7 @@
     height: 18px;
     cursor: pointer;
     border-radius: 0.2rem;
-    border:2px solid #da0404;
+    border:2px solid #ffae00;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1107,7 +1107,7 @@
 }
 
 .meaningCARO1{
-    color: #da0404;
+    color: #ffae00;
 
 }
 .caro2{
@@ -1150,7 +1150,7 @@
 }
 
 .caro i{
-    color: #da0404;
+    color: #ffae00;
 
 }
 .caro2 i{
