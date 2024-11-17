@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Home from "./Screens/Home/Home";
+import Page404 from './Screens/Page404'
 import BookDemo from "./Screens/Home/BookDemo"
 import Contact from './Screens/Home/Contact';
 import Login from "./Screens/Auth/Login";
@@ -35,9 +36,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        
-
         <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Home />} />
         <Route path="/become-member" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
@@ -64,7 +62,7 @@ function App() {
         <Route path="/password-configuration/:id/:from/:name" element={isAuthenticated ? <PasswordConfig /> : <Navigate to="/login" />} />
 
         <Route path="/to-do" element={<Todo />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>
   );

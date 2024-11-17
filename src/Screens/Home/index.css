@@ -242,3 +242,35 @@
     from, to { border-color: transparent }
     50% { border-color: rgb(255, 255, 255) }
   }
+
+  .contHome89{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding:  0 !important;
+    padding-bottom: 5rem !important;  
+}
+
+.zrfhhrs{
+    font-size: 6rem;
+    font-weight: 700;
+
+}
+
+.ebsiurfushf{
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+}
+
+.bsifhd button{
+    width: 181px;
+    height: 40px;
+    background-color: #579519;
+    color: white;
+    cursor: pointer;
+    transition: .15s all ease-in-out;
+}
+
+.bsifhd button:hover{
+    background-color: #417112;
+}
