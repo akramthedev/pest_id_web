@@ -12,6 +12,10 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
 import { useNavigate } from 'react-router-dom';
 import ErrorSuccess from '../../Components/ErrorSuccess';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 
 
@@ -160,6 +164,13 @@ const Clients = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
+
+
+  const [loading2OfPredictions, setloading2OfPredictions] = useState(false);
+  const [loading2OfPredictions2, setloading2OfPredictions2] = useState(false);
+  const [ExporterClicked, setExporterClicked] = useState(false);
+
+
   const fetch_data_allUsers = async () => {
     try {
       setLoadingAllUsers(true);
@@ -705,10 +716,160 @@ useEffect(()=>{
       flex: 1 // Allow the column to stretch
     }
   ];
+
+
+
+
+
+
+
+
+
+
+  const fetch_data_allUsersForExcel = async (fileName = 'data.xlsx') => {
+    try {
+      setloading2OfPredictions(true);
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token');
+      
+      const response = await axios.get(`${ENDPOINT_API}users`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.status === 200 ) {
+        let i = 0;
+        const transformedData = response.data.users
+          .filter(user => user.id !== userIdNum && user.type === "admin" &&  user.isEmailVerified === 1)
+          .map(user => {
+            i++; 
+            let createdAt = formatDateForCreatedAt(user.created_at);
+            return {
+              Index: i,
+              Nom_et_Prénom: user.fullName ? user.fullName : "---",
+              Adresse_Email: user.email ? user.email : "---",
+              Téléphone: user.mobile ? user.mobile : "---",
+              Permission: user.canAccess === 1 ? "Autorisé" : "Restreint",
+              Date_de_création: user.created_at ? createdAt : "---",
+            };
+          });
+
+
+          const worksheet = XLSX.utils.json_to_sheet(transformedData);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+          XLSX.writeFile(workbook, fileName);
+
+          
+
+
+      }
+      else{
+      }
+  
+    } catch (error) {
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la récupération des données.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
+      console.error('Erreur:', error.message);
+    } finally {
+      setloading2OfPredictions(false);
+    }
+  };
+  
   
     
     
+  const fetch_data_allUsersforPDF = async (fileName = 'data.xlsx') => {
+    try {
+      setloading2OfPredictions2(true);
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token');
+      
+      const response = await axios.get(`${ENDPOINT_API}users`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.status === 200 ) {
+        let i = 0;
+        const transformedData = response.data.users
+          .filter(user => user.id !== userIdNum && user.type === "admin" &&  user.isEmailVerified === 1)
+          .map(user => {
+            i++; 
+            let createdAt = formatDateForCreatedAt(user.created_at);
+            return {
+              Index: i,
+              Nom_et_Prénom: user.fullName ? user.fullName : "---",
+              Adresse_Email: user.email ? user.email : "---",
+              Téléphone: user.mobile ? user.mobile : "---",
+              Permission: user.canAccess === 1 ? "Autorisé" : "Restreint",
+              Date_de_création: user.created_at ? createdAt : "---",
+            };
+          });
 
+             
+           
+          const columns = [
+            { headerName: "Index", field: "Index" },
+            { headerName: "Nom et prénom", field: "Nom_et_Prénom" },
+            { headerName: "Adresse Email", field: "Adresse_Email" },
+            { headerName: "Téléphone", field: "Téléphone" },
+            { headerName: "Permission", field: "Permission" },
+            { headerName: "Date de création", field: "Date_de_création" },
+          ];
+
+          const doc = new jsPDF();
+
+
+          const tableColumn = columns.map(col => col.headerName); // Array of column headers
+          const tableRows = transformedData.map(row => 
+            columns.map(col => row[col.field]) // Map fields to row data
+          );
+
+          doc.text('PEST ID / Clients', 14, 15);
+          doc.autoTable({
+            head: [tableColumn], // Add headers
+            body: tableRows, // Add rows
+            startY: 20, // Start below the title
+            headStyles: {
+              fillColor: [95, 162, 27],  
+              textColor: [255, 255, 255],
+              fontSize: 12, // Optional: Adjust font size
+              halign: 'center', // Center-align header text
+            },
+          });
+        
+          doc.save(fileName);
+
+      }
+      else{
+     
+      }
+  
+    } catch (error) {
+   
+      if(!showItResponse){
+        setisErrorResponse(true);
+        setmessageResponse("Une erreur est survenue lors de la récupération des données.");
+        setshowItResponse(true);
+        setTimeout(()=>{          
+          setshowItResponse(false);
+        }, 4500);
+      }
+      console.error('Erreur:', error.message);
+    } finally {
+      setloading2OfPredictions2(false);
+    }
+  };
+  
 
 
     
@@ -724,6 +885,44 @@ useEffect(()=>{
         message={messageResponse}  
       />
       
+
+
+      
+      <div className={ExporterClicked ? "popUp  showpopUp kakakakakak1" : "popUp kakakakakak1"}>
+        <div className="kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1">
+              <div className="rowOn9i">
+                <span>Exporter les données</span>
+              </div>
+              <br />
+              <div className="rowOn9i">
+                <button disabled={loading2OfPredictions} className='jackichann' onClick={() => fetch_data_allUsersForExcel('Clients.xlsx')} >
+                  <i className='fa-solid fa-file-excel'></i>&nbsp;&nbsp;&nbsp;
+                  {
+                    loading2OfPredictions ? "Traitement en cours..." : "Sous format Excel"
+                  }
+                </button>
+              </div>
+              <div className="rowOn9ii" />
+              <div className="rowOn9i">
+                <button disabled={loading2OfPredictions2} onClick={() => fetch_data_allUsersforPDF('Clients.pdf')}   className='jackichannS'>
+                <i className='fa-solid fa-file-pdf'></i>&nbsp;&nbsp;&nbsp;{
+                    loading2OfPredictions2 ? "Traitement en cours..." : "Sous format PDF"
+                  }
+                </button>
+              </div>
+              <button 
+                className='srhfduihsuidfwhqhdwfuoqdwhfuo'
+                onClick={()=>{
+                  setExporterClicked(false);
+                }} 
+              >
+                <i className='fa-solid fa-xmark'></i>
+              </button>
+        </div>
+      </div>
+
+
+
       <div className={isDeletedClicked ? "popUp  showpopUp" : "popUp "}>
         <div className="contPopUp popUp1 popUp1popUp1popUp12  popUp1popUp1popUp12345">
           <div className="caseD11">
@@ -1228,7 +1427,7 @@ useEffect(()=>{
             <div className="caseD2">
               <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><div className="tooltipXX">Actualiser</div><i className='fa-solid fa-arrows-rotate' ></i></button>
               <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un client</button>
-              <button  disabled={loadingAllUsers || loadingDelete}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  onClick={()=>{setExporterClicked(true);}}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>
           {

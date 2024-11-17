@@ -57,6 +57,14 @@
     transition: .2s all ease-in-out;
 }
 
+.caseD2 button:last-child, .caseD2 .annulerd2{
+    background-color: rgb(255, 255, 255) !important;
+    color: #5fa21b !important ;
+    width: 120px;
+    border: 1px solid #5fa21b !important;
+    padding: 0 1.2rem !important;
+}
+
 .caseD2 .eofvouszfv11{
     background-color: #5fa21b;
 }
@@ -66,18 +74,16 @@
 }
 
 .caseD2 .eofvouszfv112{
-    background-color: #242424;
+    background-color: #f3f3f3 !important;
 }
 .caseD2 .eofvouszfv112:hover{
-    background-color: #4d4d4d;
-}
-.caseD2 .eofvouszfv112 i{
+    background-color: #f3f3f3 !important;
 }
 
-.caseD2 button:last-child, .caseD2 .annulerd2{
-    background-color: rgb(255, 255, 255) !important;
-    color: #5fa21b !important ;
-    width: 120px;
+.caseD2 .eofvouszfv112, .caseD2 .annulerd2{
+    background-color: #242424 !important;
+    color: white !important ;
+    width: auto !important;
     border: 1px solid #5fa21b !important;
     padding: 0 1.2rem !important;
 }
@@ -1232,18 +1238,17 @@
     position: fixed;
     inset: 0;
     transition: 0.15s all ease-in-out;   
-    z-index: 9999;
+    z-index: 9999999;
 }
 .kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1{
     background-color: #ffffff;
-    min-height: 30vh;
-    width: 100%;
+    height: 270px;
     overflow: hidden;
     position: relative;
     border-radius: 0.7rem;
     width: auto;
     padding: 1rem;
-    min-width: 300px;
+    width: 90%;
     max-width: 500px;
     position: relative;
 }
@@ -1254,16 +1259,16 @@
     width: 100%;
 }
 
-.kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1 button{
+.kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1 .srhfduihsuidfwhqhdwfuoqdwhfuo{
     position: absolute;
     top: 1rem;
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-top-right-radius: 0;
+    border-radius: 50%;
     right: 1rem;
 }
 
@@ -1496,4 +1501,73 @@
 
 .zsuqhdfuhqfhqhfuhqofhoqv{
     width: 200px !important;
+}
+
+.rowOn9i{
+    height: 50px;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.rowOn9i span{
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.rowOn9i .jackichann{
+    height: 100%;
+    font-weight: 500;
+    color: white;
+    font-size: 16px;
+    width: 80%;
+    background-color: #2a8050;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    transition: 0.15s all ease-in-out;
+
+}
+
+
+.rowOn9i .jackichannS {
+    height: 100%;
+    font-weight: 500;
+    color: white;
+    font-size: 16px;
+    width: 80%;
+    background-color: #e80000;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    transition: 0.15s all ease-in-out;
+
+}
+
+.jackichann:hover{
+    background-color: #165c36;
+
+}
+.jackichannS:hover{
+    background-color: #be0000;
+
+}
+
+.rowOn9ii{
+    height: 15px;
+}
+.rowOn9i button{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+.rowOn9i button i{
+    font-size: 1.67rem;
+    color: white;
+}
+
+.caseD22222 .eofvouszfv112{
+    background-color: #242424 !important;
+    color: white !important;
 }

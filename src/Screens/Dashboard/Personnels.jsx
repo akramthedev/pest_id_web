@@ -11,7 +11,9 @@ import formatDateForCreatedAt from '../../Helpers/formatCreatedAt';
 import PopUp from '../../Components/PopUp';
 import { useNavigate } from 'react-router-dom';
 import ErrorSuccess from '../../Components/ErrorSuccess';
-
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 
 
@@ -158,8 +160,10 @@ const Personnels = () => {
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
   const [messageResponse, setmessageResponse] = useState(null);
+  const [loading2OfPredictions, setloading2OfPredictions] = useState(false);
+  const [loading2OfPredictions2, setloading2OfPredictions2] = useState(false);
+  const [ExporterClicked, setExporterClicked] = useState(false);
 
- 
   const navigate = useNavigate();
 
 
@@ -540,6 +544,148 @@ const Personnels = () => {
 
 
 
+  const fetch_data_all_personnelsForExcel = async (fileName = 'data.xlsx') => {
+    try {
+      setloading2OfPredictions(true);
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token');
+      
+      const resp0 = await axios.get(`${ENDPOINT_API}getAdminIdFromUserId/${userIdNum}`,{
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      
+      if (resp0.status === 200) {
+        const response = await axios.get(`${ENDPOINT_API}staffsweb/${resp0.data.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        console.log(response.data);
+        if (response.status === 200) {
+          let i = 0;
+          const transformedData = response.data.map(item => {
+            i++;
+            let createdAt = formatDateForCreatedAt(item.created_at)
+            return {
+              Index : i,
+              Nom_et_prénom : item.user.fullName ? item.user.fullName : "---", 
+              Adresse_Email : item.user.email ? item.user.email : "---", 
+              Téléphone : item.user.mobile ? item.user.mobile : "---", 
+              Date_de_création:  item.created_at ? createdAt : "---",
+            };
+          });
+
+
+                  
+          
+          const worksheet = XLSX.utils.json_to_sheet(transformedData);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+          XLSX.writeFile(workbook, fileName);
+
+
+
+        }
+        else{
+        }
+      }
+      else{
+      }
+  
+    } catch (error) {
+      console.error('Erreur:', error.message);
+    } finally {
+      setloading2OfPredictions(false);
+    }
+  };
+
+
+
+
+
+
+  const fetch_data_all_personnelsForPDF = async (fileName = 'data.xlsx') => {
+    try {
+      setloading2OfPredictions2(true);
+      const userId = localStorage.getItem('userId');
+      const userIdNum = parseInt(userId);
+      const token = localStorage.getItem('token');
+      
+      const resp0 = await axios.get(`${ENDPOINT_API}getAdminIdFromUserId/${userIdNum}`,{
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      
+      if (resp0.status === 200) {
+        const response = await axios.get(`${ENDPOINT_API}staffsweb/${resp0.data.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        console.log(response.data);
+        if (response.status === 200) {
+          let i = 0;
+          const transformedData = response.data.map(item => {
+            i++;
+            let createdAt = formatDateForCreatedAt(item.created_at)
+            return {
+              Index : i,
+              Nom_et_prénom : item.user.fullName ? item.user.fullName : "---", 
+              Adresse_Email : item.user.email ? item.user.email : "---", 
+              Téléphone : item.user.mobile ? item.user.mobile : "---", 
+              Date_de_création:  item.created_at ? createdAt : "---",
+            };
+          });
+
+
+          
+           
+          const columns = [
+            { headerName: "Index", field: "Index" },
+            { headerName: "Nom et prénom", field: "Nom_et_prénom" },
+            { headerName: "Adresse Email", field: "Adresse_Email" },
+            { headerName: "Téléphone", field: "Téléphone" },
+            { headerName: "Date de création", field: "Date_de_création" },
+          ];
+
+          const doc = new jsPDF();
+
+
+          const tableColumn = columns.map(col => col.headerName); // Array of column headers
+          const tableRows = transformedData.map(row => 
+            columns.map(col => row[col.field]) // Map fields to row data
+          );
+
+          doc.text('PEST ID / Personnels', 14, 15);
+          doc.autoTable({
+            head: [tableColumn], // Add headers
+            body: tableRows, // Add rows
+            startY: 20, // Start below the title
+            headStyles: {
+              fillColor: [95, 162, 27],  
+              textColor: [255, 255, 255],
+              fontSize: 12, // Optional: Adjust font size
+              halign: 'center', // Center-align header text
+            },
+          });
+        
+          doc.save(fileName);
+
+          
+
+
+
+        }
+        else{
+        }
+      }
+      else{
+      }
+  
+    } catch (error) {
+      console.error('Erreur:', error.message);
+    } finally {
+      setloading2OfPredictions2(false);
+    }
+  };
+  
+
     
 
   return (
@@ -566,6 +712,44 @@ const Personnels = () => {
           &nbsp;&nbsp;Suppression en cours...
         </span>
       </div>
+
+
+
+
+      <div className={ExporterClicked ? "popUp  showpopUp kakakakakak1" : "popUp kakakakakak1"}>
+        <div className="kakakakakak1kakakakakak1kakakakakak1kakakakakak1kakakakakak1">
+              <div className="rowOn9i">
+                <span>Exporter les données</span>
+              </div>
+              <br />
+              <div className="rowOn9i">
+                <button disabled={loading2OfPredictions} className='jackichann' onClick={() => fetch_data_all_personnelsForExcel('Personnels.xlsx')} >
+                  <i className='fa-solid fa-file-excel'></i>&nbsp;&nbsp;&nbsp;
+                  {
+                    loading2OfPredictions ? "Traitement en cours..." : "Sous format Excel"
+                  }
+                </button>
+              </div>
+              <div className="rowOn9ii" />
+              <div className="rowOn9i">
+                <button disabled={loading2OfPredictions2} onClick={() => fetch_data_all_personnelsForPDF('Personnels.pdf')}   className='jackichannS'>
+                <i className='fa-solid fa-file-pdf'></i>&nbsp;&nbsp;&nbsp;{
+                    loading2OfPredictions2 ? "Traitement en cours..." : "Sous format PDF"
+                  }
+                </button>
+              </div>
+              <button 
+                className='srhfduihsuidfwhqhdwfuoqdwhfuo'
+                onClick={()=>{
+                  setExporterClicked(false);
+                }} 
+              >
+                <i className='fa-solid fa-xmark'></i>
+              </button>
+        </div>
+      </div>
+
+
 
 
 
@@ -898,7 +1082,7 @@ const Personnels = () => {
             <div className="caseD2">
               <button  disabled={LoadinG_All_Personnels}   className='eofvouszfv00 oefbbofoufzuofzs' onClick={()=>{setRefresh(!refresh)}} ><i className='fa-solid fa-arrows-rotate' ></i><div className="tooltipXX">Actualiser </div></button>
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter un personnel</button>
-              <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  onClick={()=>{setExporterClicked(true);}}  className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
             </div>
           </div>
           {

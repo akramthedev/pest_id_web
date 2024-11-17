@@ -1093,10 +1093,9 @@ const Fermes = () => {
                 </>
               }
             </div>
-            <div className="caseD2">
+            <div className="caseD2 caseD22222">
               <button  className='eofvouszfv11'  onClick={()=>{setaddClicked(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une ferme</button>
-              <button  className='eofvouszfv11 eofvouszfv112'  onClick={()=>{setaddClicked2(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une plaque</button>
-              <button   className='eofvouszfv22'><i className='fa-solid fa-download' ></i>&nbsp;Exporter</button>
+              <button  className=' eofvouszfv112'  onClick={()=>{setaddClicked2(true);}} ><i className='fa-solid fa-plus' ></i>&nbsp;Ajouter une plaque</button>
             </div>
           </div>
           {
