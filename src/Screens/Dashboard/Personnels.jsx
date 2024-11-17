@@ -20,7 +20,7 @@ import 'jspdf-autotable';
 
 
 
-const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ,setLoaderPermission,loaderOfPermission, setisDeletedClicked,paramClicked, setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse) => {
+const actionTemplate = (params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked ,setLoaderPermission,loaderOfPermission, setisDeletedClicked,paramClicked, setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse, navigate) => {
 
   
   const handleEdit = () => {
@@ -106,8 +106,18 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
   }
  
 
+
+  const handleViewDashboard = ()=>{
+    const url = `/DashboardFromViewOfSuperAdmin/${params.row.idUser}/${params.row.fullName}/${params.row.type}`;
+    window.open(url, '_blank');
+  }
+
+
   return (
     <div className='uefuvzou'>
+      <button className='uoersf'   onClick={handleViewDashboard}  >
+        <i class="fa-solid fa-chart-simple"></i>
+      </button>
       <button className='uoersf'   onClick={handleView}  >
         <i class="fa-solid fa-eye"></i>
       </button>
@@ -530,7 +540,7 @@ const Personnels = () => {
     },
     { 
       field: 'actions', 
-      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked,setLoaderPermission,loaderOfPermission,setisDeletedClicked,paramClicked,setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse ), 
+      renderCell: (params) => actionTemplate(params, set_all_personnels, setRefresh, refresh, seteditClicked, editClicked, set_personnel_to_edit, personnel_to_edit, setshowClicked, showClicked,setLoaderPermission,loaderOfPermission,setisDeletedClicked,paramClicked,setparamClicked,showItResponse, setisErrorResponse,  setshowItResponse, setmessageResponse,navigate ), 
       headerName: 'Actions', 
       minWidth: 300, 
       headerAlign: 'center', 

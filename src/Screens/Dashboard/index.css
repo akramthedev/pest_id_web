@@ -32,6 +32,11 @@
     font-size: 22px;
     font-weight: 700;
 }
+.caseD1 span em{
+    font-size: 20px;
+    font-weight: 300;
+    color: gray;
+}
 .caseD1 span:first-child{
     color: #5fa21b;
 }

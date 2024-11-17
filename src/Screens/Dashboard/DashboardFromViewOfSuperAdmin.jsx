@@ -32,7 +32,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 const DashboardFromViewOfSuperAdmin = () => {
 
     const params = useParams();
-    const {IDUSERDASHBAORD,nameClient} = params;
+    const {IDUSERDASHBAORD,nameClient,typeClient} = params;
     const [showItResponse, setshowItResponse] = useState(false);
     const [isErrorResponse, setisErrorResponse] = useState(false);
     const [messageResponse, setmessageResponse] = useState(null);
@@ -451,7 +451,7 @@ const DashboardFromViewOfSuperAdmin = () => {
             <div className="containerDash containerDashCustomized1">
               <div className="rowD1">
                 <div className="caseD1 caseD1mod">
-                  <span>Tableau</span><span>&nbsp;de Board&nbsp;&nbsp;:&nbsp;&nbsp;{nameClient && nameClient}</span>
+                  <span>Tableau</span><span>&nbsp;de Board&nbsp;&nbsp;:&nbsp;&nbsp;{nameClient && nameClient}&nbsp;&nbsp;&nbsp;<em>{typeClient && <>-- &nbsp;{typeClient === "staff" ? "Personnel" : "Directeur"}&nbsp;</>}</em></span>
                   {
                     loading1 || Loading2 || Loading3 ?
                       <>
@@ -465,7 +465,7 @@ const DashboardFromViewOfSuperAdmin = () => {
               <div className="rowD2ab">
               <div className="cardX">
                   <div className="rowCardX">
-                    <i class="fa-solid fa-seedling"></i>&nbsp;&nbsp;Total de ses fermes
+                    <i class="fa-solid fa-seedling"></i>&nbsp;&nbsp;Total des fermes
                   </div>
                   <div className="rowCardX2">
                     <div className="NOSD7IO9">

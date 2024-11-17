@@ -46,7 +46,7 @@ function App() {
         <Route path="/NewPassword" element={!isAuthenticated ? <NewPassword /> : <Navigate to="/" />}  />
 
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
+        <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient/:typeClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
         <Route path="/clients" element={isAuthenticated ? <Clients /> : <Navigate to="/login" />} />
         <Route path="/demandes" element={isAuthenticated ? <Demandes /> : <Navigate to="/login" />} />
         <Route path="/personnels" element={isAuthenticated ? <Personnels /> : <Navigate to="/login" />} />
