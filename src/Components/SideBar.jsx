@@ -69,7 +69,35 @@ const SideBar = () => {
               <div  
                 className={`textx ${location.pathname === "/demandes" ? 'textActi' : ''}`}
               >
-                Nouvelles Demandes
+                Demandes d'Accès
+              </div>
+            </div>
+          }
+          </>
+        }
+
+
+
+{
+          TypeOfUser && 
+          <>
+          {
+            TypeOfUser === "superadmin" && 
+            <div 
+              className={`rowOI ${location.pathname === "/reservations" ? 'rowOIactiavted' : ''}`} 
+              onClick={()=>{
+                navigate("/reservations");
+              }}
+            >
+              <div  
+                className={`icons ${location.pathname === "/reservations" ? 'textActi' : ''}`}
+              >
+              <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div  
+                className={`textx ${location.pathname === "/reservations" ? 'textActi' : ''}`}
+              >
+                Demandes de Réservations
               </div>
             </div>
           }
@@ -170,7 +198,7 @@ const SideBar = () => {
 
 
 
-<div 
+        <div 
           className={`rowOI ${location.pathname === "/calculations" ? 'rowOIactiavted' : ''}`} 
           onClick={()=>{
             navigate("/calculations");

@@ -5,7 +5,7 @@
 .containerDash{
     position: fixed;
     height: calc(100vh - 100px);
-    width: calc(100% - 17%);
+    width: calc(100% - 310px);
     overflow: hidden;
     bottom: 0;
     right: 0;
@@ -35,7 +35,7 @@
 .caseD1 span em{
     font-size: 20px;
     font-weight: 300;
-    color: gray;
+    color: #f7eaff;
 }
 .caseD1 span:first-child{
     color: #5fa21b;
@@ -412,6 +412,15 @@
     cursor: pointer;
     text-align: center;
     transition: .2s all ease-in-out;
+}
+.uoersf3{
+    height: 35px  !important ;
+    width: 100px   !important;
+    border-radius: 0.4rem   !important;
+    margin: 0 0.3rem !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    transition: .2s all ease-in-out !important;
 }
 .uoersf i{
     font-size: 13px;

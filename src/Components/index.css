@@ -71,7 +71,7 @@
 
 
 .SideBar{
-    width: 17%;
+    width: 310px;
     height: 100vh;
     z-index: 10;
     position: fixed;

@@ -440,7 +440,7 @@ const Demandes = () => {
       <div className="containerDash">
           <div className="rowD1">
             <div className="caseD1">
-              <span>Nouvelles</span><span>&nbsp;Demandes</span>
+              <span>Demandes </span><span>&nbsp;d'Accès</span>
               {
                 loadingNouvDem ? 
                 <>

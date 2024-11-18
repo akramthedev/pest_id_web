@@ -99,7 +99,7 @@
     display: flex;
     padding-bottom: 2rem;
     align-items: center;
-    padding-top: 11vh !important;
+    padding-top: 8vh !important;
     flex-direction: column;
 }
 
@@ -229,7 +229,7 @@
     white-space: nowrap; 
     margin: 0 auto;  
     animation: 
-      typing 0.5s steps(500, end),
+      typing 0.777s steps(500, end),
       blink-caret .5s step-end infinite;
   }
   
@@ -273,4 +273,307 @@
 
 .bsifhd button:hover{
     background-color: #417112;
+}
+
+
+
+
+
+
+
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .calendar-day {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+  }
+  
+  .calendar-day:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .selectedXXXX {
+    background-color: #65ab1e !important;
+    color: white !important;
+  }
+  
+  .calendar-grid button:disabled {
+    background-color: #ddd !important;
+    cursor: not-allowed !important;
+  }
+
+  
+
+
+
+  .contHome3976442968572{
+    padding:  0 !important;
+    padding-top: 8vh !important;
+}
+
+
+.booking-form{
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+
+.pornHub1{
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.777s all ease-in-out;
+}
+
+
+.pornhub{
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
+    width: 400px;    transition: 0.777s all ease-in-out;
+    opacity: 1;
+    min-height: 300px;
+    height: auto;
+    padding: 1rem;
+    margin-left: 1.5rem;
+    padding-top: 0;
+}
+.nopornhub{
+    width: 0;
+    visibility: hidden;
+}
+
+.nopornhub2{
+    visibility: hidden;
+    width: 500px !important;
+}
+.pornhub2{
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 500px !important;
+
+}
+.allInputs6{
+    height: 300px;
+    visibility: visible;
+    width: 400px;
+    padding-top: 1rem;
+    margin-right: 1.5rem;
+    transition: 0.777s all ease-in-out;
+}
+
+.form-group{
+    height: 70px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group input{
+    height: 45px;
+    width: 100%;
+    margin-top: 7px;
+    border-radius: 0.3rem;
+    border: 1px solid rgb(193, 193, 193);
+    outline: none;
+    padding: 0 1rem;
+}
+
+
+.form-group
+input:focus{
+  border: 1px solid #579519;
+  outline: 4px solid #e0ffc2;
+}
+
+.form-group label{
+    font-weight: 500;
+}
+
+.zrshqfuoshdfuhqdfuohoqdf{
+    background-color: gainsboro;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.shrufhsurhfuosehfohoqudf{
+    cursor: not-allowed;
+    background-color: rgb(243, 243, 243);
+}
+
+.shrufhsurhfuosehfohoqudf i{
+    color: rgb(179, 179, 179);
+}
+
+.contHome3976442968572 h2{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.contHome3976442968572 h2 span{
+    font-size: 2rem;
+    font-weight: 700;
+    color: #65ab1e;
+}
+
+
+
+
+.time-picker-container{
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
+    width: 400px;    transition: 0.777s all ease-in-out;
+    opacity: 1;
+    min-height: 300px;
+    height: auto;
+    max-height: 200px;
+    overflow:  hidden !important;
+    padding: 1rem;
+    margin-left: 3rem;
+    padding-top: 0;
+
+}
+
+
+.time-option.selected {
+    background-color: #65ab1e; /* Green background */
+    color: white;
+    border: 2px solid #fff; /* White border */
+  }
+  
+
+.calendar-header h3{
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+
+.time-option{
+    width: 60px;
+    height: 40px;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    margin: 0.2rem;
+    border: 1px solid rgb(210, 210, 210);
+}
+
+.time-options{
+    max-height: 200px;
+    overflow: hidden !important;
+}
+
+
+
+.time-picker-container h3{
+    font-size: 1.1rem;
+    font-weight: 600; 
+    padding-top: .5rem;  
+    margin-bottom: 1.5rem;
+}
+
+.time-picker-container h3 span{
+    font-size: 1.1rem;
+    font-weight: 500; 
+    color: #579519;
+}
+
+.zushufhsqdfohqudfohuqohfouhqf{
+    height:85px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.zushufhsqdfohqudfohuqohfouhqf button{
+    width: 100%;
+    background-color:#65ab1e ;
+    height: 45px;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    transition: .2s all ease-in-out;
+    cursor: pointer;
+}
+
+.zushufhsqdfohqudfohuqohfouhqf button:hover{
+    background-color:#4b8512 ;
+}
+
+.zushufhsqdfohqudfohuqohfouhqf .unClickables{
+    cursor: not-allowed;
+    background-color: rgb(235, 235, 235);
+}
+
+.zushufhsqdfohqudfohuqohfouhqf .unClickables:hover{
+    background-color: rgb(235, 235, 235);
+}
+.zushufhsqdfohqudfohuqohfouhqf .addColors{
+    background-color:#65ab1e ;
+}
+
+.input-error{
+    border: 2px solid rgb(221, 0, 0) !important;
+}
+
+.noallInputs6{
+    width: 0 !important;
+    visibility: hidden;
+}
+
+
+.rowItEm{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1.3rem;
+}
+.rowItEm span:first-child{
+    font-weight: 600;
+
+}
+
+.NoShowIt{
+    width: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.pornhubZidenx {
+    z-index: 999;
 }
