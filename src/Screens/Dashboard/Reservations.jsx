@@ -79,7 +79,7 @@ const Reservations = () => {
               mobile: user.mobile ? user.mobile : "---",
               date: user.date ? user.date : "---",
               time: user.time ? user.time : "---",
-              isDone: user.isDone === 1 ? "Finalisée" : "En cours" ,
+              isDone: user.isDone === 1 ? "Finalisée" : "Planifiée" ,
               isRemote : user.isRemote === 1 ? "À distance" : "Présentiel"
             };
           });
@@ -181,11 +181,11 @@ const Reservations = () => {
           >
             <span
               style={{
-                backgroundColor: isAuthorized ? 'white' : '#242424',
-                color : isAuthorized ? '#242424' : 'white',
+                backgroundColor: isAuthorized ? 'white' : '',
+                color : isAuthorized ? '#242424' : '#d40000',
                 padding : "0.3rem 1rem", 
                 borderRadius : "3rem", 
-                fontWeight : "500"
+                fontWeight : !isAuthorized && "600"
               }}
             >
               {params.value}
@@ -211,11 +211,11 @@ const Reservations = () => {
           >
             <span
               style={{
-                backgroundColor: isAuthorized ? '#e0ffc1' : '#f7eaff',
-                color : isAuthorized ? '#477a14' : '#9d00ff',
+                backgroundColor: isAuthorized ? '' : '',
+                color : isAuthorized ? '#242424' : '#9d00ff',
                 padding : "0.3rem 1rem", 
                 borderRadius : "3rem", 
-                fontWeight : "500"
+                fontWeight : !isAuthorized && "600"
               }}
             >
               {params.value}

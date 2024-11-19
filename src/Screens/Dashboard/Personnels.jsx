@@ -500,11 +500,11 @@ const Personnels = () => {
           >
             <span
               style={{
-                backgroundColor: isAuthorized ? '#e0ffc1' : '#ffe1e1',
-                color : isAuthorized ? '#477a14' : '#c90000',
+                backgroundColor: isAuthorized ? '' : '',
+                color : isAuthorized ? '#9d00ff' : '#d40000',
                 padding : "0.3rem 1rem", 
                 borderRadius : "3rem", 
-                fontWeight : "500"
+                fontWeight : !isAuthorized && "600"
               }}
             >
               {params.value}
