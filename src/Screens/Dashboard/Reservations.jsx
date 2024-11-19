@@ -80,6 +80,7 @@ const Reservations = () => {
               date: user.date ? user.date : "---",
               time: user.time ? user.time : "---",
               isDone: user.isDone === 1 ? "Finalisée" : "En cours" ,
+              isRemote : user.isRemote === 1 ? "À distance" : "Présentiel"
             };
           });
         setNouvellesDemandes(transformedData);
@@ -111,7 +112,7 @@ const Reservations = () => {
     { 
       field: 'id', 
       headerName: 'id', 
-      width: 150, 
+      width: 0, 
       headerAlign: 'center', 
       align: 'center',
       hide: true  
@@ -119,14 +120,14 @@ const Reservations = () => {
     { 
       field: 'identification', 
       headerName: 'Identification', 
-      width: 250, 
+      width: 200, 
       headerAlign: 'center', 
       align: 'center' 
     },
     { 
       field: 'fullName', 
       headerName: 'Nom et prénom', 
-      minWidth: 200, 
+      minWidth: 160, 
       headerAlign: 'center', 
       align: 'center',
       flex: 1 
@@ -134,7 +135,7 @@ const Reservations = () => {
     { 
       field: 'email', 
       headerName: 'Adresse Email', 
-      minWidth: 200, 
+      minWidth: 160, 
       headerAlign: 'center', 
       align: 'center',
       flex: 1 
@@ -147,6 +148,7 @@ const Reservations = () => {
       align: 'center',
       flex: 1 
     },
+    
     { 
       field: 'date', 
       headerName: 'Date', 
@@ -163,6 +165,37 @@ const Reservations = () => {
       align: 'center',
       flex: 1 
     },
+
+    { 
+      field: 'isRemote', 
+      headerName: 'Type', 
+      minWidth: 150, 
+      headerAlign: 'center', 
+      align: 'center',
+      flex: 1 ,
+      renderCell: (params) => {
+        const isAuthorized = params.value === 'À distance';
+        return (
+          <div
+             
+          >
+            <span
+              style={{
+                backgroundColor: isAuthorized ? 'white' : '#242424',
+                color : isAuthorized ? '#242424' : 'white',
+                padding : "0.3rem 1rem", 
+                borderRadius : "3rem", 
+                fontWeight : "500"
+              }}
+            >
+              {params.value}
+            </span>
+          </div>
+        );
+      },
+    },
+
+
     { 
       field: 'isDone', 
       headerName: 'Statut', 

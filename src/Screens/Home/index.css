@@ -4,7 +4,6 @@
     overflow-y: auto;
     background-color: white;
 }
-
 .navHome{
     height: 100px;
     width: 100%;
@@ -436,7 +435,7 @@ input:focus{
 
 .contHome3976442968572 h2{
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2.5rem;
     font-weight: 700;
 }
 
@@ -576,4 +575,70 @@ input:focus{
 
 .pornhubZidenx {
     z-index: 999;
+}
+
+.choicex{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.home4{
+    display: flex !important;
+    flex-direction: column;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.home4 .contHome3976442968572{
+    padding: 0 !important;
+    margin:  0 !important;
+    height: calc(100vh - 44px) !important;
+    display: flex !important;
+    padding-top: 8vh !important;
+}
+
+.choicex button{
+    width: 150px !important;
+    height: 45px;
+    transition: 0.3s all ease-in-out;
+    outline: none;
+    cursor: pointer;
+}
+
+
+.choicex button:hover{
+    background-color: rgb(221, 221, 221);
+}
+
+
+.choicex .activateRemote{
+    background-color: #5fa21b;
+    color: white;
+}
+
+.choicex .activateRemote:hover{
+    background-color: #5fa21b;
+    color: white;
+}
+
+.choicex span{
+    color: gray !important;
+}
+
+.rowItEm button{
+    width: 100% !important;
+    height: 45px;
+    background-color: #5fa21b;
+    transition: 0.3s all ease-in-out;
+    outline: none;
+    color: white;
+    cursor: pointer;
+}
+
+
+.rowItEm button:hover{
+    background-color: #447612;
 }
