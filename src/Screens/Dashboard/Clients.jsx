@@ -103,8 +103,7 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
 
 
   const handleViewDashboard = ()=>{
-    const url = `/DashboardFromViewOfSuperAdmin/${params.row.idUser}/${params.row.fullName}/${params.row.type}`;
-    window.open(url, '_blank');
+    window.open(`/dash/u/${params.row.idUser}/${params.row.fullName}/a`, '_blank');
   }
 
   return (

@@ -19,7 +19,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc', width : "200px" }}>
         <div style={{ color: 'black', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#" ,fontWeight : "500", }} >Date :</span>{`${label}`}</div>
-        <div style={{ color: '#ffae00', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#ffae00" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
+        <div style={{ color: 'blueviolet', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "blueviolet" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
         <div style={{ color: '#5fa21b', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#5fa21b" ,fontWeight : "500", }} >Tuta :</span> {` ${payload.find(p => p.dataKey === 'Tuta')?.value || 0}`}</div>
        </div>
     );
@@ -1491,7 +1491,7 @@ const Dashboard = () => {
                           >
                             <defs>
                               <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#ffae00" stopOpacity={1} />
+                                <stop offset="0%" stopColor="blueviolet" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1512,6 +1512,21 @@ const Dashboard = () => {
 
 
 
+                            {
+                              voirMouches && 
+                              <>
+                              {/* class_A Area */}
+                                <Area
+                                  animationEasing="ease-in-out"
+                                  animationDuration={1500}
+                                  type="monotone"
+                                  dataKey="Mouches"
+                                  stroke="blueviolet"
+                                  fill="url(#gradient1)"
+                                  strokeWidth={1.8}
+                                />
+                              </>
+                            }
 
                            
 
@@ -1535,21 +1550,6 @@ const Dashboard = () => {
                             }
    
 
-   {
-                              voirMouches && 
-                              <>
-                              {/* class_A Area */}
-                                <Area
-                                  animationEasing="ease-in-out"
-                                  animationDuration={1500}
-                                  type="monotone"
-                                  dataKey="Mouches"
-                                  stroke="#ffae00"
-                                  fill="url(#gradient1)"
-                                  strokeWidth={1.8}
-                                />
-                              </>
-                            }
 
                             
                             
@@ -1850,7 +1850,7 @@ const Dashboard = () => {
                           >
                             <defs>
                               <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#ffae00" stopOpacity={1} />
+                                <stop offset="0%" stopColor="blueviolet" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1874,7 +1874,24 @@ const Dashboard = () => {
 
                            
 
-                            
+                            {
+                              voirMouches && 
+                              <>
+                              {/* class_A Area */}
+                                <Area
+                                  animationEasing="ease-in-out"
+                                  animationDuration={1500}
+                                  type="monotone"
+                                  dataKey="Mouches"
+                                  stroke="blueviolet"
+                                  fill="url(#gradient1)"
+                                  strokeWidth={1.8}
+                                />
+                              </>
+                            }
+
+
+
 
                             {
                               voirTuta && 
@@ -1893,22 +1910,7 @@ const Dashboard = () => {
                             }
    
                             
-   {
-                              voirMouches && 
-                              <>
-                              {/* class_A Area */}
-                                <Area
-                                  animationEasing="ease-in-out"
-                                  animationDuration={1500}
-                                  type="monotone"
-                                  dataKey="Mouches"
-                                  stroke="#ffae00"
-                                  fill="url(#gradient1)"
-                                  strokeWidth={1.8}
-                                />
-                              </>
-                            }
-
+ 
 
 
                             <XAxis 

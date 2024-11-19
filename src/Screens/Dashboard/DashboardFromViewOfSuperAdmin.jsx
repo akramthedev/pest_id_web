@@ -17,7 +17,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc', width : "200px" }}>
         <div style={{ color: 'black', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#" ,fontWeight : "500", }} >Date :</span>{`${label}`}</div>
-        <div style={{ color: '#da0404', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#da0404" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
+        <div style={{ color: 'blueviolet', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "blueviolet" ,fontWeight : "500", }} >Mouches :</span> {` ${payload.find(p => p.dataKey === 'Mouches')?.value || 0}`}</div>
         <div style={{ color: '#5fa21b', width : "100%", display : "flex", alignItems : "center", justifyContent : "space-between" }}><span style={{ color : "#5fa21b" ,fontWeight : "500", }} >Tuta :</span> {` ${payload.find(p => p.dataKey === 'Tuta')?.value || 0}`}</div>
        </div>
     );
@@ -451,7 +451,7 @@ const DashboardFromViewOfSuperAdmin = () => {
             <div className="containerDash containerDashCustomized1">
               <div className="rowD1">
                 <div className="caseD1 caseD1mod">
-                  <span>Tableau</span><span>&nbsp;de Board&nbsp;&nbsp;:&nbsp;&nbsp;{nameClient && nameClient}&nbsp;&nbsp;&nbsp;<em>{typeClient && <>-- &nbsp;{typeClient === "staff" ? "Personnel" : "Directeur"}&nbsp;</>}</em></span>
+                  <span>Tableau</span><span>&nbsp;de Board&nbsp;&nbsp;:&nbsp;&nbsp;{nameClient && nameClient}&nbsp;&nbsp;&nbsp;<em>{typeClient && <>-- &nbsp;{typeClient === "s" ? "Personnel" : "Directeur"}&nbsp;</>}</em></span>
                   {
                     loading1 || Loading2 || Loading3 ?
                       <>
@@ -706,11 +706,11 @@ const DashboardFromViewOfSuperAdmin = () => {
                           >
                             <defs>
                               <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#da0404" stopOpacity={1} />
+                                <stop offset="0%" stopColor="blueviolet" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#5fa21b" stopOpacity={1} />
+                                <stop offset="0%" stopColor="blueviolet" stopOpacity={1} />
                                 <stop offset="100%" stopColor="#ffffff" stopOpacity={1} />
                               </linearGradient>
                               <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -758,7 +758,7 @@ const DashboardFromViewOfSuperAdmin = () => {
                                   animationDuration={1500}
                                   type="monotone"
                                   dataKey="Mouches"
-                                  stroke="#da0404"
+                                  stroke="blueviolet"
                                   fill="url(#gradient1)"
                                   strokeWidth={1.8}
                                 />

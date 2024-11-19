@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Home from "./Screens/Home/Home";
+import Tracking from './Screens/Tracking';
 import Page404 from './Screens/Page404'
 import BookDemo from "./Screens/Home/BookDemo"
 import Contact from './Screens/Home/Contact';
@@ -50,7 +51,7 @@ function App() {
           <Route path="/contact" element={  <Contact /> }  />
 
           <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/DashboardFromViewOfSuperAdmin/:IDUSERDASHBAORD/:nameClient/:typeClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
+          <Route path="/dash/u/:IDUSERDASHBAORD/:nameClient/:typeClient" element={isAuthenticated ? <DashboardFromViewOfSuperAdmin /> : <Navigate to="/login" />} />
           <Route path="/clients" element={isAuthenticated ? <Clients /> : <Navigate to="/login" />} />
           <Route path="/demandes" element={isAuthenticated ? <Demandes /> : <Navigate to="/login" />} />
           <Route path="/personnels" element={isAuthenticated ? <Personnels /> : <Navigate to="/login" />} />
@@ -64,7 +65,6 @@ function App() {
           <Route path="/password-configuration/:id/:from/:name" element={isAuthenticated ? <PasswordConfig /> : <Navigate to="/login" />} />
           <Route path="/reservations" element={isAuthenticated ? <Reservations /> : <Navigate to="/login" />} />
 
-          <Route path="/to-do" element={<Todo />} />
           <Route path="*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>

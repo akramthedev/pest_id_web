@@ -11,6 +11,7 @@ import { ENDPOINT_API } from "../../endpoint";
 import LVG from './Loader.gif'
 import PopUp from '../../Components/PopUp';
 import ErrorSuccess from '../../Components/ErrorSuccess';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -146,7 +147,7 @@ const Fermes = () => {
   const [LoadingCreatingNewPlaque, setLoadingCreatingNewPlaque] = useState(false);
 
  
- 
+  const nav = useNavigate();
   
  
 
@@ -363,11 +364,7 @@ const Fermes = () => {
           });
 
           if(resp0.status === 201){
-            setRefresh(!refresh);
-            setaddClicked(false);
-            setLocalisation("");
-            setSize("");
-            setAppelation("");
+            nav(0);
           }        
           else{
             if(!showItResponse){

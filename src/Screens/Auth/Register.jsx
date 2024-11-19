@@ -12,8 +12,6 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [passwordValidation, setPasswordValidation] = useState({
     length: false,
-    uppercase: false,
-    lowercase: false,
     digit: false,
     specialChar: false,
   });
@@ -27,8 +25,6 @@ function Register() {
     if (name === 'password') {
       setPasswordValidation({
         length: value.length >= 8,
-        uppercase: /[A-Z]/.test(value),
-        lowercase: /[a-z]/.test(value),
         digit: /[0-9]/.test(value),
         specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(value),
       });
@@ -46,8 +42,6 @@ function Register() {
     if (!password || password.length < 8) {
       validationErrors.password = 'Mot de passe invalide.';
     }  
-      if (!/[A-Z]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
-      if (!/[a-z]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
       if (!/[0-9]/.test(password))  validationErrors.password = 'Mot de passe invalide.';
       if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) validationErrors.password = 'Mot de passe invalide.';
   
@@ -137,8 +131,6 @@ function Register() {
             {Object.entries(passwordValidation).map(([key, isValid]) => (
               <p key={key} className={isValid ? 'valid' : 'invalid'}>
                 {key === 'length' && '• Au moins 8 caractères'}
-                {key === 'uppercase' && '• Une lettre majuscule'}
-                {key === 'lowercase' && '• Une lettre minuscule'}
                 {key === 'digit' && '• Un chiffre'}
                 {key === 'specialChar' && '• Un caractère spécial'}
               </p>

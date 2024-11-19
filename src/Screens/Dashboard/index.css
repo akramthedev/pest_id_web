@@ -5,7 +5,7 @@
 .containerDash{
     position: fixed;
     height: calc(100vh - 100px);
-    width: calc(100% - 310px);
+    width: calc(100% - 250px);
     overflow: hidden;
     bottom: 0;
     right: 0;
@@ -1113,7 +1113,7 @@
     height: 18px;
     cursor: pointer;
     border-radius: 0.2rem;
-    border:2px solid #ffae00;
+    border:2px solid blueviolet;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1121,7 +1121,7 @@
 }
 
 .meaningCARO1{
-    color: #ffae00;
+    color: blueviolet;
 
 }
 .caro2{
@@ -1164,7 +1164,7 @@
 }
 
 .caro i{
-    color: #ffae00;
+    color: blueviolet;
 
 }
 .caro2 i{
@@ -1581,7 +1581,12 @@
     color: white;
 }
 
-.caseD22222 .eofvouszfv112{
+.caseD22222 .eofvouszfv112{ 
     background-color: #242424 !important;
     color: white !important;
+}
+
+
+.caseD1mod span em{
+    color: rgb(171, 171, 171) !important;
 }

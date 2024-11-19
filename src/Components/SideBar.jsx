@@ -97,7 +97,7 @@ const SideBar = () => {
               <div  
                 className={`textx ${location.pathname === "/reservations" ? 'textActi' : ''}`}
               >
-                Demandes de Réservations
+                Réservations
               </div>
             </div>
           }
