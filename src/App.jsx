@@ -129,7 +129,7 @@ function App() {
     const interval = setInterval(() => {
       fetchNouvellesDemandes();
       fetchNouvellesReservations();
-    }, 5000);
+    }, 120000);
 
     return () => clearInterval(interval);
   }, []);
