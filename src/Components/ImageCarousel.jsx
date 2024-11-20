@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { NextArrow, PrevArrow } from './Customcarousel';
-
+import formatDateForCreatedAt from "../Helpers/formatCreatedAt";
 
 
 const ImageCarousel = ({ images }) => {
@@ -23,9 +23,10 @@ const ImageCarousel = ({ images }) => {
   };
 
   return (
-    <div style={{ width: "70%", margin: "0 auto" }}>
+    <div style={{ width: "70%", margin: "0 auto", position : "relative" }}>
       <Slider {...settings}>
         {images.map((image, index) => (
+        <>
           <div key={index}>
             <img
               src={image.name}
@@ -33,6 +34,8 @@ const ImageCarousel = ({ images }) => {
               className="carousel-image"
             />
           </div>
+          <span className="esirwfuhswufhsuwhdfuhswudfhsou" >{formatDateForCreatedAt(image.created_at)}</span>
+        </>
         ))}
       </Slider>
     </div>

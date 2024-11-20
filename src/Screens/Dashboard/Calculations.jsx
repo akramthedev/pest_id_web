@@ -1116,6 +1116,9 @@ const Calculations = ({newDemandes,setNewDemandes, newReservations, setNewReserv
                   <div className="casAkDs">
                     <div className="zirsqfd">
                       <div className="rowInFoS">
+                        <span>Date :</span> <span>{calculToEdit.created_at}</span>
+                      </div>
+                      <div className="rowInFoS">
                         <span>Ferme :</span> <span>{calculToEdit.farm_name}</span>
                       </div>
                       <div className="rowInFoS">
