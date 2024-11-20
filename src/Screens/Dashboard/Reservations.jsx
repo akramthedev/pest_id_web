@@ -23,7 +23,7 @@ const actionTemplate = (params, isRefusedClicked, setisRefusedClicked, isFinalis
   return (
     <div className='uefuvzou'>
     {
-      params.row.isDone === "En cours" ? 
+      params.row.isDone === "Planifiée" ? 
       <button className='uoersf'   onClick={()=>{
         setparamClicked(params);
         setisFinalised(true);
@@ -38,7 +38,7 @@ const actionTemplate = (params, isRefusedClicked, setisRefusedClicked, isFinalis
 };
 
 
-const Reservations = () => {
+const Reservations = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
   const [nouvellesDemandes, setNouvellesDemandes] = useState([]);
   const [loadingNouvDem, setLoadingNouvDem] = useState(true);
@@ -174,18 +174,17 @@ const Reservations = () => {
       align: 'center',
       flex: 1 ,
       renderCell: (params) => {
-        const isAuthorized = params.value === 'À distance';
+        const isDistancial = params.value === 'À distance';
         return (
           <div
-             
           >
             <span
               style={{
-                backgroundColor: isAuthorized ? 'white' : '',
-                color : isAuthorized ? '#242424' : '#d40000',
+                backgroundColor: isDistancial ? 'white' : '',
+                color : isDistancial ? '#242424' : '#d40000',
                 padding : "0.3rem 1rem", 
                 borderRadius : "3rem", 
-                fontWeight : !isAuthorized && "600"
+                fontWeight : !isDistancial && "600"
               }}
             >
               {params.value}
@@ -274,12 +273,34 @@ const Reservations = () => {
 
 
 
+
+
+  useEffect(()=>{
+    const markAsSeen = async()=>{
+      if(newReservations !== 0){
+        try{
+          await axios.get(`${ENDPOINT_API}markReservationsAsSeen`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          setNewReservations(0);
+        }
+        catch(e){
+          console.log(e.message);
+        }
+      }
+    }
+    markAsSeen();
+  },[]);
+
+
     
 
   return (
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp/>
       <ErrorSuccess  
         isError={isErrorResponse}

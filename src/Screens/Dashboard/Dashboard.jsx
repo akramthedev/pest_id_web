@@ -47,7 +47,7 @@ const customStyles = {
 
 
 
-const Dashboard = () => {
+const Dashboard = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
   const [showItResponse, setshowItResponse] = useState(false);
   const [isErrorResponse, setisErrorResponse] = useState(false);
@@ -1193,7 +1193,7 @@ const Dashboard = () => {
 
       
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp />
       <ErrorSuccess  
         isError={isErrorResponse}

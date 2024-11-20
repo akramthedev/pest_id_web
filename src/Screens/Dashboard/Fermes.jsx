@@ -109,7 +109,7 @@ const actionTemplate = (params, setFermes, setRefresh, refresh, seteditClicked, 
 };
 
 
-const Fermes = () => {
+const Fermes = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
  
   const [refresh,setRefresh] = useState(false);
@@ -775,7 +775,7 @@ const Fermes = () => {
   return (
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp/>
       <ErrorSuccess  
         isError={isErrorResponse}

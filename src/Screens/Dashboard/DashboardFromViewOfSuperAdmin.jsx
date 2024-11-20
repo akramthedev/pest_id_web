@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 
 
-const DashboardFromViewOfSuperAdmin = () => {
+const DashboardFromViewOfSuperAdmin = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
     const params = useParams();
     const {IDUSERDASHBAORD,nameClient,typeClient} = params;
@@ -438,7 +438,7 @@ const DashboardFromViewOfSuperAdmin = () => {
 
       
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp />
       <ErrorSuccess  
         isError={isErrorResponse}

@@ -188,7 +188,7 @@ const actionTemplate = (params,
 };
 
 
-const Calculations = () => {
+const Calculations = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
 
   const [refresh,setRefresh] = useState(false);
@@ -968,7 +968,7 @@ const Calculations = () => {
     <PopUp/>
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <ErrorSuccess  
         isError={isErrorResponse}
         showIt={showItResponse}

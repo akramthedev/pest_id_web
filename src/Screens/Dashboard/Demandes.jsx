@@ -39,7 +39,7 @@ const actionTemplate = (params, isRefusedClicked, setisRefusedClicked, isAccepte
 };
 
 
-const Demandes = () => {
+const Demandes = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
   const [nouvellesDemandes, setNouvellesDemandes] = useState([]);
   const [loadingNouvDem, setLoadingNouvDem] = useState(true);
@@ -339,13 +339,35 @@ const Demandes = () => {
     
 
 
+  useEffect(()=>{
+    const markAsSeen = async()=>{
+      if(newDemandes !== 0){
+        try{
+          //markReservationsAsSeen
+          await axios.get(`${ENDPOINT_API}markDemandesAsSeen`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          setNewDemandes(0);
+        }
+        catch(e){
+          console.log(e.message);
+        }
+      }
+    }
+    markAsSeen();
+  },[]);
+
+
+
 
     
 
   return (
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar   newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp/>
       <ErrorSuccess  
         isError={isErrorResponse}

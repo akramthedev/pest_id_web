@@ -144,7 +144,7 @@ const actionTemplate = (params, set_all_personnels, setRefresh, refresh, setedit
 };
 
 
-const Personnels = () => {
+const Personnels = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
 
 
   const [all_personnels, set_all_personnels] = useState([]);
@@ -700,7 +700,7 @@ const Personnels = () => {
   return (
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp/>
 
       <ErrorSuccess  

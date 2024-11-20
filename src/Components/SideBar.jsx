@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 
 
-const SideBar = () => {
+const SideBar = ({newReservations, setNewReservations, newDemandes, setNewDemandes}) => {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,8 +69,22 @@ const SideBar = () => {
               <div  
                 className={`textx ${location.pathname === "/demandes" ? 'textActi' : ''}`}
               >
-                Demandes d'Accès
+                Demandes
               </div>
+              &nbsp;&nbsp;
+              {
+              newDemandes ? 
+              <>
+              {
+                newDemandes !== 0 &&
+                <div className={`bulle ${location.pathname === "/reservations" ? 'zsrhdwfiuhswdofhuosqdwhf' : ''}`}>
+                  {newDemandes}
+                </div>
+              }
+              </>
+              :
+              ""
+             }
             </div>
           }
           </>
@@ -98,7 +112,20 @@ const SideBar = () => {
                 className={`textx ${location.pathname === "/reservations" ? 'textActi' : ''}`}
               >
                 Réservations
-              </div>
+              </div>&nbsp;&nbsp;
+             {
+              newReservations ?
+              <>
+              {
+                newReservations !== 0 && 
+                <div className={`bulle ${location.pathname === "/reservations" ? 'zsrhdwfiuhswdofhuosqdwhf' : ''}`}>
+                  {newReservations}
+                </div>
+              }
+              </>
+              :
+              ""
+             }
             </div>
           }
           </>

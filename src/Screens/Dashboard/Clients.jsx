@@ -136,7 +136,10 @@ const actionTemplate = (params, setAllUsers, setRefresh, refresh, seteditClicked
     </div>
   );
 };
-const Clients = () => {
+
+
+
+const Clients = ({newDemandes,setNewDemandes, newReservations, setNewReservations}) => {
   const [allUsers, setAllUsers] = useState([]);
   const [loadingAllUsers, setLoadingAllUsers] = useState(true);
   const isNoticeOfBroadCastSeen = localStorage.getItem('isNoticeOfBroadCastSeen');
@@ -877,7 +880,7 @@ useEffect(()=>{
   return (
     <div className='Dashboard'>
       <NavBar /> 
-      <SideBar />
+      <SideBar newReservations={newReservations} setNewReservations={setNewReservations}  newDemandes={newDemandes} setNewDemandes={setNewDemandes} />
       <PopUp/>
       <ErrorSuccess  
         isError={isErrorResponse}
