@@ -136,7 +136,7 @@ const Profile = () => {
               company_mobile : MobileCompany,
               company_email : EmailCompany,
             }
-            const resp22 = await axios.patch(`${ENDPOINT_API}admin/${parseInt(adminId)}`, dataCompanyModifying, {
+            const resp22 = await axios.patch(`${ENDPOINT_API}admin/${parseInt(userId)}`, dataCompanyModifying, {
               headers: {
                 'Authorization': `Bearer ${token}`
               }
